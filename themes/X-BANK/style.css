@@ -1,0 +1,176 @@
+/*
+Theme Name:   	X-BANK
+Author:       	Fred Cave
+Author URI:		http://www.fredcave.com
+*/
+
+#wpadminbar {
+    display: none !important;
+}
+
+/************************************************
+    CSS RESET
+************************************************/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; } /* HTML5 display-role reset for older browsers */ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {display: block; } body {line-height: 1; } ol, ul {list-style: none; } blockquote, q {quotes: none; } blockquote:before, blockquote:after, q:before, q:after {content: ''; content: none; } table {border-collapse: collapse; border-spacing: 0; }
+
+/************************************************
+    FONTS
+************************************************/
+
+
+/************************************************
+    GENERAL
+************************************************/
+
+html, body {
+    width: 100%;
+    top: 0;
+    font-family: "Prestige Std", "Courier New", Courier, monospace;
+    font-size: 1.15em;
+    overflow-x: hidden;
+    /*overflow-y: hidden;*/ /* ????? */
+}
+
+a {
+    color: black;
+    text-decoration: none;
+    border: none;
+    outline: none;
+}
+
+input::-moz-focus-inner { 
+    border: 0; 
+}
+
+a:hover {
+
+}
+
+b, strong {
+    font-weight: bold;
+}
+
+.clear {
+    clear: both;
+}
+
+.hide {
+    display: none;
+}
+
+/************************************************
+    BG
+************************************************/
+
+.col {
+    width: 100%;
+    left: 0;
+    position: fixed;
+}
+
+#col_1 {
+    left: 0;
+}
+
+#col_2 {
+    left: 100%;
+}
+
+.col ul {
+    position: absolute;
+} 
+
+.four ul {
+    width: 25%;    
+}
+
+.four ul:nth-child(0) {
+    left: 0;  
+}
+
+.four ul:nth-child(1) {
+    left: 25%;  
+}
+
+.four ul:nth-child(2) {
+    left: 50%;  
+}
+
+.four ul:nth-child(3) {
+    left: 75%;  
+}
+
+.col li {
+    position: relative;
+    text-align: center;
+    margin-bottom: 48px;
+    margin-bottom: 5vh;
+    top: 0;
+/*    transition: top 0.5s;
+    -webkit-transition: top 0.5s;*/
+} 
+
+.col img {
+    width: 67%;
+    position: relative;
+    margin: 0 auto;
+    -webkit-box-shadow: 18px 18px 23px 0px rgba(0,0,0,0.35);
+    -moz-box-shadow: 18px 18px 23px 0px rgba(0,0,0,0.35);
+    box-shadow: 18px 18px 23px 0px rgba(0,0,0,0.35);
+}
+ 
+/************************************************
+    RECEIPT
+************************************************/
+
+#receipt_wrapper {
+    width: 100%;
+    text-align: center;
+    position: absolute;
+}
+
+#receipt {
+    position: relative;
+    margin: 0 auto;
+    z-index: 99;
+    background-color: #fcfff3;
+    width: 800px;
+    height: 4000px;
+    -webkit-box-shadow: 18px 18px 23px 0px rgba(0,0,0,0.35);
+    -moz-box-shadow: 18px 18px 23px 0px rgba(0,0,0,0.35);
+    box-shadow: 18px 18px 23px 0px rgba(0,0,0,0.35);
+    transform: rotate(-2deg);
+    -webkit-transform: rotate(-2deg);
+    transform-origin: center;
+    -webkit-transform-origin: center;
+}
+
+.break {
+    font-size: 0.95em;
+    letter-spacing: 0.2em;
+    margin: 24px 0 36px 0;
+}
+
+section {
+    border: 1px solid orange;
+    margin: 24px auto;
+    width: 85%;
+    position: relative;
+}
+
+#r_logo img {
+    width: 30%;
+    height: auto;
+}
+
+#r_address {
+    border: 1px solid blue;
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: left;
+}
+
+
+
