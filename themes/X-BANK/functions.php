@@ -26,6 +26,23 @@ function create_post_types() {
         'menu_position' => 5
         )
     );
+    register_post_type( 'x-logos',
+    array(
+      'labels' => array(
+        'name' => __( 'Logos' )
+      ),
+      'public' => true,
+      'has_archive' => true,
+      'supports' => array('editor','title'),
+      'menu_position' => 6
+    )
+  );
+}
+
+// INCLUDE BREAKS
+
+function addBreak() {
+    echo '<p class="break"><span class="break_inner">*********************************************</span></p>';
 }
 
 ?>

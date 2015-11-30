@@ -2,53 +2,19 @@
 
 	<div id="receipt">
 
-		<section id="r_logo">
-			
-			<img src="<?php bloginfo('template_url'); ?>/img/x-bankLogo5_1200.png" />
+		<?php include("01___logo.php"); ?>
 
-			<div id="r_address">
-				Dam*Square*10 <br>
-				10536*Amsterdam <br>
-				Netherlands
-			</div>
+		<?php include("02___vitrine.php"); ?>		
 
-		</section>
+		<?php include("03___menu.php"); ?>
 
-		<p class="break">*********************************************</p>
+		<?php include("04___current.php"); ?>	
 
-		<section id="r_vitrine">
+		<?php include("05___upcoming.php"); ?>
 
-		</section>
+		<?php include("06___index.php"); ?>	
 
-		<p class="break">*********************************************</p>
-
-		<section id="r_menu">
-			Test
-		</section>
-
-		<p class="break">*********************************************</p>
-
-		<section id="r_current">
-
-		</section>
-
-		<p class="break">*********************************************</p>
-
-		<section id="r_upcoming">
-
-		</section>
-
-		<p class="break">*********************************************</p>
-
-		<section id="r_index">
-
-		</section>
-
-		<p class="break">*********************************************</p>
-
-		<section id="r_about">
-
-		</section>
+		<?php include("07___about.php"); ?>
 
 	</div>
 

@@ -26,8 +26,10 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 html, body {
     width: 100%;
     top: 0;
-    font-family: "Prestige Std", "Courier New", Courier, monospace;
-    font-size: 1.15em;
+    font-family: "Prestige Elite Std", "Courier New", Courier, monospace;
+    font-size: 1.1em;
+    line-height: 1.4;
+    letter-spacing: 0.1em;
     overflow-x: hidden;
     /*overflow-y: hidden;*/ /* ????? */
 }
@@ -49,6 +51,10 @@ a:hover {
 
 b, strong {
     font-weight: bold;
+}
+
+h1 {
+    text-transform: uppercase;
 }
 
 .clear {
@@ -134,9 +140,8 @@ b, strong {
     position: relative;
     margin: 0 auto;
     z-index: 99;
-    background-color: #fcfff3;
     width: 800px;
-    height: 4000px;
+    height: auto;
     -webkit-box-shadow: 18px 18px 23px 0px rgba(0,0,0,0.35);
     -moz-box-shadow: 18px 18px 23px 0px rgba(0,0,0,0.35);
     box-shadow: 18px 18px 23px 0px rgba(0,0,0,0.35);
@@ -146,31 +151,93 @@ b, strong {
     -webkit-transform-origin: center;
 }
 
-.break {
+p.break {
     font-size: 0.95em;
-    letter-spacing: 0.2em;
-    margin: 24px 0 36px 0;
+    letter-spacing: -0.2em;
+    width: 85%;
+    margin: 0 auto;
+    text-align: center;
+/*    margin: 24px 0 24px 0;
+*/}
+
+span.break_inner {
+    width: 105%;
 }
 
 section {
-    border: 1px solid orange;
-    margin: 24px auto;
-    width: 85%;
+    background-color: #fcfff3;
+/*    padding: 24px 12.5% 36px 12.5%;
+*/    width: 100%;
     position: relative;
+    margin-top: -1px;
+    padding: 24px 0 36px 0;
+/*    box-shadow: 18px 18px 23px 0px rgba(0,0,0,0.35);
+*/}
+
+.section_content {
+    width: 85%;
+    margin: 0 auto;
+}
+
+#r_logo {
+    min-height: 250px;
 }
 
 #r_logo img {
-    width: 30%;
+    width: 35%;
     height: auto;
 }
 
 #r_address {
-    border: 1px solid blue;
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 40px;
+    left: 7.5%;
     text-align: left;
 }
 
+#r_vitrine {
+}
 
+.r_hole {
+    height: 0px;
+    position: relative;
+}
+
+.r_hole_l, .r_hole_r {
+/*    border: 1px solid blue;
+*/    background-color: #fcfff3;
+    position: absolute;
+    width: 7.5%;
+    height: 105%;
+    left: 0;
+    top: -5px;
+    padding: 2px 0;
+    margin-top: -1px;
+/*    box-shadow: 18px 18px 23px 0px rgba(0,0,0,0.35);
+*/}
+
+.r_hole_r {
+    left: inherit;
+    right: 0;
+    box-shadow: none;
+}
+
+.r_hole_inset {
+    height: 105%;
+    box-shadow: 18px 18px 23px 0px rgba(0,0,0,0.35) inset;
+    width: 85%;
+    margin-left: 7.5%;
+    display: block;
+}
+
+#r_menu ul {
+    margin-bottom: 56px;
+}
+
+#r_menu li {
+    width: 23%;
+    display: inline-block;
+    vertical-align: middle; 
+    text-transform: uppercase;
+}
 
