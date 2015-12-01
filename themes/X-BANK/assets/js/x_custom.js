@@ -1,82 +1,15 @@
 $( document ).ready(function() {
 
+	// INIT SMOOTHSCROLL
+
+	$('a').smoothScroll();
+
 	// BG ANIMATION
 
-		// CLONE COLs IN 4-COL VIEW
+		// TMP
 
-		$( ".col ul" ).each( function(){
-			var thisParent = $(this).parent(".col");
-			$(this).clone().appendTo( thisParent );
-		});
-
-		// 1. CALCULATE POSITION OF INDIVIDUAL LIs
-
-
-	function getLiPos () {
-		$(".img_loop li").each( function(){		
-			// get current position
-			var thisTop = $(this).offset().top;
-			$(this).attr("data-top", thisTop);
-		});	
-	}
-
-	getLiPos();
-
-		// 2. POSITION THEM ABSOLUTELY
-
-	function setLiPos () {
-		$(".img_loop li").each( function(){
-			// set absolute position
-			var thisTop = $(this).attr("data-top");
-			// console.log(thisTop);
-			$(this).css({
-				"position": "absolute",
-				"top": thisTop + "px"
-			});
-		});
-	} 
-
-	//setLiPos();
-
-		// 3. MOVE UP
-
-	function animateCols ( length ) {
-
-		var i = 1;
-
-		$(".img_loop li").each( function(){
-
-			// set starting position
-			var thisStart = $(this).attr("data-top");
-			
-			// set ending position — img height above viewport
-			var thisEnd = 0 - $(this).height() * 1.2;
-
-			$.keyframe.define([{
-			    name: i,
-			    from: {"top": thisStart + "px"},
-			    to: {"top": thisEnd + "px"}
-			}]);
-
-			$(this).playKeyframe({
-				name: i,
-				duration: length + "s",
-				timingFunction: "linear",
-				iterationCount: "infinite",
-				complete: function(){
-					// console.log(this, "done");
-				}
-			});
-
-			i++;
-
-		});
-
-		/* STILL A PROBLEM WITH THIS */
-
-	}
-
-	// animateCols( 10 );
+	$(".movable_wrapper").clone().appendTo("#col_1");
+	$(".movable_wrapper").clone().appendTo("#col_1");
 
 	// RECEIPT
 
@@ -151,17 +84,54 @@ $( document ).ready(function() {
 
 	});
 
+	// BACK TO TOP BUTTON
+
+	$(".back_to_top a").on("click", function(e){
+		e.preventDefault();
+		// get offset of menu
+		var menuOffset = $("#r_menu").offset().top;
+		// scroll
+		$("html,body").animate({
+			scrollTop: menuOffset
+		}, 500);
+	});
+
+	// INDEX CLICK
+
+	$(".index_letter a").on("click", function(e){
+		e.preventDefault();
+		// get clicked letter
+		var thisLetter = $(this).text();
+		$("#sub_index li").hide();
+		$("#" + thisLetter).show();
+
+		// underline clicked letter
+		$(".index_letter a").css("border-bottom","");
+		$(this).css("border-bottom","1px solid black");
+
+
+		// animate wrapper height
+		$("#sub_index").css("height", $("#" + thisLetter).height() );
+	});
+
+	/* TO DO :
+
+		ANIMATE HEIGHT
+		NOT FOUND MESSAGE IF EMPTY
+
+	*/
+
 
 	// WINDOW EVENTS
 
 	$(window).on("load", function(){
-		receiptInit();
+		// receiptInit();
 		breakStretch();
 	}).on("resize", function(){
-		receiptInit();
+		// receiptInit();
 	}).on("scroll", function(){
 		$("html").attr("data-scroll", $(window).scrollTop() );
-		receiptCentre();
+		// receiptCentre();
 	});
     
 });

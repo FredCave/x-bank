@@ -3,7 +3,7 @@
 	<div class="section_content">
 
 		<!-- RANDOM LOGO -->
-		<?php include("01_i_logo.php"); ?>
+		<?php include("01_a_logo.php"); ?>
 
 		<div id="r_address">
 			Dam*Square*10 <br>
