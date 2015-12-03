@@ -1,5 +1,24 @@
 $( document ).ready(function() {
 
+	/*
+
+	1. VARIOUS 
+
+	2. BACKGROUND
+
+	3. RECEIPT
+
+	4. WINDOW EVENTS
+
+	*/
+
+
+/*****************************************************************************
+    
+	1. VARIOUS
+
+*****************************************************************************/
+
 	// CUSTOM CHROME JAGGED EDGE FIX
 
 	if ( window.chrome ) {
@@ -10,7 +29,11 @@ $( document ).ready(function() {
 
 	$('a').smoothScroll();
 
-	// BG ANIMATION
+/*****************************************************************************
+    
+	2. BACKGROUND
+
+*****************************************************************************/
 
 	function imagesCalc () {
 
@@ -24,7 +47,7 @@ $( document ).ready(function() {
 			var loopH = $(this).find(".img_loop:first-child").height() + $(this).find(".img_loop:nth-child(2)").height();
 			// compare to winH to get vh
 			var loopVH = "-" + (loopH / winH) * 100 + "vh";
-			console.log(loopH, winH, loopVH);
+			// console.log(loopH, winH, loopVH);
 			loopHs.push( loopVH );
 		});
 
@@ -37,7 +60,7 @@ $( document ).ready(function() {
 			var loopH = $(this).find(".img_loop:last-child").height() + $(this).find(".img_loop:nth-child(2)").height();
 			// compare to winH to get vh
 			var loopVH = "-" + (loopH / winH) * 100 + "vh";
-			console.log(loopH, winH, loopVH);
+			// console.log(loopH, winH, loopVH);
 			loopHs.push( loopVH );
 		});
 			
@@ -84,38 +107,42 @@ $( document ).ready(function() {
 
 	}
 
-	// RECEIPT
+/*****************************************************************************
+    
+	3. RECEIPT
 
-		// CENTRE RECEIPT
+*****************************************************************************/
 
-	function receiptInit () {
-		var rOffsetL = $("#receipt").offset().left;
-		$("#receipt").attr( "data-left", rOffsetL );
+	// 3.1 RECEIPT POSITIONING
 
-		receiptCentre();	
+	// function receiptInit () {
+	// 	var rOffsetL = $("#receipt").offset().left;
+	// 	$("#receipt").attr( "data-left", rOffsetL );
 
-		/* THIS NEEDS FIXING ON RESIZE */	
-	}
+	// 	receiptCentre();	
 
-	function receiptCentre ( scrollPos ) {
-		var scrollPos = $("html").attr("data-scroll");
-		var initL = parseFloat( $("#receipt").attr( "data-left" ) );
-		var calcL = ( $(window).width() - $("#receipt").width() ) / 2;
-		var diff = calcL - initL;
-		//console.log( "diff:", diff );
-		var perc;
-		if ( scrollPos ) {
-			perc = scrollPos / ( $(document).height() - $(window).height() );
-		} else {
-			perc = 0;
-		}
-		var shift = (perc - 0.5) * 2;
-		// console.log( "final shift:", 0 - shift * diff );
-		$("#receipt_wrapper").css("left", (0 - shift * diff) * 0.85 );
+	// 	/* THIS NEEDS FIXING ON RESIZE */	
+	// }
 
-	}
+	// function receiptCentre ( scrollPos ) {
+	// 	var scrollPos = $("html").attr("data-scroll");
+	// 	var initL = parseFloat( $("#receipt").attr( "data-left" ) );
+	// 	var calcL = ( $(window).width() - $("#receipt").width() ) / 2;
+	// 	var diff = calcL - initL;
+	// 	//console.log( "diff:", diff );
+	// 	var perc;
+	// 	if ( scrollPos ) {
+	// 		perc = scrollPos / ( $(document).height() - $(window).height() );
+	// 	} else {
+	// 		perc = 0;
+	// 	}
+	// 	var shift = (perc - 0.5) * 2;
+	// 	// console.log( "final shift:", 0 - shift * diff );
+	// 	$("#receipt_wrapper").css("left", (0 - shift * diff) * 0.85 );
 
-	// VITRINE TOGGLE
+	// }
+
+	// 3.2. VITRINE TOGGLE
 
 	$("a.click").on("click", function(e){
 		e.preventDefault();
@@ -143,7 +170,7 @@ $( document ).ready(function() {
 
 	});
 
-	// BACK TO TOP BUTTON
+	// 3.3. BACK TO TOP BUTTON
 
 	$(".back_to_top a").on("click", function(e){
 		e.preventDefault();
@@ -155,31 +182,63 @@ $( document ).ready(function() {
 		}, 500);
 	});
 
-	// INDEX CLICK
+	// 3.4. INDEX CLICK
 
-	$(".index_letter a").on("click", function(e){
+	// EXPAND THIS TO CATEGORIES
+
+	$(".index_menu a").on("click", function(e){
 		e.preventDefault();
-		// get clicked letter
-		var thisLetter = $(this).text();
-		$("#sub_index li").hide();
-		$("#" + thisLetter).show();
 
-		// underline clicked letter
-		$(".index_letter a").css("border-bottom","");
+		// empty results wrapper
+		var resultWrapper = $("#index_results");
+		resultWrapper.empty();
+	
+		if ( $(this).parents("#index_categories").length ) {
+			
+			var thisCat = $(this).text().toLowerCase();
+
+			// loop through LIs
+			$("#sub_index li").each( function(){
+				
+				if ( $(this).hasClass(thisCat) ) {
+					// append any results to result wrapper
+					$(this).clone().appendTo(resultWrapper);
+				}
+
+			});
+
+		} else {
+
+			// get clicked letter
+			var thisLetter = $(this).text();
+
+			// loop through LIs
+			$("#sub_index li").each( function(){
+				var initial = $(this).data("initial");
+				if ( initial === thisLetter ) {
+					// append any results to result wrapper
+					$(this).clone().appendTo(resultWrapper);
+				}
+			});
+
+		}
+
+		// underline clicked letter or cat
+		$(".index_menu a").css("border-bottom","");
 		$(this).css("border-bottom","1px solid black");
 
+		console.log( resultWrapper.height() );
+
 		// animate wrapper height
-		$("#sub_index").css("height", $("#" + thisLetter).height() );
+		$("#sub_index").css("height", resultWrapper.height() );
+
 	});
 
 	// INDEX ARTIST CLICK
 
-	// VITRINE TOGGLE
-
 	$(".index_artist span a").on("click", function(e){
 		e.preventDefault();
 
-		console.log("check");		
 
 		var target = $(this).parents("span").next(".index_artist_content");
 		if ( !target.hasClass("clicked") ) {
@@ -189,12 +248,6 @@ $( document ).ready(function() {
 			target.show().css({
 				"height" : "auto"
 			}, 1000).addClass("clicked");
-
-			// // scroll up
-			// var scrollTarget = $(this).offset().top - 60;
-			// $("html,body").animate({
-			// 	scrollTop: scrollTarget
-			// }, 500);
 
 		} else {
 			target.animate({
@@ -206,7 +259,11 @@ $( document ).ready(function() {
 
 	});
 
-	// WINDOW EVENTS
+/*****************************************************************************
+    
+	4. WINDOW EVENTS
+
+*****************************************************************************/
 
 	$(window).on("load", function(){
 		// receiptInit();

@@ -12,25 +12,24 @@
 	<div class="section_content">
 		
 		<!-- LETTERS -->
-		<?php
-		echo "<ul id='index_letters'>";
+		<ul id="index_letters" class="index_menu">
+			<?php
+			// Create a range of letters
+			$letters = range('A', 'Z');
+			// Loop through letters
+			foreach ( $letters as $letter ) {			
+				// Create individual LIs
+				echo "<li class='index_letter'><a href=''>" . $letter . "</a></li>";
+			} ?>
+		</ul>
 
-		// Create a range of letters
-		$letters = range('A', 'Z');
-		// Loop through letters
-		foreach ( $letters as $letter ) {
-			
-			// Create individual LIs
-			echo "<li class='index_letter'><a href=''>";
-
-			echo $letter;
-
-			echo "</a></li>";
-
-		}
-
-		echo "</ul>";
-		?>
+		<!-- CATEGORIES -->
+		<ul id="index_categories" class="index_menu">
+			<li><a href="">Art</a></li>
+			<li><a href="">Fashion</a></li>
+			<li><a href="">Design</a></li>
+			<div class="clear"></div>
+		</ul>
 
 		<!-- DIVs WITH CONTENT -->
 		<?php include("06_a_index.php"); ?>

@@ -297,9 +297,18 @@ section {
     text-transform: uppercase;
 }
 
+.index_menu li a {
+    border-bottom: 1px solid #fcfff3;
+    border-bottom: 1px solid transparent;
+}
+
+.index_menu li a:hover {
+    border-bottom: 1px solid black;
+}
+
 ul#index_letters {
     text-align: center;
-    margin-bottom: 48px;
+    margin-bottom: 24px;
 }
 
 ul#index_letters li {
@@ -307,6 +316,30 @@ ul#index_letters li {
     display: inline-block;
     margin: 0.2px;
     padding: 5px 6px 4px 6px;
+}
+
+ul#index_categories {
+    text-align: center;
+    margin-bottom: 48px;
+    position: relative;
+}
+
+ul#index_categories li {
+    display: inline-block;
+}
+
+ul#index_categories li:nth-child(1) {
+    float: left;
+}
+
+ul#index_categories li:nth-child(2) {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+ul#index_categories li:nth-child(3) {
+    float: right;
 }
 
 #sub_index {
@@ -320,13 +353,13 @@ ul#index_letters li {
     display: none;
 }
 
-.index_artist span {
+span.index_artist_title {
     display: block; 
     overflow: hidden; 
     white-space: nowrap;
 }
 
-.index_artist span:after {
+span.index_artist_title:after {
     content: ".............................................";
 }
 
@@ -338,5 +371,11 @@ ul#index_letters li {
     display: none;
 }
 
+#index_results {
 
+}
+
+#index_results li {
+    display: block;
+}
 

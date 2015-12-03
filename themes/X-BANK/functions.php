@@ -21,6 +21,7 @@ function create_post_types() {
             'name' => __( 'Index' )
         ),
         'public' => true,
+        'taxonomies' => array('category'),
         'has_archive' => true,
         'supports' => array('editor','title'),
         'menu_position' => 5
@@ -38,6 +39,16 @@ function create_post_types() {
     )
   );
 }
+
+// GET CATEGORIES FOR EACH ARTIST
+
+function print_categories() {       
+    if( get_field("index_categories").length ):
+        $categories = get_field_object("index_categories");
+        $values = $categories['value'];
+        return strtolower ( join(' ', $values) );
+    endif; 
+} 
 
 // INCLUDE BREAKS
 
