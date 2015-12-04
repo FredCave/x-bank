@@ -62,6 +62,10 @@ h1 {
     margin-bottom: 36px;
 }
 
+p {
+    text-align: justify;
+}
+
 .clear {
     clear: both;
 }
@@ -342,13 +346,13 @@ ul#index_categories li:nth-child(3) {
     float: right;
 }
 
-#sub_index {
+.sub_index {
     height: 0px;
     -webkit-transition: height 0.5s;
             transition: height 0.5s;
 }
 
-#sub_index li {
+.sub_index li {
     text-align: left;
     display: none;
 }
@@ -364,18 +368,35 @@ span.index_artist_title:after {
 }
 
 .index_artist_content {
-    border: 1px solid orange;
+    text-align: center;  
     height: 0px;
     -webkit-transition: height 0.5s;
             transition: height 0.5s;
     display: none;
 }
 
-#index_results {
+.index_results {
 
 }
 
-#index_results li {
+.index_results li {
     display: block;
 }
+
+.index_artist_image {
+
+}
+
+.index_artist_image img {
+    width: 60%;
+    margin: 24px auto 36px auto;
+    height: auto;   
+}
+
+.index_artist_bio {
+/*    border: 1px solid orange;*/
+
+    margin-bottom: 48px;
+}
+
 

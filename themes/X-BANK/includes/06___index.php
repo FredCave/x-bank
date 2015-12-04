@@ -32,7 +32,31 @@
 		</ul>
 
 		<!-- DIVs WITH CONTENT -->
-		<?php include("06_a_index.php"); ?>
+
+		<!-- SKETCH -->
+
+		<ul><!-- THIS NEEDS TO BE UNIQUE -->
+			SEARCH RESULT HERE:
+			<li>
+				ARTIST 1
+				<!-- BREAK -->
+				</li></ul></div><!-- end of .section_content --></section>
+				<div class="r_hole">
+					<div class="r_hole_l"></div>
+					<div class="r_hole_inset"></div>
+					<div class="r_hole_r"></div>
+				</div>
+				<section id="index_bottom"><div class="section_content"><ul><li>
+				<!-- END OF BREAK -->
+			</li>
+			<li>ARTIST 2</li>
+			<li>ARTIST 3</li>
+			<li>ARTIST 4</li>
+		</ul>
+
+		<!-- END OF SKETCH -->
+		
+		<?php /*include("06_a_index.php");*/ ?>
 
 	</div>
 

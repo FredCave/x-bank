@@ -7,6 +7,10 @@ $( document ).ready(function() {
 	2. BACKGROUND
 
 	3. RECEIPT
+		3.1. RECEIPT POSITION
+		3.2. VITRINE TOGGLE
+		3.3. BACK TO TOP BUTTON
+		3.4. INDEX CLICK
 
 	4. WINDOW EVENTS
 
@@ -51,7 +55,7 @@ $( document ).ready(function() {
 			loopHs.push( loopVH );
 		});
 
-		console.log(loopHs);
+		//console.log(loopHs);
 
 		// clone last UL for slide_down
 		$(".slide_down").each( function(index){
@@ -184,80 +188,78 @@ $( document ).ready(function() {
 
 	// 3.4. INDEX CLICK
 
-	// EXPAND THIS TO CATEGORIES
+	// CLICK ON LETTER OR CATEGORY
 
 	$(".index_menu a").on("click", function(e){
 		e.preventDefault();
-
 		// empty results wrapper
-		var resultWrapper = $("#index_results");
+		var resultWrapper = $(".index_results");
 		resultWrapper.empty();
-	
 		if ( $(this).parents("#index_categories").length ) {
-			
 			var thisCat = $(this).text().toLowerCase();
-
 			// loop through LIs
-			$("#sub_index li").each( function(){
-				
+			$(".sub_index li").each( function(){
 				if ( $(this).hasClass(thisCat) ) {
 					// append any results to result wrapper
 					$(this).clone().appendTo(resultWrapper);
 				}
-
 			});
-
 		} else {
-
 			// get clicked letter
 			var thisLetter = $(this).text();
-
 			// loop through LIs
-			$("#sub_index li").each( function(){
+			$(".sub_index li").each( function(){
 				var initial = $(this).data("initial");
 				if ( initial === thisLetter ) {
 					// append any results to result wrapper
 					$(this).clone().appendTo(resultWrapper);
 				}
 			});
-
 		}
-
 		// underline clicked letter or cat
 		$(".index_menu a").css("border-bottom","");
 		$(this).css("border-bottom","1px solid black");
-
-		console.log( resultWrapper.height() );
-
 		// animate wrapper height
-		$("#sub_index").css("height", resultWrapper.height() );
+		$(".sub_index").css("height", resultWrapper.height() );
+	});
+
+	// CLICK ON ARTIST NAME
+
+	$(".index_results").on("click", ".index_artist_title a", function(e){
+		e.preventDefault();
+		var target = $(this).parents("span").next(".index_artist_content");
+		var resultWrapper = $(".index_results");
+		if ( !target.hasClass("clicked") ) {
+			target.addClass("clicked").css("height","auto").show();
+		} else {
+			target.removeClass("clicked").css("height","0").hide();	
+			console.log( resultWrapper.height() );	
+		}
+		// animate wrapper height
+		$(".sub_index").css("height", resultWrapper.height() );
 
 	});
 
-	// INDEX ARTIST CLICK
+	// 3.5. ARTIST VITRINE TOGGLE
 
-	$(".index_artist span a").on("click", function(e){
+	$(".index_results").on("click", ".artist_vitrine_toggle", function(e){
+
 		e.preventDefault();
 
+		// $(this).parents(".index_artist_content").find(".hole_wrapper").append('</div></div></li></ul></div></section><div class="r_hole"><div class="r_hole_l"></div><div class="r_hole_inset"></div><div class="r_hole_r"></div></div><section><div><ul><li><div><div>');
 
-		var target = $(this).parents("span").next(".index_artist_content");
-		if ( !target.hasClass("clicked") ) {
-			
-			$(".index_artist_content").css("height","0").hide();
+		//$(this).parents(".index_artist_content").find(".hole_wrapper").append('</div>x<div>');
 
-			target.show().css({
-				"height" : "auto"
-			}, 1000).addClass("clicked");
-
-		} else {
-			target.animate({
-				"height" : 0
-			}, 1000).removeClass("clicked");			
-		}
-
-		$("#sub_index").css("height","auto");
 
 	});
+
+
+
+
+
+
+	// </div></div></li></ul></div></section><divclass="r_hole"><divclass="r_hole_l"></div><divclass="r_hole_inset"></div><divclass="r_hole_r"></div></div><section><div><ul><li><div><div>
+
 
 /*****************************************************************************
     

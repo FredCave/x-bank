@@ -1,6 +1,10 @@
-<ul id="sub_index">
+<ul class="sub_index">
 
-	<div id="index_results"></div>
+	<ul class="index_results">
+
+
+
+	</ul>
 	
 	<?php
 	$args = array(
@@ -21,8 +25,36 @@
 
 				<!-- REST OF CONTENT, VISIBLE WHEN EXPANDED -->
 				<div class="index_artist_content">
-					<!-- ARTIST IMAGE -->
-					<?php the_field("index_artist_bio"); ?>
+					
+					<div class="index_artist_image">
+						<a class="artist_vitrine_toggle" href=""><img src="<?php bloginfo( "template_url" ); ?>/img/BK.jpg" /></a>
+					</div>
+
+					<h1><a class="artist_vitrine_toggle" href=""><?php the_title(); ?></a></h1>
+
+					<!-- VITRINE CODE -->
+
+					</div></li></ul></ul></div></section>
+					<div class="r_hole">
+						<div class="r_hole_l"></div>
+						<div class="r_hole_inset"></div>
+						<div class="r_hole_r"></div>
+					</div>
+
+<section>
+	<div class="section_content">
+		<ul class="sub_index">
+			<ul class="index_results">
+			<li class="index_artist">
+				<div class="index_artist_content">
+
+					<!-- END OF VITRINE CODE -->
+
+					<div class="index_artist_bio">
+						<?php the_field("index_artist_bio"); ?>
+					</div>
+
+					<div class="clear"></div>
 				</div>
 
 			</li>
