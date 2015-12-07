@@ -39,6 +39,67 @@ $( document ).ready(function() {
 
 *****************************************************************************/
 
+	function imagesFadeIn () {
+		// check images have loaded
+		$(".wrapper").animate({
+			"opacity": "1"
+		}, 2000);
+	}
+
+	function imagesHtmlPrep( noCols ) {
+		// CREATE COLUMNS
+		var direction;
+		var ulHTML = "";
+		for ( i=0; i<noCols; i++ ) {
+			if ( i % 2 === 0 ) {
+				direction = "slide_up";
+			} else {
+				direction = "slide_down";
+			}
+			ulHTML += "<div class='movable_wrapper " + direction + "'>";
+			ulHTML += "<ul class='img_loop'></ul>";
+			ulHTML += "</div>";
+		}
+		// console.log(ulHTML);
+		$("#wrapper_1").html( ulHTML ).attr("data-col", noCols );
+	}
+
+	function imagesInject ( imgPerCol ) {
+		// get number of spaces to be filled
+		var spaces = $("#wrapper_1").attr("data-col") * imgPerCol;
+		var img = 0;
+		var col = 0;
+		for ( i=1; i < spaces; i++ ) {
+			img++;
+			if ( img === imgPerCol ) {
+				img = 0;
+				col++;
+				// new target where imgs will be injected
+			}
+			console.log(img, col);
+		}
+
+		// var i = 0; // image index
+		// var j = 0; // li index
+		// var target;
+		// $("#load_wrapper li").each( function(){		
+		// 	target = $("#wrapper_1").find("div.movable_wrapper").eq(j).find(".img_loop");
+		// 	console.log(imgPerCol, i, j);
+		// 	$(this).appendTo( target );
+		// 	if ( i === imgPerCol ) {	
+		// 		// reset index
+		// 		i = 0;
+		// 		j++;
+		// 	} else {
+		// 		i++;
+		// 	}
+		// });
+		// repeat images 
+
+
+
+	}
+
 	function imagesCalc () {
 
 		var winH = $(window).height();
@@ -54,8 +115,6 @@ $( document ).ready(function() {
 			// console.log(loopH, winH, loopVH);
 			loopHs.push( loopVH );
 		});
-
-		//console.log(loopHs);
 
 		// clone last UL for slide_down
 		$(".slide_down").each( function(index){
@@ -193,7 +252,7 @@ $( document ).ready(function() {
 	$(".index_menu a").on("click", function(e){
 		e.preventDefault();
 		// empty results wrapper
-		var resultWrapper = $(".index_results");
+		var resultWrapper = $("#index .index_results");
 		resultWrapper.empty();
 		if ( $(this).parents("#index_categories").length ) {
 			var thisCat = $(this).text().toLowerCase();
@@ -225,11 +284,10 @@ $( document ).ready(function() {
 
 	// CLICK ON ARTIST NAME
 
-	$(".index_results").on("click", ".index_artist_title a", function(e){
-		e.preventDefault();
-		var target = $(this).parents("span").next(".index_artist_content");
-		var resultWrapper = $(".index_results");
+	function artistInfoToggle ( target ) {
+		var resultWrapper = $("#index .index_results");
 		if ( !target.hasClass("clicked") ) {
+			$(".index_artist_content").removeClass("clicked").css("height","0").hide();
 			target.addClass("clicked").css("height","auto").show();
 		} else {
 			target.removeClass("clicked").css("height","0").hide();	
@@ -237,29 +295,76 @@ $( document ).ready(function() {
 		}
 		// animate wrapper height
 		$(".sub_index").css("height", resultWrapper.height() );
+		/*
+		ADD SCROLL TO 
+		*/
+	}
 
+	$(".index_results").on("click", ".index_artist_title a", function(e){
+		e.preventDefault();
+		var target = $(this).parents("span").next(".index_artist_content");
+		artistInfoToggle(target);
 	});
 
 	// 3.5. ARTIST VITRINE TOGGLE
 
-	$(".index_results").on("click", ".artist_vitrine_toggle", function(e){
+	function artistVitrineOpen ( thisArtist ) {
+		var winH = $(window).height();
+		var resultWrapper = $(".index_results");
+		var vitrine = $("#artist_vitrine");
+		// get all child elements of this .index_artist_content
+		var followingContent = thisArtist.parents(".index_artist_content").children();
+		// get all following elements in results
+		var following = thisArtist.parents(".index_artist").nextAll()
+		// clone rather than move
+		followingContent.hide().addClass("hidden");
+		following.hide().addClass("hidden");
+		var followingContentCopy = followingContent.clone();
+		var followingCopy = following.clone();
+		followingContentCopy.prependTo( $("#index_bis .section_content") ).show();
+		followingCopy.prependTo( $("#index_bis .index_results") ).show();		
+		// collapse sub_index
+			// pause transition
+		$(".sub_index").css({
+			"height": resultWrapper.height(),
+			"-webkit-transition": "height 0s",
+            "transition": "height 0s" 
+		});
+		// animate vitrine
+		vitrine.animate({
+			"height" : winH * 0.7
+		}, 1000).addClass("clicked");
+		// reset transition
+		$(".sub_index").css({
+			"-webkit-transition": "",
+            "transition": "" 
+		});
+	}
 
+	function artistVitrineClose () {
+		// close vitrine
+		var vitrine = $("#artist_vitrine");
+		vitrine.css("height", "0px").removeClass("clicked");
+		// reset hidden elements in #index
+		$(".hidden").show().removeClass("hidden");
+		// empty #index_bis	
+		$("#index_bis .index_results").empty().siblings().remove();	
+	}
+
+	$(".index").on("click", ".artist_vitrine_toggle", function(e){
 		e.preventDefault();
-
-		// $(this).parents(".index_artist_content").find(".hole_wrapper").append('</div></div></li></ul></div></section><div class="r_hole"><div class="r_hole_l"></div><div class="r_hole_inset"></div><div class="r_hole_r"></div></div><section><div><ul><li><div><div>');
-
-		//$(this).parents(".index_artist_content").find(".hole_wrapper").append('</div>x<div>');
-
-
+		var artist = $(this);
+		// animate vitrine
+		var target = $("#artist_vitrine");	
+		// if nothing is open
+		if ( !target.hasClass("clicked") ) {
+			artistVitrineOpen( artist );	
+		} else {
+			// reset
+			artistVitrineClose(); 
+			artistVitrineOpen( artist );				
+		}		
 	});
-
-
-
-
-
-
-	// </div></div></li></ul></div></section><divclass="r_hole"><divclass="r_hole_l"></div><divclass="r_hole_inset"></div><divclass="r_hole_r"></div></div><section><div><ul><li><div><div>
-
 
 /*****************************************************************************
     
@@ -268,8 +373,10 @@ $( document ).ready(function() {
 *****************************************************************************/
 
 	$(window).on("load", function(){
-		// receiptInit();
-		imagesCalc();
+		imagesFadeIn();
+		imagesHtmlPrep(4);
+		imagesInject(5);
+		//imagesCalc();
 	}).on("resize", function(){
 		// receiptInit();
 		imagesCalc();

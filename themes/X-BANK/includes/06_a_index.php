@@ -1,11 +1,5 @@
 <ul class="sub_index">
 
-	<ul class="index_results">
-
-
-
-	</ul>
-	
 	<?php
 	$args = array(
 		"post_type" => "index",
@@ -32,24 +26,6 @@
 
 					<h1><a class="artist_vitrine_toggle" href=""><?php the_title(); ?></a></h1>
 
-					<!-- VITRINE CODE -->
-
-					</div></li></ul></ul></div></section>
-					<div class="r_hole">
-						<div class="r_hole_l"></div>
-						<div class="r_hole_inset"></div>
-						<div class="r_hole_r"></div>
-					</div>
-
-<section>
-	<div class="section_content">
-		<ul class="sub_index">
-			<ul class="index_results">
-			<li class="index_artist">
-				<div class="index_artist_content">
-
-					<!-- END OF VITRINE CODE -->
-
 					<div class="index_artist_bio">
 						<?php the_field("index_artist_bio"); ?>
 					</div>
@@ -62,7 +38,11 @@
 		<?php	
 		endwhile;
 	endif;
-	wp_reset_postdata;
-?>
+	wp_reset_postdata; ?>
+
+	<ul class="index_results">
+		<!-- RESULTS GO HERE -->
+	</ul>
+	
 </ul><!-- END OF #SUB_INDEX -->
 

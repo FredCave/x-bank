@@ -86,6 +86,7 @@ p {
     left: 0;
     top: 0%;
     position: fixed;
+    opacity: 0;
 }
 
 #wrapper_1 {
@@ -167,7 +168,7 @@ p {
 } 
 
 .wrapper img {
-    width: 67%;
+    width: 75%;
     position: relative;
     margin: 0 auto;
     -webkit-box-shadow: 18px 18px 23px 0px rgba(0,0,0,0.35);
@@ -301,6 +302,10 @@ section {
     text-transform: uppercase;
 }
 
+#index .index_results {
+
+}
+
 .index_menu li a {
     border-bottom: 1px solid #fcfff3;
     border-bottom: 1px solid transparent;
@@ -369,9 +374,9 @@ span.index_artist_title:after {
 
 .index_artist_content {
     text-align: center;  
-    height: 0px;
     -webkit-transition: height 0.5s;
             transition: height 0.5s;
+    height: 0px;
     display: none;
 }
 

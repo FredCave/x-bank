@@ -1,4 +1,4 @@
-<section id="index">
+<section id="index" class="index">
 
 	<!-- SECTION HEADER -->
 
@@ -32,32 +32,35 @@
 		</ul>
 
 		<!-- DIVs WITH CONTENT -->
-
-		<!-- SKETCH -->
-
-		<ul><!-- THIS NEEDS TO BE UNIQUE -->
-			SEARCH RESULT HERE:
-			<li>
-				ARTIST 1
-				<!-- BREAK -->
-				</li></ul></div><!-- end of .section_content --></section>
-				<div class="r_hole">
-					<div class="r_hole_l"></div>
-					<div class="r_hole_inset"></div>
-					<div class="r_hole_r"></div>
-				</div>
-				<section id="index_bottom"><div class="section_content"><ul><li>
-				<!-- END OF BREAK -->
-			</li>
-			<li>ARTIST 2</li>
-			<li>ARTIST 3</li>
-			<li>ARTIST 4</li>
-		</ul>
-
-		<!-- END OF SKETCH -->
 		
-		<?php /*include("06_a_index.php");*/ ?>
+		<?php include("06_a_index.php"); ?>
 
 	</div>
 
 </section>
+
+<!-- HOLE GOES HERE -->
+
+<div id="artist_vitrine" class="r_hole">
+	<div class="r_hole_l"></div>
+	<div class="r_hole_inset"></div>
+	<div class="r_hole_r"></div>
+</div>
+
+<section id="index_bis" class="index">
+
+	<div class="section_content">
+
+		<!-- APPENDED GOES HERE -->
+
+		<ul class="index_results"></ul>
+
+	</div>
+
+</section>
+
+
+
+
+
+

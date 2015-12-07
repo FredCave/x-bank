@@ -1,11 +1,9 @@
 <?php
 
-function x_images() {
+// get IDs of any media posts to be excluded — only logos for the time being
+function x_images_exclude( $type ) {
 
-	/* NEED TO FIND A WAY TO MAKE THIS GLOBAL */
-
-	// get IDs of any logo posts
-	$the_query = new WP_Query( array("post_type" => "x-logos") );
+	$the_query = new WP_Query( array("post_type" => $type) );
 	if ( $the_query->have_posts() ) { 
 		while ( $the_query->have_posts() ) : $the_query->the_post();
 			if ( get_field('logos') ) {
@@ -20,46 +18,70 @@ function x_images() {
 		endwhile;
 	} 
 	wp_reset_postdata;
+	return $logo_ids;
+}
 
-	// start main loop through media, excluding logo IDs
+function x_get_attachments( $noPosts ) {
+	
+	/* THIS RETURNS AN ARRAY OF ALL THE AVAILABLE IMAGES */
 
 	$args = array(
 	    'post_type' => 'attachment',
-	    'numberposts' => 3,
+	    'numberposts' => $noPosts,
 	    'orderby' => 'rand',
-	    'post__not_in' => $logo_ids
+	    'post__not_in' => x_images_exclude( x-logos )
 	    ); 
-	// returns list of all attachments
-	$attachments = get_posts($args);
+	return get_posts($args);
+}
+
+function x_image_object( $img_id ) {
+    $width = wp_get_attachment_image_src( $img_id )[1];
+    $height = wp_get_attachment_image_src( $img_id )[2];
+    $thumb = wp_get_attachment_image_src( $img_id, "thumbnail" )[0];
+    $medium = wp_get_attachment_image_src( $img_id, "medium" )[0];
+    $large = wp_get_attachment_image_src( $img_id, "large" )[0];
+    $full = wp_get_attachment_image_src( $img_id, "full" )[0];
+
+    $class = "landscape"; 
+    if ( $width < $height ) {
+        $class = "portrait";
+        $thumb = wp_get_attachment_image_src( $img_id, "medium" )[0];
+        $medium = wp_get_attachment_image_src( $img_id, "large" )[0];
+        $large = wp_get_attachment_image_src( $img_id, "full" )[0];
+    }
+
+    echo "<li>" . "<img class='" . $i . "' src='". $medium ."' />" . $i . "</li>";	
+}
+
+function x_images( $noPosts ) {
+	
+	$attachments = x_get_attachments( $noPosts );
+	echo "<ul class='img_loop'>";
+
 	if ($attachments) {
-	    
-	    foreach ($attachments as $attachment) {
-			
-	        $img_id = $attachment->ID;		
-	        $width = wp_get_attachment_image_src( $img_id )[1];
-	        $height = wp_get_attachment_image_src( $img_id )[2];
-	        $thumb = wp_get_attachment_image_src( $img_id, "thumbnail" )[0];
-	        $medium = wp_get_attachment_image_src( $img_id, "medium" )[0];
-	        $large = wp_get_attachment_image_src( $img_id, "large" )[0];
-	        $full = wp_get_attachment_image_src( $img_id, "full" )[0];
-
-	        $class = "landscape"; 
-	        if ( $width < $height ) {
-	            $class = "portrait";
-	            $thumb = wp_get_attachment_image_src( $img_id, "medium" )[0];
-		        $medium = wp_get_attachment_image_src( $img_id, "large" )[0];
-		        $large = wp_get_attachment_image_src( $img_id, "full" )[0];
-	        }
-
-	        echo "<li>" . "<img src='". $medium ."' />" . "</li>";
-
-	    }
+		// loop through array
+		$i = 1;
+		foreach ($attachments as $attachment) {
+			if ( $i === $noPosts ) {
+	        	break 1;
+	        } else {
+	        	$img_id = $attachment->ID;
+				x_image_object( $img_id );
+	        	$i++;	
+	        }	
+		}
 	}
-
-} // end of function
+	echo "</ul>";
+}
 
 ?>
 
+<div id="load_wrapper" class="hide">
+	<!-- IMAGES INITIALLY LOADED HERE -->
+	<?php x_images( 12 ); ?>
+	<!-- HTML DONE IN JQUERY -->
+
+</div>
 
 <!-- COLUMN 1 -->
 
@@ -67,14 +89,16 @@ function x_images() {
 
 	<!-- HOW TO LOAD AJAX?? -->
 
-	<div class="movable_wrapper slide_up loop_1">
+
+
+	<?php /* <div class="movable_wrapper slide_up loop_1">
 
 		<ul class="img_loop">
-			<?php x_images(); ?>
+			<?php x_images(3); ?>
 		</ul>
 
 		<ul class="img_loop">
-			<?php x_images(); ?>
+			<?php x_images(3); ?>
 		</ul>
 
 		<ul class="img_loop">
@@ -90,11 +114,11 @@ function x_images() {
 		</ul>
 
 		<ul class="img_loop">
-			<?php x_images(); ?>
+			<?php x_images(3); ?>
 		</ul>
 
 		<ul class="img_loop">
-			<?php x_images(); ?>
+			<?php x_images(3); ?>
 		</ul>
 
 	</div>
@@ -102,11 +126,11 @@ function x_images() {
 	<div class="movable_wrapper slide_up loop_3">
 
 		<ul class="img_loop">
-			<?php x_images(); ?>
+			<?php x_images(3); ?>
 		</ul>
 
 		<ul class="img_loop">
-			<?php x_images(); ?>
+			<?php x_images(3); ?>
 		</ul>
 
 		<ul class="img_loop">
@@ -122,14 +146,14 @@ function x_images() {
 		</ul>
 
 		<ul class="img_loop">
-			<?php x_images(); ?>
+			<?php x_images(3); ?>
 		</ul>
 
 		<ul class="img_loop">
-			<?php x_images(); ?>
+			<?php x_images(3); ?>
 		</ul>
 
-	</div>
+	</div> */ ?>
 
 </div>
 
