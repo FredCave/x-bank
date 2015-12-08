@@ -15,7 +15,14 @@
 			<li class="index_artist <?php echo print_categories(); ?>" data-initial="<?php echo $initial[0]; ?>">
 				
 				<!-- TITLE, VISIBLE IN LIST -->
-				<span class="index_artist_title"><a href=""><?php the_title(); ?></a></span>
+				<div class="index_artist_title">
+					<a href="">
+						<span class="index_artist_name"><?php the_title(); ?> * * * * * </span>
+
+						<span class="index_artist_dates">01/01/2001 - 03/05/2005</span>
+						<div class="clear"></div>
+					</a>
+				</div>
 
 				<!-- REST OF CONTENT, VISIBLE WHEN EXPANDED -->
 				<div class="index_artist_content">

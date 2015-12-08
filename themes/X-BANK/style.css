@@ -114,29 +114,30 @@ p {
     position: absolute;     
 }
 
-.loop_1 {
-    -webkit-animation: slideshow_up_1 18s linear infinite;
-       -moz-animation: slideshow_up_1 18s linear infinite; 
-            animation: slideshow_up_1 18s linear infinite;       
+/*
+.col_1 {
+    -webkit-animation: loop_1 18s linear infinite;
+       -moz-animation: loop_1 18s linear infinite; 
+            animation: loop_1 18s linear infinite;       
 }
 
-.loop_2 {
-    -webkit-animation: slideshow_down_1 18s linear infinite;
-       -moz-animation: slideshow_down_1 18s linear infinite; 
-            animation: slideshow_down_1 18s linear infinite;       
+.col_2 {
+    -webkit-animation: loop_2 18s linear infinite;
+       -moz-animation: loop_2 18s linear infinite; 
+            animation: loop_2 18s linear infinite;       
 }
 
-.loop_3 {
-    -webkit-animation: slideshow_up_2 18s linear infinite;
-       -moz-animation: slideshow_up_2 18s linear infinite; 
-            animation: slideshow_up_2 18s linear infinite;       
+.col_3 {
+    -webkit-animation: loop_3 18s linear infinite;
+       -moz-animation: loop_3 18s linear infinite; 
+            animation: loop_3 18s linear infinite;       
 }
 
-.loop_4 {
-    -webkit-animation: slideshow_down_2 18s linear infinite;
-       -moz-animation: slideshow_down_2 18s linear infinite; 
-            animation: slideshow_down_2 18s linear infinite;       
-}
+.col_4 {
+/*    -webkit-animation: loop_4 18s linear infinite;
+       -moz-animation: loop_4 18s linear infinite; 
+            animation: loop_4 18s linear infinite;       
+}*/
 
 .movable_wrapper:nth-child(0) {
     left: 0;  
@@ -362,14 +363,25 @@ ul#index_categories li:nth-child(3) {
     display: none;
 }
 
-span.index_artist_title {
+div.index_artist_title {
+    border: 1px solid yellow;
     display: block; 
-    overflow: hidden; 
-    white-space: nowrap;
+    position: relative;
+/*    overflow: hidden; 
+    white-space: nowrap;*/
 }
 
-span.index_artist_title:after {
-    content: ".............................................";
+div.index_artist_title:after {
+/*    content: ".............................................";
+*/}
+
+span.index_artist_name {
+    position: ab;
+    float: left;
+}
+
+span.index_artist_dates {
+    float: right;
 }
 
 .index_artist_content {

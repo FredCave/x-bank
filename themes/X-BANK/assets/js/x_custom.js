@@ -50,14 +50,16 @@ $( document ).ready(function() {
 		// CREATE COLUMNS
 		var direction;
 		var ulHTML = "";
+		var j;
 		for ( i=0; i<noCols; i++ ) {
 			if ( i % 2 === 0 ) {
 				direction = "slide_up";
 			} else {
 				direction = "slide_down";
 			}
-			ulHTML += "<div class='movable_wrapper " + direction + "'>";
-			ulHTML += "<ul class='img_loop'></ul>";
+			j = i + 1;
+			ulHTML += "<div class='movable_wrapper " + direction + " col_" + j +"'>";
+			ulHTML += "<ul class='img_loop'></ul><ul class='img_loop'></ul>";
 			ulHTML += "</div>";
 		}
 		// console.log(ulHTML);
@@ -67,69 +69,46 @@ $( document ).ready(function() {
 	function imagesInject ( imgPerCol ) {
 		// get number of spaces to be filled
 		var spaces = $("#wrapper_1").attr("data-col") * imgPerCol;
+		// spaces
+		var col = 0; // col corresponds to eq of target element		
 		var img = 0;
-		var col = 0;
-		for ( i=1; i < spaces; i++ ) {
-			img++;
+		var sourceIndex = 0; // corresponds to image index in #load_wrapper
+		var source;
+		for ( i=0; i < spaces; i++ ) {			
 			if ( img === imgPerCol ) {
 				img = 0;
 				col++;
-				// new target where imgs will be injected
 			}
-			console.log(img, col);
-		}
-
-		// var i = 0; // image index
-		// var j = 0; // li index
-		// var target;
-		// $("#load_wrapper li").each( function(){		
-		// 	target = $("#wrapper_1").find("div.movable_wrapper").eq(j).find(".img_loop");
-		// 	console.log(imgPerCol, i, j);
-		// 	$(this).appendTo( target );
-		// 	if ( i === imgPerCol ) {	
-		// 		// reset index
-		// 		i = 0;
-		// 		j++;
-		// 	} else {
-		// 		i++;
-		// 	}
-		// });
-		// repeat images 
-
-
-
+			// Get image
+			source = $("#load_wrapper ul li").eq(sourceIndex);
+			// If no more images, start from beginning 
+			if ( !source.length ) {
+				sourceIndex = 0;
+				source = $("#load_wrapper ul li").eq(sourceIndex);
+			} 				
+			source.clone().appendTo( $("#wrapper_1 .movable_wrapper").eq( col ).find("ul") );
+			img++;
+			sourceIndex++;
+		} // end of for loop
 	}
 
-	function imagesCalc () {
-
+	function imagesAnim () {
+		// 2 ULs per column
 		var winH = $(window).height();
 		var loopHs = [];
-
-		// clone first UL for slide_up
-		$(".slide_up").each( function(index){
-			$(this).find(".img_loop:last-child").html( $(this).find(".img_loop:first-child").html() );
-			// get height of ULs 1 + 2 (in px)
-			var loopH = $(this).find(".img_loop:first-child").height() + $(this).find(".img_loop:nth-child(2)").height();
+		$(".movable_wrapper").each( function(){
+			// get UL height in px
+			var loopH =  $(this).find("ul").height();
 			// compare to winH to get vh
 			var loopVH = "-" + (loopH / winH) * 100 + "vh";
-			// console.log(loopH, winH, loopVH);
-			loopHs.push( loopVH );
+			loopHs.push(loopVH);
 		});
+		
+		/* Define animations dynamically?? */
 
-		// clone last UL for slide_down
-		$(".slide_down").each( function(index){
-			$(this).find(".img_loop:first-child").html( $(this).find(".img_loop:last-child").html() );
-			// get height of ULs 3 + 2 (in px)
-			var loopH = $(this).find(".img_loop:last-child").height() + $(this).find(".img_loop:nth-child(2)").height();
-			// compare to winH to get vh
-			var loopVH = "-" + (loopH / winH) * 100 + "vh";
-			// console.log(loopH, winH, loopVH);
-			loopHs.push( loopVH );
-		});
-			
 		// define animations
 		$.keyframe.define({
-		    name: 'slideshow_up_1',
+		    name: 'loop_1',
 		    from: {
 		        'transform': 'translateY(0vh)'
 		    },
@@ -139,9 +118,9 @@ $( document ).ready(function() {
 		});
 
 		$.keyframe.define({
-		    name: 'slideshow_down_1',
+		    name: 'loop_2',
 		    from: {
-		        'transform': 'translateY(' + loopHs[2] + ')' 
+		        'transform': 'translateY(' + loopHs[1] + ')' 
 		    },
 		    to: {
 		        'transform': 'translateY(0vh)'
@@ -149,17 +128,17 @@ $( document ).ready(function() {
 		});	
 
 		$.keyframe.define({
-		    name: 'slideshow_up_2',
+		    name: 'loop_3',
 		    from: {
 		        'transform': 'translateY(0vh)'
 		    },
 		    to: {
-		        'transform': 'translateY(' + loopHs[1] + ')' 
+		        'transform': 'translateY(' + loopHs[2] + ')' 
 		    }
 		});
 
 		$.keyframe.define({
-		    name: 'slideshow_down_2',
+		    name: 'loop_4',
 		    from: {
 		        'transform': 'translateY(' + loopHs[3] + ')' 
 		    },
@@ -167,6 +146,17 @@ $( document ).ready(function() {
 		        'transform': 'translateY(0vh)'
 		    }
 		});	
+
+		// Play animations
+
+		$(".movable_wrapper").each( function(i){
+			$(this).playKeyframe({
+			    name: 'loop_' + ( i + 1 ), 
+			    duration: '18s', 
+			    timingFunction: 'linear', 
+			    iterationCount: 'infinite' 
+			});			
+		});
 
 	}
 
@@ -205,7 +195,22 @@ $( document ).ready(function() {
 
 	// }
 
-	// 3.2. VITRINE TOGGLE
+	// 3.2. RECEIPT CONTENT INIT
+
+	function dotConnect ( selector ) {
+		$( selector ).each( function(){
+			var nameL = $(this).find("span.index_artist_name").text().length;
+			var dateL = $(this).find("span.index_artist_dates").text().length;
+			console.log(nameL, dateL);
+
+			// is there a way to find available space??
+
+		});
+	}
+
+	dotConnect ( $(".index_artist_title") );
+
+	// 3.3. VITRINE TOGGLE
 
 	$("a.click").on("click", function(e){
 		e.preventDefault();
@@ -233,7 +238,7 @@ $( document ).ready(function() {
 
 	});
 
-	// 3.3. BACK TO TOP BUTTON
+	// 3.4. BACK TO TOP BUTTON
 
 	$(".back_to_top a").on("click", function(e){
 		e.preventDefault();
@@ -245,7 +250,7 @@ $( document ).ready(function() {
 		}, 500);
 	});
 
-	// 3.4. INDEX CLICK
+	// 3.5. INDEX CLICK
 
 	// CLICK ON LETTER OR CATEGORY
 
@@ -282,7 +287,7 @@ $( document ).ready(function() {
 		$(".sub_index").css("height", resultWrapper.height() );
 	});
 
-	// CLICK ON ARTIST NAME
+	// 3.6. CLICK ON ARTIST NAME
 
 	function artistInfoToggle ( target ) {
 		var resultWrapper = $("#index .index_results");
@@ -306,7 +311,7 @@ $( document ).ready(function() {
 		artistInfoToggle(target);
 	});
 
-	// 3.5. ARTIST VITRINE TOGGLE
+	// 3.7. ARTIST VITRINE TOGGLE
 
 	function artistVitrineOpen ( thisArtist ) {
 		var winH = $(window).height();
@@ -376,10 +381,10 @@ $( document ).ready(function() {
 		imagesFadeIn();
 		imagesHtmlPrep(4);
 		imagesInject(5);
-		//imagesCalc();
+		imagesAnim();
 	}).on("resize", function(){
 		// receiptInit();
-		imagesCalc();
+		// imagesCalc();
 	}).on("scroll", function(){
 		$("html").attr("data-scroll", $(window).scrollTop() );
 		// receiptCentre();
