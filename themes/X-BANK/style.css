@@ -8,6 +8,19 @@ Author URI:		http://www.fredcave.com
     display: none !important;
 }
 
+#test_button {
+    -webkit-box-shadow: 18px 18px 23px 0px rgba(0,0,0,0.35);
+    -moz-box-shadow: 18px 18px 23px 0px rgba(0,0,0,0.35);
+    box-shadow: 18px 18px 23px 0px rgba(0,0,0,0.35);
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    left: calc(50% - 40px);
+    width: 80px;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
 /************************************************
     CSS RESET
 ************************************************/
@@ -28,6 +41,8 @@ html, body {
     top: 0;
     font-family: "Prestige Elite Std", "Courier New", Courier, monospace;
     font-size: 1.1em;
+    text-rendering: optimizeLegibility;
+    -webkit-text-stroke: 0.5px black;
     line-height: 1.4;
     letter-spacing: 0.1em;
     overflow-x: hidden;
@@ -84,6 +99,8 @@ p {
     width: 100%;
     height: 100vh;
     left: 0;
+    transition: left 1s;
+    -webkit-transition: left 1s;
     top: 0%;
     position: fixed;
     opacity: 0;
@@ -95,6 +112,10 @@ p {
 
 #wrapper_2 {
     left: 100%;
+}
+
+.container {
+    height: 100%;
 }
 
 .wrapper ul {
@@ -114,31 +135,6 @@ p {
     position: absolute;     
 }
 
-/*
-.col_1 {
-    -webkit-animation: loop_1 18s linear infinite;
-       -moz-animation: loop_1 18s linear infinite; 
-            animation: loop_1 18s linear infinite;       
-}
-
-.col_2 {
-    -webkit-animation: loop_2 18s linear infinite;
-       -moz-animation: loop_2 18s linear infinite; 
-            animation: loop_2 18s linear infinite;       
-}
-
-.col_3 {
-    -webkit-animation: loop_3 18s linear infinite;
-       -moz-animation: loop_3 18s linear infinite; 
-            animation: loop_3 18s linear infinite;       
-}
-
-.col_4 {
-/*    -webkit-animation: loop_4 18s linear infinite;
-       -moz-animation: loop_4 18s linear infinite; 
-            animation: loop_4 18s linear infinite;       
-}*/
-
 .movable_wrapper:nth-child(0) {
     left: 0;  
 }
@@ -153,6 +149,18 @@ p {
 
 .movable_wrapper:nth-child(3) {
     left: 75%;  
+}
+
+.container_2 .movable_wrapper {
+    width: 50%;  
+}
+
+.container_2 .movable_wrapper:nth-child(1) {
+    left: 0;  
+}
+
+.container_2 .movable_wrapper:nth-child(2) {
+    left: 50%;  
 }
 
 .wrapper li {

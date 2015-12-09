@@ -12,7 +12,7 @@
 			<?php 
 			$initial = get_the_title();
 			?>
-			<li class="index_artist <?php echo print_categories(); ?>" data-initial="<?php echo $initial[0]; ?>">
+			<li id="<?php the_ID(); ?>" class="index_artist <?php echo print_categories(); ?>" data-initial="<?php echo $initial[0]; ?>">
 				
 				<!-- TITLE, VISIBLE IN LIST -->
 				<div class="index_artist_title">

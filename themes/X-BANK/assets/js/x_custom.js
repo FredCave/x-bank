@@ -39,14 +39,20 @@ $( document ).ready(function() {
 
 *****************************************************************************/
 
-	function imagesFadeIn () {
-		// check images have loaded
-		$(".wrapper").animate({
+	function imagesFadeIn ( postId ) {
+		// if no postId then use initial container
+		var target;
+		if ( !postId ) {
+			target = $("#wrapper_1");
+		} else {
+			target = $( "#" + postId ).parents(".wrapper");
+		}
+		target.animate({
 			"opacity": "1"
-		}, 2000);
+		}, 2000);	
 	}
 
-	function imagesHtmlPrep( noCols ) {
+	function imagesHtmlPrep( noCols, moment ) { // moment = post id
 		// CREATE COLUMNS
 		var direction;
 		var ulHTML = "";
@@ -57,18 +63,37 @@ $( document ).ready(function() {
 			} else {
 				direction = "slide_down";
 			}
-			j = i + 1;
+			j = i + 1;	
 			ulHTML += "<div class='movable_wrapper " + direction + " col_" + j +"'>";
 			ulHTML += "<ul class='img_loop'></ul><ul class='img_loop'></ul>";
 			ulHTML += "</div>";
+		}	
+		// destination wrapper
+		if ( moment === "init" ) {
+			$("#init_container").prepend( ulHTML ).attr("data-col", noCols );	
+		} else {
+			// create new wrapper
+			var newWrapper = $( document.createElement('div') );
+			// add load_wrapper for subsequent containers
+			ulHTML += "<ul class='load_wrapper hide'></ul>";
+			newWrapper.attr( "id", moment ).attr("data-col", noCols ).html( ulHTML );
+			// add classes depending on no. of cols
+			newWrapper.addClass("container container_" + noCols);
+			// append to wrapper
+			newWrapper.appendTo( $(".toLoad") );
 		}
-		// console.log(ulHTML);
-		$("#wrapper_1").html( ulHTML ).attr("data-col", noCols );
 	}
 
-	function imagesInject ( imgPerCol ) {
+	function imagesInject ( imgPerCol, postId ) {
 		// get number of spaces to be filled
-		var spaces = $("#wrapper_1").attr("data-col") * imgPerCol;
+		// + need to know which container is being injected
+		var target;
+		if ( postId === "init" ) {
+			target = $("#init_container");
+		} else {
+			target = $("#" + postId);			
+		}
+		var spaces = target.attr("data-col") * imgPerCol;
 		// spaces
 		var col = 0; // col corresponds to eq of target element		
 		var img = 0;
@@ -80,23 +105,29 @@ $( document ).ready(function() {
 				col++;
 			}
 			// Get image
-			source = $("#load_wrapper ul li").eq(sourceIndex);
+			source = target.find(".load_wrapper ul li").eq(sourceIndex);
 			// If no more images, start from beginning 
 			if ( !source.length ) {
 				sourceIndex = 0;
-				source = $("#load_wrapper ul li").eq(sourceIndex);
+				source = target.find(".load_wrapper ul li").eq(sourceIndex);
 			} 				
-			source.clone().appendTo( $("#wrapper_1 .movable_wrapper").eq( col ).find("ul") );
+			source.clone().appendTo( target.find(".movable_wrapper").eq( col ).find("ul") );
 			img++;
 			sourceIndex++;
 		} // end of for loop
 	}
 
-	function imagesAnim () {
+	function imagesAnim ( postId ) {
 		// 2 ULs per column
 		var winH = $(window).height();
 		var loopHs = [];
-		$(".movable_wrapper").each( function(){
+		var target;
+		if ( postId === "init" ) {
+			target = "init_container";
+		} else {
+			target = postId;
+		}
+		$("#" + target).find(".movable_wrapper").each( function(){
 			// get UL height in px
 			var loopH =  $(this).find("ul").height();
 			// compare to winH to get vh
@@ -104,7 +135,11 @@ $( document ).ready(function() {
 			loopHs.push(loopVH);
 		});
 		
-		/* Define animations dynamically?? */
+		/* 
+
+		Define animations dynamically?? 
+
+		*/
 
 		// define animations
 		$.keyframe.define({
@@ -149,7 +184,7 @@ $( document ).ready(function() {
 
 		// Play animations
 
-		$(".movable_wrapper").each( function(i){
+		$("#" + target).find(".movable_wrapper").each( function(i){
 			$(this).playKeyframe({
 			    name: 'loop_' + ( i + 1 ), 
 			    duration: '18s', 
@@ -159,6 +194,73 @@ $( document ).ready(function() {
 		});
 
 	}
+
+	function wrapperAnim () {
+		/*
+
+		Is there a way to simplify this ??
+
+		*/
+		// check where wrapper_1 is
+		if ( parseInt ( $("#wrapper_1").css("left") ) === 0 ) {
+			// Move wrappers
+			$("#wrapper_1").css("left", "-100%").delay(1000).css("opacity","0");
+			$("#wrapper_2").css("left", "0%");
+			// Declare which wrapper can be loaded in
+			$(".toLoad").removeClass("toLoad");
+			$("#wrapper_2").addClass("toLoad");
+		} else {
+			// Move wrappers
+			$("#wrapper_2").css("left", "100%").delay(1000).css("opacity","0");
+			$("#wrapper_1").css("left", "0%");
+			// Declare which wrapper can be loaded in
+			$(".toLoad").removeClass("toLoad");
+			$("#wrapper_1").addClass("toLoad");						
+		}
+	}
+
+	function imagesInit () {
+		imagesHtmlPrep( 4, "init" ); // no. of columns // initial load
+		imagesInject( 5, "init" ); // no. of imgs/col
+		imagesAnim( "init" );
+		imagesFadeIn();
+	}
+
+	$("#test_button").on("click", function(){
+		// animate wrappers
+		wrapperAnim();
+		// get ID of post to load
+		var postId = $(this).children().attr("id"); // temporary path — needs changing
+		// prepare html
+		imagesHtmlPrep( 2, postId );
+		// ajax call — append to load wrapper with id
+		$.get("?p=" + postId, function (response) {
+            $( "#" + postId ).find(".load_wrapper").html( response );                   
+        }).done(function () {           
+	        console.log("done");
+	        // Inject images
+	        imagesInject( 4, postId );
+	        imagesAnim( postId );
+	        $("#" + postId).onImagesLoad( function( $selector ){
+				//note: this == $selector, both of which will be $("body") in this example
+				imagesFadeIn( postId );
+			});
+			
+	        /*
+				Check if images have loaded
+				then fade in
+			*/
+	        // update url  
+	        // window.history.pushState("", "", sectionName);  
+        }); 
+	});
+
+	/* TEST */
+
+	// $('body').onImagesLoad( function( $selector ){
+	// 	//note: this == $selector, both of which will be $("body") in this example
+	// 	alert();
+	// });
 
 /*****************************************************************************
     
@@ -378,10 +480,9 @@ $( document ).ready(function() {
 *****************************************************************************/
 
 	$(window).on("load", function(){
-		imagesFadeIn();
-		imagesHtmlPrep(4);
-		imagesInject(5);
-		imagesAnim();
+		
+		imagesInit();
+
 	}).on("resize", function(){
 		// receiptInit();
 		// imagesCalc();
