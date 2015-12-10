@@ -8,19 +8,6 @@ Author URI:		http://www.fredcave.com
     display: none !important;
 }
 
-#test_button {
-    -webkit-box-shadow: 18px 18px 23px 0px rgba(0,0,0,0.35);
-    -moz-box-shadow: 18px 18px 23px 0px rgba(0,0,0,0.35);
-    box-shadow: 18px 18px 23px 0px rgba(0,0,0,0.35);
-    position: fixed;
-    top: 50%;
-    transform: translateY(-50%);
-    left: calc(50% - 40px);
-    width: 80px;
-    padding: 8px 12px;
-    cursor: pointer;
-}
-
 /************************************************
     CSS RESET
 ************************************************/
@@ -42,7 +29,7 @@ html, body {
     font-family: "Prestige Elite Std", "Courier New", Courier, monospace;
     font-size: 1.1em;
     text-rendering: optimizeLegibility;
-    -webkit-text-stroke: 0.5px black;
+    /*-webkit-text-stroke: 0.5px black;*/
     line-height: 1.4;
     letter-spacing: 0.1em;
     overflow-x: hidden;
@@ -87,6 +74,11 @@ p {
 
 .hide {
     display: none;
+}
+
+.asterisks {
+    letter-spacing: 0.2em;
+    line-height: 1.6em;
 }
 
 /************************************************
@@ -199,7 +191,7 @@ p {
 
 #receipt {
     position: relative;
-    margin: 0 auto;
+    margin: 120px auto 120px auto;
     z-index: 99;
     width: 800px;
     height: auto;
@@ -273,6 +265,8 @@ section {
 .r_hole {
     height: 0px;
     position: relative;
+    -webkit-transition: height 1s ease-in-out;
+            transition: height 1s ease-in-out;  
 }
 
 .r_hole_l, .r_hole_r {
@@ -362,8 +356,8 @@ ul#index_categories li:nth-child(3) {
 
 .sub_index {
     height: 0px;
-    -webkit-transition: height 0.5s;
-            transition: height 0.5s;
+    -webkit-transition: height 0.5s ease-in-out;
+            transition: height 0.5s ease-in-out;
 }
 
 .sub_index li {
@@ -371,41 +365,36 @@ ul#index_categories li:nth-child(3) {
     display: none;
 }
 
-div.index_artist_title {
-    border: 1px solid yellow;
+.index_results li {
+    display: block;
+}
+
+.index_artist {
+
+}
+
+.index_artist_title {
+/*    border: 1px solid gray;*/
     display: block; 
     position: relative;
-/*    overflow: hidden; 
-    white-space: nowrap;*/
+    text-align: center;
+    width: 100%;
 }
 
-div.index_artist_title:after {
-/*    content: ".............................................";
-*/}
-
-span.index_artist_name {
-    position: ab;
-    float: left;
-}
-
-span.index_artist_dates {
-    float: right;
+.index_artist_title p {
+/*    display: inline-block;
+    width: 100%;*/
+    letter-spacing: 0;
+    white-space: nowrap;
+    text-align: center;
 }
 
 .index_artist_content {
     text-align: center;  
-    -webkit-transition: height 0.5s;
-            transition: height 0.5s;
+    -webkit-transition: height 0.5s ease-in-out;
+            transition: height 0.5s ease-in-out;
     height: 0px;
-    display: none;
-}
-
-.index_results {
-
-}
-
-.index_results li {
-    display: block;
+    overflow: hidden;
 }
 
 .index_artist_image {
@@ -423,5 +412,14 @@ span.index_artist_dates {
 
     margin-bottom: 48px;
 }
+
+#about {
+    padding-bottom: 100px;
+}
+
+.about_text {
+    margin-bottom: 48px;
+}
+
 
 

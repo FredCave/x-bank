@@ -2,7 +2,7 @@
 
 	<div class="section_content">
 
-		<h1><a href="" class="click">Vitrine</a></h1>
+		<h1><a href="" class="main_vitrine">Vitrine</a></h1>
 
 	</div>
 

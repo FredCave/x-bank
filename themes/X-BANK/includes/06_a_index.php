@@ -15,11 +15,15 @@
 			<li id="<?php the_ID(); ?>" class="index_artist <?php echo print_categories(); ?>" data-initial="<?php echo $initial[0]; ?>">
 				
 				<!-- TITLE, VISIBLE IN LIST -->
-				<div class="index_artist_title">
+				<div class="index_artist_title asterisks">
 					<a href="">
-						<span class="index_artist_name"><?php the_title(); ?> * * * * * </span>
-
-						<span class="index_artist_dates">01/01/2001 - 03/05/2005</span>
+						<?php 
+						$a = get_the_title();
+						$b = "01/01/2001 - 03/05/2005";
+						echo "<p>";
+						starFiller( 42, $a, $b );
+						echo "</p>";
+						?>
 						<div class="clear"></div>
 					</a>
 				</div>

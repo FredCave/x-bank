@@ -4,13 +4,31 @@ $( document ).ready(function() {
 
 	1. VARIOUS 
 
+		1.1. CUSTOM CHROME JAGGED EDGE FIX
+		1.2. INIT SMOOTHSCROLL
+		1.3. JUSTIFY LINES
+
 	2. BACKGROUND
 
+		2.1. DECLARE FUNCTIONS
+			2.1.1. imagesHtmlPrep
+			2.1.2. imagesInject
+			2.1.3. imagesAnim
+			2.1.4. imagesFadeIn
+			2.1.5. wrapperShift
+		2.2. EVENTS
+			2.2.1. imagesInit
+			2.2.2. on artist click
+
 	3. RECEIPT
-		3.1. RECEIPT POSITION
-		3.2. VITRINE TOGGLE
-		3.3. BACK TO TOP BUTTON
-		3.4. INDEX CLICK
+		
+		3.1. RECEIPT POSITION ????
+		3.2. RECEIPT CONTENT INIT ????
+		3.3. VITRINE TOGGLE
+		3.4. BACK TO TOP BUTTON
+		3.5. INDEX CLICK
+		3.6. ARTIST NAME CLICK
+		3.7. ARTIST VITRINE TOGGLE
 
 	4. WINDOW EVENTS
 
@@ -23,15 +41,42 @@ $( document ).ready(function() {
 
 *****************************************************************************/
 
-	// CUSTOM CHROME JAGGED EDGE FIX
+	// 1.1. CUSTOM CHROME JAGGED EDGE FIX
 
 	if ( window.chrome ) {
 		$("section").css("backface-visibility", "hidden");
 	}
 
-	// INIT SMOOTHSCROLL
+	// 1.2. INIT SMOOTHSCROLL
 
 	$('a').smoothScroll();
+
+	// 1.3. JUSTIFY LINES
+
+	function justify ( source ) {
+		/* 
+		TO DO:
+		GLOBALISED FUNCTION 
+		*/
+	}
+
+	$(".index_artist_title").each( function(){
+		// get container width - HACK: receipt width * 0.85
+		var thisW = $("#receipt").width() * 0.85;
+		// get text width
+		var noChars = $(this).find("p").text().length;
+		//var textW = $(this).find("p").css("letter-spacing","0").textWidth();
+		/* 
+		THIS NEEDS FIXING
+		*/
+		textW = 490; // TEMP: should be this with 0 letter-spacing
+		// calculate difference + no. of characters
+		var diff = thisW - textW;
+		var space = ( diff / (noChars +1) ) * 1.05;
+		$(this).find("p").css("letter-spacing", space );
+		// console.log(thisW, textW, noChars);
+	});
+
 
 /*****************************************************************************
     
@@ -39,18 +84,7 @@ $( document ).ready(function() {
 
 *****************************************************************************/
 
-	function imagesFadeIn ( postId ) {
-		// if no postId then use initial container
-		var target;
-		if ( !postId ) {
-			target = $("#wrapper_1");
-		} else {
-			target = $( "#" + postId ).parents(".wrapper");
-		}
-		target.animate({
-			"opacity": "1"
-		}, 2000);	
-	}
+	// 2.1. DECLARE FUNCTIONS
 
 	function imagesHtmlPrep( noCols, moment ) { // moment = post id
 		// CREATE COLUMNS
@@ -195,7 +229,20 @@ $( document ).ready(function() {
 
 	}
 
-	function wrapperAnim () {
+	function imagesFadeIn ( postId ) {
+		// if no postId then use initial container
+		var target;
+		if ( !postId ) {
+			target = $("#wrapper_1");
+		} else {
+			target = $( "#" + postId ).parents(".wrapper");
+		}
+		target.animate({
+			"opacity": "1"
+		}, 2000);	
+	}
+
+	function wrapperShift () {
 		/*
 
 		Is there a way to simplify this ??
@@ -219,6 +266,10 @@ $( document ).ready(function() {
 		}
 	}
 
+	// 2.2. EVENTS
+
+		// 2.2.1. INITIATE ON LOAD
+
 	function imagesInit () {
 		imagesHtmlPrep( 4, "init" ); // no. of columns // initial load
 		imagesInject( 5, "init" ); // no. of imgs/col
@@ -226,9 +277,11 @@ $( document ).ready(function() {
 		imagesFadeIn();
 	}
 
+		// 2.2.2. ON ARTIST CLICK
+
 	$("#test_button").on("click", function(){
 		// animate wrappers
-		wrapperAnim();
+		wrapperShift();
 		// get ID of post to load
 		var postId = $(this).children().attr("id"); // temporary path — needs changing
 		// prepare html
@@ -237,7 +290,6 @@ $( document ).ready(function() {
 		$.get("?p=" + postId, function (response) {
             $( "#" + postId ).find(".load_wrapper").html( response );                   
         }).done(function () {           
-	        console.log("done");
 	        // Inject images
 	        imagesInject( 4, postId );
 	        imagesAnim( postId );
@@ -255,12 +307,6 @@ $( document ).ready(function() {
         }); 
 	});
 
-	/* TEST */
-
-	// $('body').onImagesLoad( function( $selector ){
-	// 	//note: this == $selector, both of which will be $("body") in this example
-	// 	alert();
-	// });
 
 /*****************************************************************************
     
@@ -270,74 +316,51 @@ $( document ).ready(function() {
 
 	// 3.1 RECEIPT POSITIONING
 
-	// function receiptInit () {
-	// 	var rOffsetL = $("#receipt").offset().left;
-	// 	$("#receipt").attr( "data-left", rOffsetL );
-
-	// 	receiptCentre();	
-
-	// 	/* THIS NEEDS FIXING ON RESIZE */	
-	// }
-
-	// function receiptCentre ( scrollPos ) {
-	// 	var scrollPos = $("html").attr("data-scroll");
-	// 	var initL = parseFloat( $("#receipt").attr( "data-left" ) );
-	// 	var calcL = ( $(window).width() - $("#receipt").width() ) / 2;
-	// 	var diff = calcL - initL;
-	// 	//console.log( "diff:", diff );
-	// 	var perc;
-	// 	if ( scrollPos ) {
-	// 		perc = scrollPos / ( $(document).height() - $(window).height() );
-	// 	} else {
-	// 		perc = 0;
-	// 	}
-	// 	var shift = (perc - 0.5) * 2;
-	// 	// console.log( "final shift:", 0 - shift * diff );
-	// 	$("#receipt_wrapper").css("left", (0 - shift * diff) * 0.85 );
-
-	// }
+	// ????
 
 	// 3.2. RECEIPT CONTENT INIT
 
-	function dotConnect ( selector ) {
-		$( selector ).each( function(){
-			var nameL = $(this).find("span.index_artist_name").text().length;
-			var dateL = $(this).find("span.index_artist_dates").text().length;
-			console.log(nameL, dateL);
+	// ????
 
-			// is there a way to find available space??
+	// 3.3. VITRINE TOGGLE // GLOBALISE ??
 
-		});
-	}
-
-	dotConnect ( $(".index_artist_title") );
-
-	// 3.3. VITRINE TOGGLE
-
-	$("a.click").on("click", function(e){
-		e.preventDefault();
-
+	function vitrineToggle ( thisA ) {
 		// calculate height of vitrine
 		var winH = $(window).height();
-
-		var target = $(this).parents("section").next(".r_hole");
+		// get target
+		var target;
+		var artistVitrine = false;
+		if ( $(thisA).hasClass("main_vitrine") ) {
+			// Main vitrine
+			target = $("#r_vitrine").next(".r_hole");
+			artistVitrine = true;
+		} else {
+			// Artist vitrine
+			target = $("#artist_vitrine");
+		}
 		if ( !target.hasClass("clicked") ) {
-			target.animate({
-				"height" : winH * 0.7
-			}, 1000).addClass("clicked");
+			target.css("height", winH * 0.7).addClass("clicked");
 
 			// scroll up
-			var scrollTarget = $(this).offset().top - 60;
+			var scrollTarget = $(thisA).offset().top - 60;
 			$("html,body").animate({
 				scrollTop: scrollTarget
 			}, 500);
-
+			if ( artistVitrine ) {
+				var artist = thisA.parents(".index_artist");
+				artistVitrineOpen( artist );
+			}
 		} else {
-			target.animate({
-				"height" : 0
-			}, 1000).removeClass("clicked");			
-		}
+			target.css("height", "0px").removeClass("clicked");			
+			if ( artistVitrine ) {
+				artistVitrineClose();
+			}
+		}	
+	}
 
+	$("a.main_vitrine").on("click", function(e){
+		e.preventDefault();
+		vitrineToggle ( $(this) );
 	});
 
 	// 3.4. BACK TO TOP BUTTON
@@ -389,58 +412,82 @@ $( document ).ready(function() {
 		$(".sub_index").css("height", resultWrapper.height() );
 	});
 
-	// 3.6. CLICK ON ARTIST NAME
+	// 3.6. ARTIST NAME CLICK
 
 	function artistInfoToggle ( target ) {
+
+		// reset html elements from index_bis
+		$(".hidden").show().removeClass("hidden");
+		// empty #index_bis	
+		$("#index_bis .index_results").empty().siblings().remove();
+
 		var resultWrapper = $("#index .index_results");
+		var childrenH = 0;
 		if ( !target.hasClass("clicked") ) {
-			$(".index_artist_content").removeClass("clicked").css("height","0").hide();
-			target.addClass("clicked").css("height","auto").show();
+			$(".index_artist_content").removeClass("clicked").css("height","0");
+			// get height of content and declare css to get animation
+			target.children().each( function(){
+				childrenH += $(this).outerHeight(true);
+			});
+			target.addClass("clicked").css(
+				"height", childrenH
+				);
 		} else {
-			target.removeClass("clicked").css("height","0").hide();	
-			console.log( resultWrapper.height() );	
+			target.removeClass("clicked").css(
+				"height", "0px"
+			);		
 		}
 		// animate wrapper height
-		$(".sub_index").css("height", resultWrapper.height() );
+		// calculate height based on LI's height + height of child
+		var calcH = childrenH;
+		$(".index_artist_title").each( function(){
+			calcH += $(this).height();
+		});
+		$(".sub_index").css("height", calcH );
+		
 		/*
 		ADD SCROLL TO 
 		*/
 	}
 
+	// CLICK EVENT
+
 	$(".index_results").on("click", ".index_artist_title a", function(e){
 		e.preventDefault();
-		var target = $(this).parents("span").next(".index_artist_content");
+		var target = $(this).parents(".index_artist_title").next(".index_artist_content");
 		artistInfoToggle(target);
 	});
 
 	// 3.7. ARTIST VITRINE TOGGLE
 
 	function artistVitrineOpen ( thisArtist ) {
-		var winH = $(window).height();
-		var resultWrapper = $(".index_results");
-		var vitrine = $("#artist_vitrine");
-		// get all child elements of this .index_artist_content
-		var followingContent = thisArtist.parents(".index_artist_content").children();
-		// get all following elements in results
-		var following = thisArtist.parents(".index_artist").nextAll()
+		// thisArtist returns LI
+		// var winH = $(window).height();
+		// var vitrine = $("#artist_vitrine");
+		// get, clone, hide and prepend followinginner and followingouter
+		var followingInner = thisArtist.find(".index_artist_content").children();
+		var followingOuter = thisArtist.nextAll();
+		// hide original elements
+		followingInner.add(followingOuter).hide().addClass("hidden");
 		// clone rather than move
-		followingContent.hide().addClass("hidden");
-		following.hide().addClass("hidden");
-		var followingContentCopy = followingContent.clone();
-		var followingCopy = following.clone();
-		followingContentCopy.prependTo( $("#index_bis .section_content") ).show();
-		followingCopy.prependTo( $("#index_bis .index_results") ).show();		
+		followingInner.clone().prependTo( $("#index_bis .section_content") ).show();
+		followingOuter.clone().prependTo( $("#index_bis .index_results") ).show();	
 		// collapse sub_index
 			// pause transition
+		var prevElements = thisArtist.prevAll().length + 1;
+		var resultsH = prevElements * thisArtist.find(".index_artist_title").height();
 		$(".sub_index").css({
-			"height": resultWrapper.height(),
+			"height": resultsH,
 			"-webkit-transition": "height 0s",
             "transition": "height 0s" 
 		});
 		// animate vitrine
-		vitrine.animate({
-			"height" : winH * 0.7
-		}, 1000).addClass("clicked");
+		//vitrine.css("height", winH * 0.7).addClass("clicked");
+		// scroll up
+		// var scrollTarget = thisArtist.offset().top - 60;
+		// $("html,body").animate({
+		// 	scrollTop: scrollTarget
+		// }, 500);
 		// reset transition
 		$(".sub_index").css({
 			"-webkit-transition": "",
@@ -452,25 +499,37 @@ $( document ).ready(function() {
 		// close vitrine
 		var vitrine = $("#artist_vitrine");
 		vitrine.css("height", "0px").removeClass("clicked");
-		// reset hidden elements in #index
-		$(".hidden").show().removeClass("hidden");
-		// empty #index_bis	
-		$("#index_bis .index_results").empty().siblings().remove();	
+		// no reset here, elements are reset when an artist is next clicked
+		//setTimeout( function(){
+			// reset hidden elements in #index
+			// $(".hidden").show().removeClass("hidden");
+			// empty #index_bis	
+			// $("#index_bis .index_results").empty().siblings().remove();
+		//}, 1000 );
+		var resultsH = $(".index_results").height();
+		// $(".sub_index").css({
+		// 	"height": resultsH,
+		// 	"-webkit-transition": "height 0s",
+  //           "transition": "height 0s"  
+		// });	
 	}
+
+	// Click event
 
 	$(".index").on("click", ".artist_vitrine_toggle", function(e){
 		e.preventDefault();
-		var artist = $(this);
+		// get artist (li)
+		//var artist = $(this).parents(".index_artist");
 		// animate vitrine
-		var target = $("#artist_vitrine");	
+		vitrineToggle( $(this) ); 
 		// if nothing is open
-		if ( !target.hasClass("clicked") ) {
-			artistVitrineOpen( artist );	
-		} else {
-			// reset
-			artistVitrineClose(); 
-			artistVitrineOpen( artist );				
-		}		
+		// if ( !target.hasClass("clicked") ) {
+		// 	artistVitrineOpen( artist );	
+		// } else {
+		// 	// reset
+		// 	artistVitrineClose(); 
+		// 	// artistVitrineOpen( artist );				
+		// }		
 	});
 
 /*****************************************************************************
@@ -484,11 +543,10 @@ $( document ).ready(function() {
 		imagesInit();
 
 	}).on("resize", function(){
-		// receiptInit();
-		// imagesCalc();
+
 	}).on("scroll", function(){
 		$("html").attr("data-scroll", $(window).scrollTop() );
-		// receiptCentre();
+
 	});
     
 });

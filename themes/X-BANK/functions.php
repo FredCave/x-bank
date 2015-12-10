@@ -80,8 +80,8 @@ function x_image_object( $img_id, $i ) {
 // STAR FILLER
 
 function starFiller ( $noChars, $firstString, $secondString ) {
-    $firstString = str_replace(' ', '', $firstString);
     $secondString = str_replace(' ', '', $secondString);
+    $secondString = str_replace('–', '-', $secondString);
     $a = strlen( trim($firstString) );
     $b = strlen( trim($secondString) );
     // calculate no. of asterisks
@@ -91,9 +91,6 @@ function starFiller ( $noChars, $firstString, $secondString ) {
         echo "*";
     }   
     echo $secondString;
-
-    /* NEEDS FIXING */
-
 }
 
 ?>
