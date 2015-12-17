@@ -20,7 +20,7 @@
 						<?php 
 						$a = get_the_title();
 						$b = "01/01/2001 - 03/05/2005";
-						echo "<p>";
+						echo "<p class='line_stretch'>";
 						starFiller( 42, $a, $b );
 						echo "</p>";
 						?>
@@ -39,6 +39,10 @@
 
 					<div class="index_artist_bio">
 						<?php the_field("index_artist_bio"); ?>
+					</div>
+
+					<div class="index_artist_shop_link">
+						Visit*the*shop
 					</div>
 
 					<div class="clear"></div>

@@ -7,6 +7,7 @@ $( document ).ready(function() {
 		1.1. CUSTOM CHROME JAGGED EDGE FIX
 		1.2. INIT SMOOTHSCROLL
 		1.3. JUSTIFY LINES
+		1.4. STARS FOR H1
 
 	2. BACKGROUND
 
@@ -60,21 +61,27 @@ $( document ).ready(function() {
 		*/
 	}
 
-	$(".index_artist_title").each( function(){
+	$(".line_stretch").each( function(){
 		// get container width - HACK: receipt width * 0.85
 		var thisW = $("#receipt").width() * 0.85;
 		// get text width
-		var noChars = $(this).find("p").text().length;
-		//var textW = $(this).find("p").css("letter-spacing","0").textWidth();
-		/* 
-		THIS NEEDS FIXING
-		*/
-		textW = 490; // TEMP: should be this with 0 letter-spacing
+		var noChars = $(this).text().trim().length;
+		console.log(noChars);
+		var fontS = parseFloat( $(this).css("font-size") );
+		var textW = fontS * noChars * 0.595;
+		// this ratio (0.595) can be played with
 		// calculate difference + no. of characters
 		var diff = thisW - textW;
-		var space = ( diff / (noChars +1) ) * 1.05;
-		$(this).find("p").css("letter-spacing", space );
+		var space = ( diff / (noChars +1) );
+		$(this).css("letter-spacing", space );
 		// console.log(thisW, textW, noChars);
+	});
+
+	// 1.4. H1 STARS
+
+	$("h1").each( function(){
+		var text = $(this).text().replace(/\s/g, "*");
+		$(this).text(text);
 	});
 
 
@@ -250,15 +257,24 @@ $( document ).ready(function() {
 		*/
 		// check where wrapper_1 is
 		if ( parseInt ( $("#wrapper_1").css("left") ) === 0 ) {
+
+			console.log("wrapper shift case 1");
+
 			// Move wrappers
-			$("#wrapper_1").css("left", "-100%").delay(1000).css("opacity","0");
+			$("#wrapper_1").css("left", "-100%");
+			setTimeout( function(){
+				$("#wrapper_1").css("opacity", "0");	
+			}, 1500 );
 			$("#wrapper_2").css("left", "0%");
 			// Declare which wrapper can be loaded in
 			$(".toLoad").removeClass("toLoad");
 			$("#wrapper_2").addClass("toLoad");
 		} else {
 			// Move wrappers
-			$("#wrapper_2").css("left", "100%").delay(1000).css("opacity","0");
+			$("#wrapper_2").css("left", "100%");
+			setTimeout( function(){
+				$("#wrapper_2").css("opacity", "0");	
+			}, 1500 );
 			$("#wrapper_1").css("left", "0%");
 			// Declare which wrapper can be loaded in
 			$(".toLoad").removeClass("toLoad");
@@ -279,17 +295,20 @@ $( document ).ready(function() {
 
 		// 2.2.2. ON ARTIST CLICK
 
-	$("#test_button").on("click", function(){
-		// animate wrappers
-		wrapperShift();
+	function artistVitrineToggle ( thisClick ) {
+		console.log(thisClick);
+
 		// get ID of post to load
-		var postId = $(this).children().attr("id"); // temporary path — needs changing
+		var postId = thisClick.parents("li").attr("id");
 		// prepare html
 		imagesHtmlPrep( 2, postId );
 		// ajax call — append to load wrapper with id
 		$.get("?p=" + postId, function (response) {
             $( "#" + postId ).find(".load_wrapper").html( response );                   
-        }).done(function () {           
+        }).done(function () {
+
+
+
 	        // Inject images
 	        imagesInject( 4, postId );
 	        imagesAnim( postId );
@@ -297,6 +316,9 @@ $( document ).ready(function() {
 				//note: this == $selector, both of which will be $("body") in this example
 				imagesFadeIn( postId );
 			});
+
+			// animate wrappers
+			// wrapperShift();
 			
 	        /*
 				Check if images have loaded
@@ -305,8 +327,7 @@ $( document ).ready(function() {
 	        // update url  
 	        // window.history.pushState("", "", sectionName);  
         }); 
-	});
-
+	}
 
 /*****************************************************************************
     
@@ -322,7 +343,7 @@ $( document ).ready(function() {
 
 	// ????
 
-	// 3.3. VITRINE TOGGLE // GLOBALISE ??
+	// 3.3. VITRINE TOGGLE
 
 	function vitrineToggle ( thisA ) {
 		// calculate height of vitrine
@@ -332,29 +353,35 @@ $( document ).ready(function() {
 		var artistVitrine = false;
 		if ( $(thisA).hasClass("main_vitrine") ) {
 			// Main vitrine
-			target = $("#r_vitrine").next(".r_hole");
-			artistVitrine = true;
+			target = $("#r_vitrine").next(".r_hole");		
 		} else {
 			// Artist vitrine
 			target = $("#artist_vitrine");
+			artistVitrine = true;
 		}
+
 		if ( !target.hasClass("clicked") ) {
 			target.css("height", winH * 0.7).addClass("clicked");
 
 			// scroll up
 			var scrollTarget = $(thisA).offset().top - 60;
+			
+			if ( artistVitrine ) {
+				var artist = thisA.parents(".index_artist");
+				scrollTarget = artist.offset().top - 60;
+				artistVitrineOpen( artist );
+			}
+
+			console.log(thisA, scrollTarget);
 			$("html,body").animate({
 				scrollTop: scrollTarget
 			}, 500);
-			if ( artistVitrine ) {
-				var artist = thisA.parents(".index_artist");
-				artistVitrineOpen( artist );
-			}
+
 		} else {
 			target.css("height", "0px").removeClass("clicked");			
-			if ( artistVitrine ) {
-				artistVitrineClose();
-			}
+			// if ( artistVitrine ) {
+			// 	artistVitrineClose();
+			// }
 		}	
 	}
 
@@ -373,6 +400,23 @@ $( document ).ready(function() {
 		$("html,body").animate({
 			scrollTop: menuOffset
 		}, 500);
+	});
+
+	// 3.4. CURRENT TOGGLE
+
+	$(".show_toggle").on("click", function(e){
+		e.preventDefault();
+		var following = $(this).next(".show_content");
+		if ( following.hasClass("clicked") ) {
+			following.css( "height", 0 ).removeClass("clicked");
+		} else {
+			var contentsH = 0;
+			following.children().each( function(){
+				contentsH += $(this).outerHeight(true);
+			}).height();
+			console.log(contentsH);
+			following.css( "height", contentsH ).addClass("clicked");		
+		}
 	});
 
 	// 3.5. INDEX CLICK
@@ -416,6 +460,13 @@ $( document ).ready(function() {
 
 	function artistInfoToggle ( target ) {
 
+		/* PROBLEM IS HERE */
+
+		// close artist vitrine
+		$("#artist_vitrine").hide().css("height", "0px").removeClass("clicked");
+		setTimeout( function(){
+			$("#artist_vitrine").show();
+		}, 500);	
 		// reset html elements from index_bis
 		$(".hidden").show().removeClass("hidden");
 		// empty #index_bis	
@@ -462,8 +513,6 @@ $( document ).ready(function() {
 
 	function artistVitrineOpen ( thisArtist ) {
 		// thisArtist returns LI
-		// var winH = $(window).height();
-		// var vitrine = $("#artist_vitrine");
 		// get, clone, hide and prepend followinginner and followingouter
 		var followingInner = thisArtist.find(".index_artist_content").children();
 		var followingOuter = thisArtist.nextAll();
@@ -481,24 +530,21 @@ $( document ).ready(function() {
 			"-webkit-transition": "height 0s",
             "transition": "height 0s" 
 		});
-		// animate vitrine
-		//vitrine.css("height", winH * 0.7).addClass("clicked");
-		// scroll up
-		// var scrollTarget = thisArtist.offset().top - 60;
-		// $("html,body").animate({
-		// 	scrollTop: scrollTarget
-		// }, 500);
-		// reset transition
-		$(".sub_index").css({
-			"-webkit-transition": "",
-            "transition": "" 
-		});
+		// animate vitrine is done by vitrineToggle function
+		
+		// reset transition ????
+		setTimeout( function(){
+			$(".sub_index").css({
+				"-webkit-transition": "",
+				"transition": "" 
+			});	
+		}, 500);
 	}
 
 	function artistVitrineClose () {
 		// close vitrine
-		var vitrine = $("#artist_vitrine");
-		vitrine.css("height", "0px").removeClass("clicked");
+		//var vitrine = $("#artist_vitrine");
+		//vitrine.css("height", "0px").removeClass("clicked");
 		// no reset here, elements are reset when an artist is next clicked
 		//setTimeout( function(){
 			// reset hidden elements in #index
@@ -506,7 +552,7 @@ $( document ).ready(function() {
 			// empty #index_bis	
 			// $("#index_bis .index_results").empty().siblings().remove();
 		//}, 1000 );
-		var resultsH = $(".index_results").height();
+		//var resultsH = $(".index_results").height();
 		// $(".sub_index").css({
 		// 	"height": resultsH,
 		// 	"-webkit-transition": "height 0s",
@@ -518,18 +564,9 @@ $( document ).ready(function() {
 
 	$(".index").on("click", ".artist_vitrine_toggle", function(e){
 		e.preventDefault();
-		// get artist (li)
-		//var artist = $(this).parents(".index_artist");
-		// animate vitrine
-		vitrineToggle( $(this) ); 
-		// if nothing is open
-		// if ( !target.hasClass("clicked") ) {
-		// 	artistVitrineOpen( artist );	
-		// } else {
-		// 	// reset
-		// 	artistVitrineClose(); 
-		// 	// artistVitrineOpen( artist );				
-		// }		
+		vitrineToggle( $(this) );
+		/* NEED CHECK WHETHER THIS ARTIST IS ALREADY LOADED OR NOT */
+		//artistVitrineToggle( $(this) ); 		
 	});
 
 /*****************************************************************************

@@ -5,6 +5,7 @@ module.exports = function ( grunt ) {
 		pkg: grunt.file.readJSON("package.json"),
 		uglify: {
 			dev: {
+				beautify: true,
 				preserveComments: "all",
 				src: "assets/js/*.js",
 				dest: "js/scripts.min.js"

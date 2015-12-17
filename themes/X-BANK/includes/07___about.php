@@ -40,7 +40,7 @@
 			<?php addBreak(); ?>
 			<div class="section_head">
 				<h1><?php the_title(); ?></h1>
-				<div class="back_to_top"><a href="">&uarr;</a></div>
+				<div class="back_to_top"><a href=""><img src="<?php bloginfo('template_url'); ?>/img/up_arrow.svg" /></a></div>
 			</div>
 			<?php addBreak(); ?>
 
@@ -56,6 +56,10 @@
 				<div class="about_opening asterisks">
 					<?php openingTimes(); ?>
 				</div>
+
+				<div class="about_social_media">
+					<!-- SOCIAL MEDIA LINKS HERE -->
+				</div>		
 			
 			</div>
 

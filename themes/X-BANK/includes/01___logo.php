@@ -11,6 +11,10 @@
 			Netherlands
 		</div>
 
+		<div id="r_shop_link">
+			Visit*the*shop
+		</div>		
+
 	</div>
 
 	<?php addBreak(); ?>

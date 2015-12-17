@@ -4,13 +4,17 @@
 
 	<?php addBreak(); ?>
 	<div class="section_head">
-		<h1>INDEX</h1>
-		<div class="back_to_top"><a href="">&uarr;</a></div>
+		<h1>Index</h1>
+		<div class="back_to_top"><a href=""><img src="<?php bloginfo('template_url'); ?>/img/up_arrow.svg" /></a></div>
 	</div>
 	<?php addBreak(); ?>
 
 	<div class="section_content">
 		
+		<!-- LETTERS -->
+
+		<p class="index_menu"><a href="">Previous Shows</a></p>
+
 		<!-- LETTERS -->
 		<ul id="index_letters" class="index_menu">
 			<?php
@@ -30,6 +34,10 @@
 			<li><a href="">Design</a></li>
 			<div class="clear"></div>
 		</ul>
+
+		<!-- SEARCH -->
+
+		<p id="index_search" class="index_menu"><a href="">Search</a></p>
 
 		<!-- DIVs WITH CONTENT -->
 		

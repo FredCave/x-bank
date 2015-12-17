@@ -8,6 +8,43 @@ Author URI:		http://www.fredcave.com
     display: none !important;
 }
 
+/*
+TMP
+*/
+.wrapper_test .movable_wrapper {
+    -webkit-animation-play-state: paused; /* Chrome, Safari, Opera */
+    animation-play-state: paused;
+    animation: fakeloop 2s !important;
+}
+
+.img_before, .img_after {
+    display: block;
+    height: 32px;
+    width: 90%;
+    background-color: #fbfdf8;
+    left: 5%;
+    top: -40px;
+    -webkit-box-shadow: 18px 18px 23px 0px rgba(0,0,0,0.35);
+    -moz-box-shadow: 18px 18px 23px 0px rgba(0,0,0,0.35);
+    box-shadow: 18px 18px 23px 0px rgba(0,0,0,0.35);
+    position: absolute;
+    padding: 8px 0;
+    font-size: 0.9em;
+    display: none;
+}
+
+.img_after {
+    /*margin-bottom: 92px;*/
+    bottom: -36px;
+    z-index: 9999;
+    padding: 12px 0 4px 0;
+}
+
+.wrapper_test .movable_wrapper img {
+    /*margin-bottom: 0px !important;*/
+    cursor: pointer;
+}
+
 /************************************************
     CSS RESET
 ************************************************/
@@ -18,6 +55,16 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
     FONTS
 ************************************************/
 
+@font-face {
+    font-family: 'PES';
+    src: url('fonts/pes-webfont.eot');
+    src: url('fonts/pes-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/pes-webfont.woff2') format('woff2'),
+         url('fonts/pes-webfont.woff') format('woff'),
+         url('fonts/pes-webfont.svg#pesregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
 
 /************************************************
     GENERAL
@@ -26,7 +73,7 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
 html, body {
     width: 100%;
     top: 0;
-    font-family: "Prestige Elite Std", "Courier New", Courier, monospace;
+    font-family: "PES", "Courier New", Courier, monospace;
     font-size: 1.1em;
     text-rendering: optimizeLegibility;
     /*-webkit-text-stroke: 0.5px black;*/
@@ -66,6 +113,7 @@ h1 {
 
 p {
     text-align: justify;
+    text-align: center;
 }
 
 .clear {
@@ -91,8 +139,8 @@ p {
     width: 100%;
     height: 100vh;
     left: 0;
-    transition: left 1s;
-    -webkit-transition: left 1s;
+    transition: left 2s;
+    -webkit-transition: left 2s;
     top: 0%;
     position: fixed;
     opacity: 0;
@@ -170,6 +218,7 @@ p {
 
 .wrapper img {
     width: 75%;
+    width: 90%;
     position: relative;
     margin: 0 auto;
     -webkit-box-shadow: 18px 18px 23px 0px rgba(0,0,0,0.35);
@@ -206,7 +255,7 @@ p {
 
 p.break {
     font-size: 0.95em;
-    letter-spacing: 0.4em;
+    letter-spacing: 0.5em;
     width: 85%;
     margin: 0 auto 32px auto;
     text-align: center;
@@ -226,10 +275,20 @@ span.break_inner {
     position: absolute;
     top: 0;
     right: 7.5%;
+    height: 12px;
+    margin-right: 2px;
+}
+
+.back_to_top img {
+    height: 100%;
+    width: auto;
 }
 
 section {
     background-color: #fcfff3;
+    background-color: #f5f0f3;
+    background-color: #f9f9f9;
+    background-color: #fbfdf8;
     -webkit-font-smoothing: subpixel-antialiased;
     padding: 2px;
     width: 100%;
@@ -243,7 +302,7 @@ section {
     margin: 0 auto;
 }
 
-#r_logo {
+#r_logo .section_content {
     min-height: 250px;
 }
 
@@ -259,8 +318,22 @@ section {
     text-align: left;
 }
 
-#r_vitrine {
+#r_shop_link {
+    position: absolute;
+    top: 40px;
+    right: 7.5%;
+    text-align: right; 
+    text-transform: uppercase;   
 }
+
+#r_logo p.break {
+    margin-bottom: 0px;
+}
+
+#r_vitrine, #r_vitrine_bis {
+    padding: 2px 0px;
+}
+
 
 .r_hole {
     height: 0px;
@@ -271,6 +344,7 @@ section {
 
 .r_hole_l, .r_hole_r {
     background-color: #fcfff3;
+    background-color: #fbfdf8;
     position: absolute;
     width: 7.5%;
     height: 105%;
@@ -305,8 +379,38 @@ section {
     text-transform: uppercase;
 }
 
-#index .index_results {
+#on_show {
+/*  border: 1px solid orange;*/
+    margin-top: -48px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    position: relative;
+}
 
+#r_current_text {
+    position: absolute;
+    top: 0;
+    left: 7.5%;
+    text-align: left;
+}
+
+#r_current_image {
+    padding-bottom: 16px;
+}
+
+.show_content {
+    height: 0px;
+    -webkit-transition: height 0.5s ease-in-out;
+            transition: height 0.5s ease-in-out;
+    overflow: hidden;
+}
+
+#r_current_content div {
+    margin-bottom: 36px;
+}
+
+#r_upcoming_list .show_content p {
+    margin: 24px auto 48px auto;
 }
 
 .index_menu li a {
@@ -318,21 +422,27 @@ section {
     border-bottom: 1px solid black;
 }
 
-ul#index_letters {
-    text-align: center;
+.index_menu {
     margin-bottom: 24px;
+}
+
+
+ul#index_letters {
+    width: 105%;
+    margin-left: -2.5%;
+    text-align: center;
 }
 
 ul#index_letters li {
 /*    border: 1px solid purple;*/
     display: inline-block;
-    margin: 0.2px;
+    margin: 0.45px;
     padding: 5px 6px 4px 6px;
 }
 
 ul#index_categories {
     text-align: center;
-    margin-bottom: 48px;
+/*    margin-bottom: 48px;*/
     position: relative;
 }
 
@@ -352,6 +462,12 @@ ul#index_categories li:nth-child(2) {
 
 ul#index_categories li:nth-child(3) {
     float: right;
+    margin-right: 0.5%;
+}
+
+#index_search {
+    padding-top: 4px;
+    margin-bottom: 48px;
 }
 
 .sub_index {
@@ -384,7 +500,7 @@ ul#index_categories li:nth-child(3) {
 .index_artist_title p {
 /*    display: inline-block;
     width: 100%;*/
-    letter-spacing: 0;
+/*    letter-spacing: 0;*/
     white-space: nowrap;
     text-align: center;
 }
@@ -409,8 +525,12 @@ ul#index_categories li:nth-child(3) {
 
 .index_artist_bio {
 /*    border: 1px solid orange;*/
-
     margin-bottom: 48px;
+}
+
+.index_artist_shop_link {
+    text-transform: uppercase;
+    margin-bottom: 56px;
 }
 
 #about {

@@ -2,7 +2,7 @@
 
 	<div class="section_content">
 
-		<h1><a href="" class="main_vitrine">Vitrine</a></h1>
+		<a href="" class="main_vitrine"><h1>Vitrine</h1></a>
 
 	</div>
 
@@ -14,13 +14,13 @@
 	<div class="r_hole_r"></div>
 </div>
 
-<section>
+<section id="r_vitrine_bis">
 
 	<div class="section_content">
 
 
 	</div>
 
-	<?php addBreak(); ?>
+	<?php /*addBreak();*/ ?>
 
 </section>

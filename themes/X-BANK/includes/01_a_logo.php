@@ -1,5 +1,4 @@
 <!-- TEST IMAGE -->
-<!-- <img src="<?php bloginfo('template_url'); ?>/img/x-bankLogo5_1200.png" /> -->
 
 <?php $the_query = new WP_Query( array("post_type" => "x-logos") ); ?>
 <?php if ( $the_query->have_posts() ) { ?>
