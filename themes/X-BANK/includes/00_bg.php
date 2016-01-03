@@ -1,5 +1,15 @@
 <?php
 
+/* 
+	INITIAL BG IMAGE SELECTION HERE
+
+	CHECK BG IMAGE POST (BOTTOM OF PAGE)
+		IF ACTIVATED USE IMAGES FROM THAT SELECTION
+		ELSE USE DEFAULT RANDOM IMAGE SELECTION
+*/
+
+/* DEFAULT RANDOM IMAGES */
+
 // get IDs of any media posts to be excluded — only logos for the time being
 function x_images_exclude( $type ) {	
 	$logo_ids = [];
@@ -33,7 +43,7 @@ function x_get_attachments( $noPosts ) {
 	return get_posts($args);
 }
 
-/* MOVE TO FUNCTIONS SO SINGLE POST CAN ACCESS IT AS WELL */
+/* CREATES UL WITH IMAGES USING X_IMAGE_OBJECT FUNCTION IN FUNCTIONS.PHP */
 
 function x_images( $noPosts ) {
 	
@@ -49,7 +59,9 @@ function x_images( $noPosts ) {
 	        	break 1;
 	        } else {
 	        	$img_id = $attachment->ID;
-				x_image_object( $img_id, $i ); // Moved to functions.php
+				echo "<li id='" . $img_id ."'>";
+				x_image_object( $img_id ); // Moved to functions.php
+	        	echo "</li>";
 	        	$i++;	
 	        }	
 		}
@@ -65,7 +77,40 @@ function x_images( $noPosts ) {
 		<!-- INITIAL CONTAINER -->
 		<div class="load_wrapper hide">
 			<!-- IMAGES INITIALLY LOADED HERE, HTML DONE IN JQUERY -->
-			<?php x_images( 12 ); ?>
+			<!-- FIRST LOOP THROUGH CURATED BG IMAGE POST -->
+			<?php
+			$wp_query = new WP_Query("name=background-images");
+			if ( $wp_query->have_posts() ) :
+				while ( $wp_query->have_posts() ) : $wp_query->the_post();
+					// If activate field is checked
+					if( get_field('bg_activate') ) {		
+						// Create UL
+						echo "<ul>";
+							// Loop through images
+							if ( have_rows("bg_images") ) :
+								while ( have_rows("bg_images") ) : the_row(); ?>
+									<li>
+										<?php 
+										$image = get_sub_field("bg_image");
+										//echo $image["ID"];
+										x_image_object( $image["ID"] );
+										?>
+									</li>
+								<?php
+								endwhile;
+							endif;
+						echo "</ul>";
+					} else {
+						
+						// IF DEACTIVATED USE DEFAULT RANDOM IMAGE FUNCTION
+						x_images( 12 );
+					
+					}
+				endwhile;
+				wp_reset_postdata();
+			endif;
+
+			?>
 		</div>
 	</div>
 </div>

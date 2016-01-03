@@ -11,8 +11,11 @@
 			Netherlands
 		</div>
 
-		<div id="r_shop_link">
-			Visit*the*shop
+		<div id="r_top_links">
+			<ul>
+				<li><a href="">Visit*the*shop</a></li>
+				<li><a href="#about">About*X*Bank</a></li>
+			</ul>
 		</div>		
 
 	</div>

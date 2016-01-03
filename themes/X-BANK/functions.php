@@ -3,11 +3,11 @@
 // ENQUEUE CUSTOM SCRIPTS
 function enqueue_cpr_scripts() {
   
-    wp_deregister_script( 'jquery' );
-    wp_register_script( 'jquery', '//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js');
-    wp_enqueue_script( 'jquery' );  
+    // wp_deregister_script( 'jquery' );
+    // wp_register_script( 'jquery', '//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js');
+    // wp_enqueue_script( 'jquery' );  
     
-    wp_enqueue_script('modernizr', get_template_directory_uri() . '/js/scripts.min.js', array('jquery'), true);
+    wp_enqueue_script('all-scripts', get_template_directory_uri() . '/js/scripts.min.js', array('jquery'), true);
 
 }
 add_action('wp_enqueue_scripts', 'enqueue_cpr_scripts');
@@ -58,7 +58,7 @@ function addBreak() {
 
 // IMAGE OBJECT
 
-function x_image_object( $img_id, $i ) {
+function x_image_object( $img_id ) {
     $width = wp_get_attachment_image_src( $img_id )[1];
     $height = wp_get_attachment_image_src( $img_id )[2];
     $thumb = wp_get_attachment_image_src( $img_id, "thumbnail" )[0];
@@ -74,7 +74,7 @@ function x_image_object( $img_id, $i ) {
         $large = wp_get_attachment_image_src( $img_id, "full" )[0];
     }
 
-    echo "<li>" . "<img class='" . $i . "' src='". $medium ."' />" . "</li>"; 
+    echo "<img class='' src='". $medium ."' />"; 
 }
 
 // STAR FILLER

@@ -158,81 +158,119 @@ $( document ).ready(function() {
 		} // end of for loop
 	}
 
-	function imagesAnim ( postId ) {
-		// 2 ULs per column
-		var winH = $(window).height();
-		var loopHs = [];
+	function imagesAnim ( init ) {
 		var target;
-		if ( postId === "init" ) {
+
+		// Init / single post
+		if ( init ) {
 			target = "init_container";
-		} else {
+
+		} else {	
 			target = postId;
 		}
+
+		// Calculate dimensions
+	
+		var winH = $(window).height();
+		var loopHs = [];
 		$("#" + target).find(".movable_wrapper").each( function(){
 			// get UL height in px
-			var loopH =  $(this).find("ul").height();
-			// compare to winH to get vh
-			var loopVH = "-" + (loopH / winH) * 100 + "vh";
-			loopHs.push(loopVH);
-		});
-		
-		/* 
-
-		Define animations dynamically?? 
-
-		*/
-
-		// define animations
-		$.keyframe.define({
-		    name: 'loop_1',
-		    from: {
-		        'transform': 'translateY(0vh)'
-		    },
-		    to: {
-		        'transform': 'translateY(' + loopHs[0] + ')' 
-		    }
+			var thisUl = $(this).find("ul")
+			var loopH =  thisUl.height();
+			// set height
+			thisUl.css("height",loopH).attr("data-height",loopH);
+			loopHs.push(loopH);
+			//console.log( $(this), loopH );
 		});
 
-		$.keyframe.define({
-		    name: 'loop_2',
-		    from: {
-		        'transform': 'translateY(' + loopHs[1] + ')' 
-		    },
-		    to: {
-		        'transform': 'translateY(0vh)'
-		    }
-		});	
+		// Declare animations dynamically
 
-		$.keyframe.define({
-		    name: 'loop_3',
-		    from: {
-		        'transform': 'translateY(0vh)'
-		    },
-		    to: {
-		        'transform': 'translateY(' + loopHs[2] + ')' 
-		    }
-		});
+		for (var i = 0; i < loopHs.length; i++) {
+		    // Odd/even to create alternating animations
+		    if ( i % 2 === 0) {
+				
+				// UP
+				
+				$.keyframe.define({
+				    name: 'exit-' + i,
+				    from: {
+				        'transform': 'translateY(0px)'
+				    },
+				    to: {
+				        'transform': 'translateY(-' + loopHs[i] + 'px)' // negative number
+				    }
+				});
 
-		$.keyframe.define({
-		    name: 'loop_4',
-		    from: {
-		        'transform': 'translateY(' + loopHs[3] + ')' 
-		    },
-		    to: {
-		        'transform': 'translateY(0vh)'
+				$.keyframe.define({
+				    name: 'enter-' + i,
+				    from: {
+				        'transform': 'translateY(' + loopHs[i] + 'px)'
+				    },
+				    to: {
+				        'transform': 'translateY(-' + loopHs[i] + 'px)' // negative number'
+				    }
+				});
+
+		    } else {
+				
+				// DOWN
+
+				$.keyframe.define({
+				    name: 'exit-' + i,
+				    from: {
+				    	'transform': 'translateY(-' + loopHs[i] + 'px)'  
+				    },
+				    to: {
+				        'transform': 'translateY(0px)'
+				    }
+				});
+
+				$.keyframe.define({
+				    name: 'enter-' + i,
+				    from: {
+				    	'transform': 'translateY(-' + loopHs[i] + 'px)'  
+				    },
+				    to: {
+				        'transform': 'translateY(' + loopHs[i] + 'px)'
+				    }
+				});
+		    
 		    }
-		});	
+
+		}
 
 		// Play animations
 
-		$("#" + target).find(".movable_wrapper").each( function(i){
+		$("#wrapper_1 .movable_wrapper ul:first-child").addClass("ul_1");
+		$("#wrapper_1 .movable_wrapper ul:last-child").addClass("ul_2").hide();
+
+		// Shift up second UL to fill gap
+		$("#" + target).find(".movable_wrapper .ul_2").each( function(i){
+			$(this).css(
+				"margin-top", "-" + $(this).height() + "px"
+			);			
+		});
+
+		$("#" + target).find(".movable_wrapper .ul_1").each( function(i){
+			//console.log( $(this), target );
 			$(this).playKeyframe({
-			    name: 'loop_' + ( i + 1 ), 
-			    duration: '18s', 
+			    name: 'enter-' + i, 
+			    duration: '20s', 
 			    timingFunction: 'linear', 
 			    iterationCount: 'infinite' 
 			});			
 		});
+		setTimeout( function() {
+			$(".ul_2").show();
+			$("#" + target).find(".movable_wrapper .ul_2").each( function(i){
+				$(this).playKeyframe({
+				    name: 'enter-' + i, 
+				    duration: '20s', 
+				    timingFunction: 'linear', 
+				    iterationCount: 'infinite' 
+				});			
+			});
+		}, 10000 );
 
 	}
 
@@ -248,6 +286,23 @@ $( document ).ready(function() {
 			"opacity": "1"
 		}, 2000);	
 	}
+
+	/* CLICK ON IMAGES */
+
+	function imagesPause () {
+		if ( !$(".wrapper").hasClass("paused") ) {
+			$(".wrapper").addClass("paused");
+			$(".wrapper").find("ul").addClass("paused");
+		} else {
+			$(".wrapper").removeClass("paused");
+			$(".wrapper").find("ul").removeClass("paused");
+		}
+	}
+
+	$(".wrapper").on("click", "li", function(){
+		imagesPause();
+		console.log( $(this).attr("id") );
+	});
 
 	function wrapperShift () {
 		/*
@@ -282,6 +337,37 @@ $( document ).ready(function() {
 		}
 	}
 
+	// ON RESIZE
+
+	function imagesResize () {
+		/*
+		Height is fixed during calculation
+		Stored in attr
+		Margins are modified depending on diff
+		*/
+		$(".movable_wrapper ul").each( function(i){
+			// stored height
+			var dataH = $(this).data("height");
+			// current height
+			var thisH = $(this).height();
+
+			var diff = dataH - thisH;
+			//console.log(diff);
+
+			
+			
+			var imgH = 0;
+			$(this).find("img").each( function(){
+				imgH += $(this).height();
+			});
+			var imgDiff = ( dataH - imgH ) / 5; // Always 5 img/col?
+			$(this).find("img").css(
+				"margin-bottom", imgDiff
+			);
+
+		});
+	}
+
 	// 2.2. EVENTS
 
 		// 2.2.1. INITIATE ON LOAD
@@ -289,9 +375,11 @@ $( document ).ready(function() {
 	function imagesInit () {
 		imagesHtmlPrep( 4, "init" ); // no. of columns // initial load
 		imagesInject( 5, "init" ); // no. of imgs/col
-		imagesAnim( "init" );
+		imagesAnim( true );
 		imagesFadeIn();
 	}
+
+
 
 		// 2.2.2. ON ARTIST CLICK
 
@@ -300,6 +388,8 @@ $( document ).ready(function() {
 
 		// get ID of post to load
 		var postId = thisClick.parents("li").attr("id");
+		// get number of columns
+		var noCols = thisClick.parents("li").attr("data-cols");
 		// prepare html
 		imagesHtmlPrep( 2, postId );
 		// ajax call — append to load wrapper with id
@@ -580,7 +670,7 @@ $( document ).ready(function() {
 		imagesInit();
 
 	}).on("resize", function(){
-
+		imagesResize();
 	}).on("scroll", function(){
 		$("html").attr("data-scroll", $(window).scrollTop() );
 

@@ -6,9 +6,9 @@
 
 		<ul>
 			<li><a href="#on_show">On*Show</a></li>
-			<li><a href="#upcoming">Upcoming Shows</a></li>
+			<li><a href="#upcoming">Upcoming</a></li>
+			<li><a href="#previous">Previous</a></li>
 			<li><a href="#index">Index</a></li>
-			<li><a href="#about">About X*Bank</a></li>
 		</ul>	
 
 	</div>

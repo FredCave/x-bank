@@ -11,11 +11,9 @@
 
 	<div class="section_content">
 		
-		<!-- LETTERS -->
+		<!--<p class="index_menu"><a href="">Previous Shows</a></p>-->
 
-		<p class="index_menu"><a href="">Previous Shows</a></p>
-
-		<!-- LETTERS -->
+		<!-- LETTERS 
 		<ul id="index_letters" class="index_menu">
 			<?php
 			// Create a range of letters
@@ -26,6 +24,7 @@
 				echo "<li class='index_letter'><a href=''>" . $letter . "</a></li>";
 			} ?>
 		</ul>
+		-->
 
 		<!-- CATEGORIES -->
 		<ul id="index_categories" class="index_menu">
@@ -37,7 +36,12 @@
 
 		<!-- SEARCH -->
 
-		<p id="index_search" class="index_menu"><a href="">Search</a></p>
+		<p id="index_search" class="index_menu">
+			<!-- SEARCH TOGGLE BUTTON -->
+			<a href="">Search</a>
+			<!-- SEARCH FIELD -->
+			<input id="search" name="search" placeholder="Start typing here" type="text" data-toggle="hideseek" data-list=".sub_index">
+		</p>
 
 		<!-- DIVs WITH CONTENT -->
 		

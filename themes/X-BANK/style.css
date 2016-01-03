@@ -88,6 +88,8 @@ a {
     text-decoration: none;
     border: none;
     outline: none;
+    padding: 2px 4px;
+/*    border-bottom: 1px solid transparent;*/
 }
 
 input::-moz-focus-inner { 
@@ -95,7 +97,7 @@ input::-moz-focus-inner {
 }
 
 a:hover {
-
+/*    border-bottom: 1px solid black;*/
 }
 
 b, strong {
@@ -167,28 +169,41 @@ p {
 
 .movable_wrapper {
     /* MOVABLE WRAPPER */
-    top: 0vh;
+    /*top: 0vh;*/
     width: 25%;
     height: auto;
     /* HEIGHT NEEDS TO BE 3 TIMES BIGGER THAN UL SIZE — SET IN JS */
     overflow: hidden;
-    position: absolute;     
+    position: absolute;
+    /* To force GPU use */
+    -webkit-transform: translate3d(0, 0, 0);  
+    transform: translate3d(0, 0, 0);     
 }
 
-.movable_wrapper:nth-child(0) {
-    left: 0;  
+/*.movable_wrapper ul:first-child {
+    background-color: rgba(255,255,0, 0.1);
 }
+
+.movable_wrapper ul:last-child {
+    background-color: rgba(0,255,0, 0.1);
+}*/
 
 .movable_wrapper:nth-child(1) {
-    left: 25%;  
+    left: 0;
+
 }
 
 .movable_wrapper:nth-child(2) {
-    left: 50%;  
+    left: 25%; 
+
 }
 
 .movable_wrapper:nth-child(3) {
-    left: 75%;  
+    left: 50%; 
+}
+
+.movable_wrapper:nth-child(4) {
+    left: 75%; 
 }
 
 .container_2 .movable_wrapper {
@@ -227,6 +242,12 @@ p {
     margin-bottom: 92px;
 }
 
+.paused{
+    -webkit-animation-play-state: paused !important;
+    -moz-animation-play-state: paused !important;
+    -o-animation-play-state: paused !important; 
+    animation-play-state: paused !important;
+}
 
 /************************************************
     RECEIPT
@@ -316,14 +337,17 @@ section {
     top: 40px;
     left: 7.5%;
     text-align: left;
+    line-height: 1.6;   
 }
 
-#r_shop_link {
+#r_top_links {
+/*    border: 1px solid orange;*/
     position: absolute;
     top: 40px;
     right: 7.5%;
     text-align: right; 
-    text-transform: uppercase;   
+    text-transform: uppercase;
+    line-height: 1.6;   
 }
 
 #r_logo p.break {
@@ -333,7 +357,6 @@ section {
 #r_vitrine, #r_vitrine_bis {
     padding: 2px 0px;
 }
-
 
 .r_hole {
     height: 0px;
@@ -495,6 +518,10 @@ ul#index_categories li:nth-child(3) {
     position: relative;
     text-align: center;
     width: 100%;
+}
+
+.index_artist_title > a {
+    padding: 0px;
 }
 
 .index_artist_title p {

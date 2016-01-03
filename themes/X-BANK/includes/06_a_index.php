@@ -11,8 +11,14 @@
 		while ( $index_query->have_posts() ): $index_query->the_post(); ?>
 			<?php 
 			$initial = get_the_title();
+			// no. of cols
+			if ( get_field("index_no_columns") ) {
+				$noCols = get_field("index_no_columns");
+			} else {
+				$noCols = 2;
+			}
 			?>
-			<li id="<?php the_ID(); ?>" class="index_artist <?php echo print_categories(); ?>" data-initial="<?php echo $initial[0]; ?>">
+			<li id="<?php the_ID(); ?>" class="index_artist <?php echo print_categories(); ?>" data-initial="<?php echo $initial[0]; ?>" data-cols="<?php echo $noCols; ?>">
 				
 				<!-- TITLE, VISIBLE IN LIST -->
 				<div class="index_artist_title asterisks">
