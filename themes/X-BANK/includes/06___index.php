@@ -40,7 +40,7 @@
 			<!-- SEARCH TOGGLE BUTTON -->
 			<a href="">Search</a>
 			<!-- SEARCH FIELD -->
-			<input id="search" name="search" placeholder="Start typing here" type="text" data-toggle="hideseek" data-list=".sub_index">
+			<input id="search" name="search" placeholder="Search" type="text" data-list=".sub_index">
 		</p>
 
 		<!-- DIVs WITH CONTENT -->

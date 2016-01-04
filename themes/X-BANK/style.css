@@ -257,6 +257,7 @@ p {
     width: 100%;
     text-align: center;
     position: absolute;
+    pointer-events: none;
 }
 
 #receipt {
@@ -272,6 +273,7 @@ p {
     -webkit-transform: rotate(-1deg);
     transform-origin: center;
     -webkit-transform-origin: center;
+    pointer-events: auto;
 }
 
 p.break {
@@ -493,10 +495,23 @@ ul#index_categories li:nth-child(3) {
     margin-bottom: 48px;
 }
 
+#index_search input {
+    background-color: transparent;
+    border: 0;
+    border-bottom: 1px solid black;
+    padding: 2px 4px;
+    font-size: 1.05em;
+    letter-spacing: 0.05em;
+    font-family: "PES", "Courier New", Courier, monospace;
+    text-align: center;
+    display: none;
+}
+
 .sub_index {
     height: 0px;
     -webkit-transition: height 0.5s ease-in-out;
             transition: height 0.5s ease-in-out;
+    overflow: hidden;
 }
 
 .sub_index li {
@@ -505,7 +520,7 @@ ul#index_categories li:nth-child(3) {
 }
 
 .index_results li {
-    display: block;
+    display: block !important;
 }
 
 .index_artist {

@@ -4,7 +4,7 @@
 	$args = array(
 		"post_type" => "index",
 		"posts_per_page" => -1,
-		"orderby" => name
+		"orderby" => "name" 
 	);
 	$index_query = new WP_Query( $args );
 	if ( $index_query->have_posts() ) :
@@ -35,7 +35,7 @@
 				</div>
 
 				<!-- REST OF CONTENT, VISIBLE WHEN EXPANDED -->
-				<div class="index_artist_content">
+				<div class="index_artist_content ignore">
 					
 					<div class="index_artist_image">
 						<a class="artist_vitrine_toggle" href=""><img src="<?php bloginfo( "template_url" ); ?>/img/BK.jpg" /></a>

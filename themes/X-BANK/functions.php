@@ -58,23 +58,24 @@ function addBreak() {
 
 // IMAGE OBJECT
 
-function x_image_object( $img_id ) {
-    $width = wp_get_attachment_image_src( $img_id )[1];
-    $height = wp_get_attachment_image_src( $img_id )[2];
-    $thumb = wp_get_attachment_image_src( $img_id, "thumbnail" )[0];
-    $medium = wp_get_attachment_image_src( $img_id, "medium" )[0];
-    $large = wp_get_attachment_image_src( $img_id, "large" )[0];
-    $full = wp_get_attachment_image_src( $img_id, "full" )[0];
-
+function x_image_object( $image ) {
+    $width = $image['sizes'][ $size . '-width' ];
+    $height = $image['sizes'][ $size . '-height' ];
+    $thumb = $image['sizes'][ "thumbnail" ];
+    $medium = $image['sizes'][ "medium" ];
+    $large = $image['sizes'][ "large" ];
+    $full = $image['url'];
+    $id = $image["id"];
+    
     $class = "landscape"; 
     if ( $width < $height ) {
         $class = "portrait";
-        $thumb = wp_get_attachment_image_src( $img_id, "medium" )[0];
-        $medium = wp_get_attachment_image_src( $img_id, "large" )[0];
-        $large = wp_get_attachment_image_src( $img_id, "full" )[0];
+        $thumb = $image['sizes'][ "medium" ];
+        $medium = $image['sizes'][ "large" ];
+        $large = $image['url'];
     }
 
-    echo "<img class='' src='". $medium ."' />"; 
+    echo "<img class='' src='". $medium ."' />";
 }
 
 // STAR FILLER

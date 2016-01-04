@@ -12,6 +12,6 @@
 	-->
 
 <!-- RECEIPT -->
-	<?php include("includes/00_receipt.php"); ?>
+	<?php /*include("includes/00_receipt.php");*/ ?>
 
 <?php get_footer(); ?>

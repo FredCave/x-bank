@@ -66,7 +66,7 @@ $( document ).ready(function() {
 		var thisW = $("#receipt").width() * 0.85;
 		// get text width
 		var noChars = $(this).text().trim().length;
-		console.log(noChars);
+		//console.log(noChars);
 		var fontS = parseFloat( $(this).css("font-size") );
 		var textW = fontS * noChars * 0.595;
 		// this ratio (0.595) can be played with
@@ -301,7 +301,7 @@ $( document ).ready(function() {
 
 	$(".wrapper").on("click", "li", function(){
 		imagesPause();
-		console.log( $(this).attr("id") );
+		//console.log( $(this).attr("id") );
 	});
 
 	function wrapperShift () {
@@ -313,7 +313,7 @@ $( document ).ready(function() {
 		// check where wrapper_1 is
 		if ( parseInt ( $("#wrapper_1").css("left") ) === 0 ) {
 
-			console.log("wrapper shift case 1");
+			//console.log("wrapper shift case 1");
 
 			// Move wrappers
 			$("#wrapper_1").css("left", "-100%");
@@ -384,7 +384,7 @@ $( document ).ready(function() {
 		// 2.2.2. ON ARTIST CLICK
 
 	function artistVitrineToggle ( thisClick ) {
-		console.log(thisClick);
+		//console.log(thisClick);
 
 		// get ID of post to load
 		var postId = thisClick.parents("li").attr("id");
@@ -435,9 +435,31 @@ $( document ).ready(function() {
 
 	// 3.3. VITRINE TOGGLE
 
+	function vitrineCloseOnScroll () {		
+		$(".r_hole_tmp").each( function(){
+			// detect if vitrine is visible or not
+			var thisOffset = $(this).offset().top;
+			var winH = $(window).height();
+			console.log(thisOffset);
+
+			
+
+			if ( $(window).scrollTop() < thisOffset - ( winH / 2 ) || $(window).scrollTop() > thisOffset + ( winH / 2 ) ) {
+				console.log("not visible");
+				// detect if vitrine has class .no_close
+				if ( !$(this).hasClass("no_close") ) {
+					$(this).css("height", "0px").removeClass("clicked");	
+				}
+			}
+			
+		});
+	
+	}
+
 	function vitrineToggle ( thisA ) {
 		// calculate height of vitrine
 		var winH = $(window).height();
+
 		// get target
 		var target;
 		var artistVitrine = false;
@@ -451,7 +473,7 @@ $( document ).ready(function() {
 		}
 
 		if ( !target.hasClass("clicked") ) {
-			target.css("height", winH * 0.7).addClass("clicked");
+			target.css("height", winH * 0.7).addClass("clicked no_close");
 
 			// scroll up
 			var scrollTarget = $(thisA).offset().top - 60;
@@ -462,18 +484,24 @@ $( document ).ready(function() {
 				artistVitrineOpen( artist );
 			}
 
-			console.log(thisA, scrollTarget);
+			//console.log(thisA, scrollTarget);
 			$("html,body").animate({
 				scrollTop: scrollTarget
 			}, 500);
 
+			// remove no_close after 2 seconds
+			setTimeout( function(){
+				target.removeClass("no_close");
+			}, 2000);
+
 		} else {
-			target.css("height", "0px").removeClass("clicked");			
+			target.css("height", "0px").removeClass("clicked");
 			// if ( artistVitrine ) {
 			// 	artistVitrineClose();
 			// }
 		}	
 	}
+
 
 	$("a.main_vitrine").on("click", function(e){
 		e.preventDefault();
@@ -504,7 +532,7 @@ $( document ).ready(function() {
 			following.children().each( function(){
 				contentsH += $(this).outerHeight(true);
 			}).height();
-			console.log(contentsH);
+			//console.log(contentsH);
 			following.css( "height", contentsH ).addClass("clicked");		
 		}
 	});
@@ -659,6 +687,41 @@ $( document ).ready(function() {
 		//artistVitrineToggle( $(this) ); 		
 	});
 
+	// 3.7. SEARCH FUNCTION
+
+	// Initiate hideseek plugin
+	$('#search').hideseek({
+		ignore_accents: true,
+		ignore: '.ignore',
+		hidden_mode: true
+	}).on("_after", function() {
+		// empty results wrapper
+		var resultWrapper = $("#index .index_results");
+		resultWrapper.empty();
+		// loop through LIs — check if has class .result — see plugin file for modifications
+		$(".sub_index li").each( function(){
+			if ( $(this).hasClass("result") ) {
+				$(this).clone().appendTo(resultWrapper).hide();
+			}
+		});
+		// animate wrapper height
+		console.log( resultWrapper.height() );
+		$(".sub_index").css("height", resultWrapper.height() );
+
+	});
+
+	// Toggle search field
+		// Show
+	$("#index_search a").on("click", function(){
+		$(this).hide().next().show();
+	});
+		// Hide
+	$(document).click(function(e) { 
+	    if ( !$(e.target).closest("#index_search").length ) {
+	        $("#index_search input").hide().prev().show();
+	    }        
+	});
+
 /*****************************************************************************
     
 	4. WINDOW EVENTS
@@ -672,8 +735,8 @@ $( document ).ready(function() {
 	}).on("resize", function(){
 		imagesResize();
 	}).on("scroll", function(){
-		$("html").attr("data-scroll", $(window).scrollTop() );
-
+		//$("html").attr("data-scroll", $(window).scrollTop() ); // why was this here??
+		vitrineCloseOnScroll();
 	});
     
 });
