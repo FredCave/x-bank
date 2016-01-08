@@ -75,7 +75,7 @@ function x_image_object( $image ) {
         $large = $image['url'];
     }
 
-    echo "<img class='' src='". $medium ."' />";
+    echo "<img class='bg_image' src='". $medium ."' />";
 }
 
 // STAR FILLER
@@ -87,11 +87,11 @@ function starFiller ( $noChars, $firstString, $secondString ) {
     $b = strlen( trim($secondString) );
     // calculate no. of asterisks
     $filler = $noChars - $a - $b;
-    echo $firstString;
+    echo "<span class='stars'>***</span>" . $firstString . "<span class='stars'>***</span><br class='star_break'><span class='star_filler'>";
     for ( $i=0; $i < $filler; $i++ ) {
         echo "*";
     }   
-    echo $secondString;
+    echo "</span>" . $secondString;
 }
 
 ?>

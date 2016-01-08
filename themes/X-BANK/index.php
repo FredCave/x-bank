@@ -1,6 +1,6 @@
 <?php get_header(); ?>
 
-<!-- BG -->
+	<!-- BG -->
 	<?php include("includes/00_bg.php"); ?>
 
 	<!-- 	
@@ -11,7 +11,7 @@
 	</div> 
 	-->
 
-<!-- RECEIPT -->
-	<?php /*include("includes/00_receipt.php");*/ ?>
+	<!-- RECEIPT -->
+	<?php include("includes/00_receipt.php"); ?>
 
 <?php get_footer(); ?>

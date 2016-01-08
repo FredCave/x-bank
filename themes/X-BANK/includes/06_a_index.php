@@ -35,13 +35,13 @@
 				</div>
 
 				<!-- REST OF CONTENT, VISIBLE WHEN EXPANDED -->
-				<div class="index_artist_content ignore">
+				<div class="index_artist_content">
 					
 					<div class="index_artist_image">
-						<a class="artist_vitrine_toggle" href=""><img src="<?php bloginfo( "template_url" ); ?>/img/BK.jpg" /></a>
+						<a id="toggle-<?php the_ID(); ?>" class="artist_vitrine_toggle" href=""><img src="<?php bloginfo( "template_url" ); ?>/img/BK.jpg" /></a>
 					</div>
 
-					<h1><a class="artist_vitrine_toggle" href=""><?php the_title(); ?></a></h1>
+					<h1><a id="toggle-<?php the_ID(); ?>" class="artist_vitrine_toggle" href=""><?php the_title(); ?></a></h1>
 
 					<div class="index_artist_bio">
 						<?php the_field("index_artist_bio"); ?>

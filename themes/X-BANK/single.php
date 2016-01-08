@@ -2,24 +2,29 @@
 <ul class="img_loop">
 	<?php 
 
-	/*
-		IMAGE OPTIONS:
-		ARTIST NAME
-		TITLE??
-		WEBSHOP LINK (TO ARTIST)	
-			OR OPTIONAL EXTERNAL LINK
-		SOCIAL MEDIA SHARE
-	*/
-
 	if( have_rows('index_images') ):
 	    while ( have_rows('index_images') ) : the_row(); ?>
 			<!-- FUNCTION EXPORTS JUST IMG TAGS -->
-        	<li>
-	        	<?php 
-		        	$image = get_sub_field('index_image');
-		        	$img_id = $image["id"];
-		        	x_image_object( $img_id );
-		        ?>
+        	<li class="img">
+        		<span class="img_info_top img_info">
+					See more / Buy it
+				</span>
+
+				<!-- image object function in functions.php -->
+				<?php $image = get_sub_field('index_image'); 
+				
+                if( !empty($image) ): 
+					x_image_object( $image );
+                endif; ?>
+				<!-- image info/links -->
+				
+				<span class="img_info_bottom img_info">
+					<ul class="img_info_icons">
+						<li><img src="<?php bloginfo('template_url'); ?>/img/icon_facebook.svg" /></li>
+						<li><img src="<?php bloginfo('template_url'); ?>/img/icon_instagram.svg" /></li>
+						<li><img src="<?php bloginfo('template_url'); ?>/img/icon_twitter.svg" /></li>
+					</ul>
+				</span>
 		    </li>
 	    <?php
 	    endwhile;

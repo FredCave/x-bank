@@ -2,7 +2,7 @@
 
 	<div class="section_content">
 
-		<a href="" class="main_vitrine"><h1>Vitrine</h1></a>
+		<a href="" id="toggle-main" class="main_vitrine"><h1>Vitrine</h1></a>
 
 	</div>
 

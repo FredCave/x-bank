@@ -13,19 +13,6 @@
 		
 		<!--<p class="index_menu"><a href="">Previous Shows</a></p>-->
 
-		<!-- LETTERS 
-		<ul id="index_letters" class="index_menu">
-			<?php
-			// Create a range of letters
-			$letters = range('A', 'Z');
-			// Loop through letters
-			foreach ( $letters as $letter ) {			
-				// Create individual LIs
-				echo "<li class='index_letter'><a href=''>" . $letter . "</a></li>";
-			} ?>
-		</ul>
-		-->
-
 		<!-- CATEGORIES -->
 		<ul id="index_categories" class="index_menu">
 			<li><a href="">Art</a></li>
