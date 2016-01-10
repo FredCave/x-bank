@@ -1,93 +1,203 @@
 <?php get_header(); ?>
 
-<?php
-
-// get IDs of any media posts to be excluded — only logos for the time being
-function x_images_exclude( $type ) {	
-	$logo_ids = [];
-	$the_query = new WP_Query( array("post_type" => "x-logos") );
-	if ( $the_query->have_posts() ) { 		
-		while ( $the_query->have_posts() ) : $the_query->the_post();
-			if ( get_field('logos') ) {
-				$x_fields = get_field('logos');
-				// array of logo IDs				
-				foreach ( $x_fields as $x_field ) {
-					$logo_id = $x_field["logo"]["id"];
-					array_push( $logo_ids, $logo_id );
-				}
-			}
-		endwhile;
-	} 
-	wp_reset_postdata();
-	return $logo_ids;
-}
-
-function x_get_attachments( $noPosts ) {
-	
-	/* THIS RETURNS AN ARRAY OF ALL THE AVAILABLE IMAGES */
-
-	$args = array(
-	    'post_type' => 'attachment',
-	    'numberposts' => $noPosts,
-	    'orderby' => 'rand',
-	    'post__not_in' => x_images_exclude( "x-logos" )
-	    ); 
-	return get_posts($args);
-}
-
-/* MOVE TO FUNCTIONS SO SINGLE POST CAN ACCESS IT AS WELL */
-
-function x_images( $noPosts ) {
-	
-	$attachments = x_get_attachments( $noPosts );
-	echo "<ul id='init' class='img_loop'>";
-
-	if ($attachments) {
-		// loop through array
-		$i = 0; 
-		/* $i = temporary parameter just to know if all images are being loaded */
-		foreach ($attachments as $attachment) {
-			if ( $i === $noPosts ) {
-	        	break 1;
-	        } else {
-	        	$img_id = $attachment->ID;
-				x_image_object( $img_id, $i ); // Moved to functions.php
-	        	$i++;	
-	        }	
-		}
+	<style>
+	#test_container {
+/*		border: 1px solid orange;*/
+		width: 100%;
+/*		left: 25%;
+		top: 33%;*/
+		height: 100%;
+		position: fixed;
 	}
-	echo "</ul>";
-}
+	.test_column {		
+		width: 25%;
+		height: 100%;
+		position: absolute;
+	}
+	.test_column:nth-child(1) {
+		left: 0%;
+	}	
+	.test_column:nth-child(2) {
+		left: 25%;
+	}
+	.test_column:nth-child(3) {
+		left: 50%;
+	}
+	.test_column:nth-child(4) {
+		left: 75%;
+	}
+	.test_column ul {	
+/*		position: absolute;*/
+		top: 0%;
+		width: 100%;
+		/*height: 500px;*/
+		text-align: center;
+	}
+	.test_column li {	
+/*		border: 1px solid purple;*/
+		margin-bottom: 90px;
+	}
+	.test_column img {
+		width: 80%;
+		height: auto;
+		margin: 0% auto;
+	} 
+	.a {
+/*		border: 1px solid red;*/
+	}
+	.b {
+/*		border: 1px solid green;*/
+/*		display: none;*/
+	}
+	</style>
 
-?>
+	<div id="test_container">
 
-<div id="wrapper_1" class="wrapper wrapper_test">
-	<div id="init_container" class="container">
-		<!-- INITIAL CONTAINER -->
-		<div class="load_wrapper hide">
-			<!-- IMAGES INITIALLY LOADED HERE, HTML DONE IN JQUERY -->
-			<?php x_images( 12 ); ?>
+		<div class="test_column">
+			<ul id="test_ul_1" class="a">
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+			</ul>
 		</div>
+
+		<div class="test_column">
+			<ul id="test_ul_1" class="a">
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+			</ul>
+		</div>
+
+		<div class="test_column">
+			<ul id="test_ul_1" class="a">
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+			</ul>
+		</div>
+
+		<div class="test_column">
+			<ul id="test_ul_1" class="a">
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+				<li><img src="<?php bloginfo('template_url'); ?>/img/tmp.jpg" /></li>
+			</ul>
+		</div>
+
 	</div>
-</div>
 
-<script>
+	<script>
+	$(document).ready( function(){
 
-	$(".wrapper_test li").each( function(){
-		$(this).prepend("<div class='img_before'><a href=''>Artist info</a></div>");
-		$(this).find("img").after("<div class='img_after'><a href=''>Go to webshop</a></div>");
+		// each individual LI animated
+
+		// when no longer visible, appended to bottom of list
+
+
+
+
+
+		var ulH = $(".a").height();
+		var conH = $("#test_container").height();
+		console.log(ulH, conH);
+
+		$.keyframe.define({
+		    name: 'up',
+		    from: {
+		    	'transform': 'translateY(0px)'  
+		    },
+		    to: {
+		        'transform': 'translateY(-' + ( ulH - conH ) + 'px)'  
+		    }
+		});
+
+		$.keyframe.define({
+		    name: 'down',
+		    from: {
+		    	'transform': 'translateY(-' + ( ulH - conH ) + 'px)'   
+		    },
+		    to: {
+		        'transform': 'translateY(0px)' 
+		    }
+		});
+
+		$(".test_column:nth-child(1), .test_column:nth-child(3)").playKeyframe({
+		    name: 'up', 
+		    duration: '60s', 
+		    timingFunction: 'ease-out',
+		    direction: 'alternate',
+
+		    iterationCount: 'infinite',
+		    complete: function(){
+		    	
+		    } 
+		});
+
+		$(".test_column:nth-child(2), .test_column:nth-child(4)").playKeyframe({
+		    name: 'down', 
+		    duration: '60s', 
+		    timingFunction: 'ease-out',
+		    direction: 'alternate', 
+		    iterationCount: 'infinite',
+		    complete: function(){
+		    	
+		    } 
+		});	
+
+		// $(".b").playKeyframe({
+		//     name: 'up', 
+		//     duration: '10s', 
+		//     timingFunction: 'linear', 
+		//     complete: function(){
+		//     	$(".b").playKeyframe({
+		// 		    name: 'down', 
+		// 		    duration: '20s', 
+		// 		    timingFunction: 'linear',
+		// 		    iterationCount: 'infinite'
+		// 		});
+		//     } 
+		// });	
+
+
 	});
-
-	$(".wrapper_test").on("click", "img", function(){
-		var imgH = $(this).height();
-		console.log(imgH);
-		$(".img_before, .img_after").hide();
-		$(this).next(".img_after").css("top", imgH).show();
-		$(this).prev(".img_before").show();
-	});
-
-</script>
-
+	</script>
 
 <?php get_footer(); ?>
 

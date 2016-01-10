@@ -55,26 +55,24 @@ $( document ).ready(function() {
 
 	// 1.3. JUSTIFY LINES
 
-	function justify ( source ) {
-		/* 
-		TO DO:
-		GLOBALISED FUNCTION ????
-		*/
-	}
+	function justify ( ) {
 
-	$(".line_stretch").each( function(){
-		// get container width - HACK: receipt width * 0.85
-		var thisW = $("#receipt").width() * 0.85;
-		// get text width
-		var noChars = $(this).text().trim().length;
-		var fontS = parseFloat( $(this).css("font-size") );
-		var textW = fontS * noChars * 0.595;
-		// this ratio (0.595) can be played with
-		// calculate difference + no. of characters
-		var diff = thisW - textW;
-		var space = ( diff / (noChars +1) );
-		$(this).css("letter-spacing", space );
-	});
+		$(".line_stretch").each( function(){
+			// get container width - HACK: receipt width * 0.85
+			var thisW = $("#receipt").width() * 0.85;
+			// get text width
+			var noChars = $(this).text().trim().length;
+			console.log(noChars);
+			var fontS = parseFloat( $(this).css("font-size") );
+			var textW = fontS * noChars * 0.5;
+			// this ratio (0.595) can be played with
+			// calculate difference + no. of characters
+			var diff = thisW - textW;
+			var space = ( diff / (noChars +1) );
+			$(this).css("letter-spacing", space );
+		});
+
+	}
 
 	// 1.4. H1 STARS
 
@@ -106,7 +104,7 @@ $( document ).ready(function() {
 			}
 			j = i + 1;	
 			ulHTML += "<div class='movable_wrapper " + direction + " col_" + j +"'>";
-			ulHTML += "<ul id='ul" + i + "a' class='img_loop ul_1'></ul><ul id='ul" + i + "b' class='img_loop ul_2'></ul>";
+			ulHTML += "<ul class='img_loop'></ul><ul class='img_loop'></ul>";
 			ulHTML += "</div>";
 		}	
 		// destination wrapper
@@ -167,11 +165,8 @@ $( document ).ready(function() {
 		nocols = 4;
 		
 		// IMAGES INJECTED INTO ALL AVAILABLE ULs
-		source.find("li.img").each( function(i){
-			// tmp limit to no. of images
-			if ( i < 4 ) {
-				$(this).clone().appendTo( target.find(".img_loop") ); 	
-			}
+		source.find("li.img").each( function(){
+			$(this).clone().appendTo( target.find(".img_loop") ); 	
 		});
 
 		// IF MULTIPLE ULs, COLs 2-4 ARE SHUFFLED
@@ -183,158 +178,50 @@ $( document ).ready(function() {
 		} 
 	}
 
-
-	/* THIS SHOULD BE THE GLOBAL FUNCTION — ON RESIZE AS WELL */
-
-	var firstTime = true;
-
  	function imagesAnim ( init ) {
 
- 		//console.log(firstTime);
- 		if ( !firstTime ) {
- 			//$(".wrapper").addClass("paused");
-			//$(".wrapper").find("ul").addClass("paused");
- 		}
+ 		// GET UL + WIN HEIGHT
+ 		var ulH = $(".img_loop").height();
+		var winH = $(window).height();
 
- 		var target = $(".current .container");
-
- 		var winH = $(window).height();
-		
- 		var ulH = target.find(".img_loop").height();
- 		//console.log("ulH", ulH);
-
-			// Declare animations 
-		
-		var start, end;
-
-		if ( firstTime ) {
-			start = ulH;
-			end = 0 - ulH;
-		} else {
-			// GET TOP AND HEIGHT OF MOST VISIBLE ULs
-			var $ul = $(".movable_wrapper").eq(0);
-				
-			var vis = [];
-			// Get most visible UL
-			$ul.find(".img_loop").each( function(){
-				var visInner = [];			
-				var thisVis = $(this).fracs().visible;
-				visInner.push( thisVis, $(this).attr("id") );
-				vis.push(visInner);
-
-				console.log( $(this).css("transform") );
-			});
-				
-			vis.sort( function(a, b){return b[0]-a[0]} );
-		
-			// ID OF MOST VISIBLE UL
-			var thisId = vis[0][1]; // $("#"+thisId)
-			//console.log(thisId);
-			$("#"+thisId).css("background-color","255,0,255,0.2");
-
-			// HIDE OTHER UL
-			/*
-			if ( $("#"+thisId).hasClass("ul_1") ) {
-				$(".ul_2").hide();
-			} else {
-				$(".ul_1").hide();
-			}
-			*/
-				
-			// GET CURRENT POSITION
-			var thisTop = $("#"+thisId).offset().top;
-								
-			start = thisTop;
-			start = 0;
-
-			//console.log(thisTop);
-			end = thisTop - ulH;
-
-			$("#"+thisId).css({
-				"position" : "fixed",
-				"top" : 0
-			});
-
-
-		} // end of else
-
-		
-
-		// UP
-
+		// DEFINE ANIMATIONS		
 		$.keyframe.define({
-		    name: 'up-' + ulH,
+		    name: 'up',
 		    from: {
-		        'transform': 'translateY(' + start + 'px)'
+		    	'transform': 'translateY(0px)'  
 		    },
 		    to: {
-		        'transform': 'translateY(' + end + 'px)' // negative number'
+		        'transform': 'translateY(-' + ( ulH - winH ) + 'px)'  
 		    }
 		});
-				
-		// DOWN
 
 		$.keyframe.define({
-		    name: 'down-' + ulH,
+		    name: 'down',
 		    from: {
-		    	'transform': 'translateY(' + start + 'px)'  
+		    	'transform': 'translateY(-' + ( ulH - winH ) + 'px)'   
 		    },
 		    to: {
-		        'transform': 'translateY(' + end + 'px)'
+		        'transform': 'translateY(0px)' 
 		    }
 		});
-		    
-		// Shift up second UL to fill gap
-		target.find(".movable_wrapper .ul_2").each( function(i){
-			$(this).css(
-				"margin-top", "-" + $(this).height() + "px"
-			);			
+
+		// ASSIGN ANIMATIONS
+
+		$(".movable_wrapper:nth-child(1) .img_loop, .movable_wrapper:nth-child(3) .img_loop").playKeyframe({
+		    name: 'up', 
+		    duration: '90s', 
+		    timingFunction: 'ease-out',
+		    direction: 'alternate',
+		    iterationCount: 'infinite'
 		});
 
-		target.find(".movable_wrapper").each( function(i){
-			if ( i % 2 === 0 ) {
-				$(this).find(".ul_1").playKeyframe({
-				    name: 'down-' + ulH, 
-				    duration: '20s', 
-				    timingFunction: 'linear', 
-				    iterationCount: 'infinite' 
-				});	
-			} else {
-				$(this).find(".ul_1").playKeyframe({
-				    name: 'down-' + ulH, 
-				    duration: '20s', 
-				    timingFunction: 'linear', 
-				    iterationCount: 'infinite' 
-				});						
-			}
-		});
-		setTimeout( function() {
-			$(".ul_2, .ul_1").show();
-			target.find(".movable_wrapper").each( function(i){
-				if ( i % 2 === 0 ) {
-					$(this).find(".ul_2").playKeyframe({
-					    name: 'down-' + ulH,  
-					    duration: '20s', 
-					    timingFunction: 'linear', 
-					    iterationCount: 'infinite' 
-					});	
-				} else {
-					$(this).find(".ul_2").playKeyframe({
-					    name: 'down-' + ulH,  
-					    duration: '20s', 
-					    timingFunction: 'linear', 
-					    iterationCount: 'infinite' 
-					});						
-				}	
-			});
-		}, 10000 );
-
-		//$(".movable_wrapper ul").resetKeyframe();
-
-		// $(".wrapper").removeClass("paused");
-		// $(".wrapper").find("ul").removeClass("paused");
-
-		firstTime = false;
+		$(".movable_wrapper:nth-child(2) .img_loop, .movable_wrapper:nth-child(4) .img_loop").playKeyframe({
+		    name: 'down', 
+		    duration: '90s', 
+		    timingFunction: 'ease-out',
+		    direction: 'alternate', 
+		    iterationCount: 'infinite'
+		});	
 
 	}
 
@@ -346,136 +233,28 @@ $( document ).ready(function() {
 
 	/* CLICK ON IMAGES */
 
-	function imagesPause ( thisLi ) {
-		if ( !$(".wrapper").hasClass("paused") ) {
-			$(".wrapper").addClass("paused");
-			$(".wrapper").find("ul").addClass("paused");
+	function imagesClick ( thisLi ) {
+		if ( !$(".img_loop").hasClass("paused") ) {
+			$(".img_loop").addClass("paused");
 
-			$("#img_info_fixed").empty();
+			// SHOW INFO			
 			$(".img_info").css("opacity","0");
-			thisLi.find(".img_info").css("opacity","1").appendTo("#img_info_fixed");
+			thisLi.find(".img_info").css("opacity","1").clone().appendTo("#img_info_fixed");
+
 		} else {
-			$(".wrapper").removeClass("paused");
-			$(".wrapper").find("ul").removeClass("paused");
+			$(".img_loop").removeClass("paused");
 
+			// HIDE INFO
 			$(".img_info").css("opacity","0");
+			$("#img_info_fixed").empty();
 		}
 	}
 
 	$(".wrapper").on("click", "li.img", function(){
-		imagesPause( $(this) );
+		imagesClick( $(this) );
 	});
 
-	function imagesRecalc () {
-
-		var winW = $(window).width();
-			
-		// PAUSE ALL ANIMATIONS
-		imagesPause();
-
-		// GET TOP AND HEIGHT OF MOST VISIBLE ULs
-		var ulCalc = [];
-		// UL EACH
-		$(".movable_wrapper").each( function(){
-			
-			// Get most visible UL
-			var vis = [];
-			$(this).find(".img_loop").each( function(){
-				var visInner = [];
-				var thisVis = $(this).fracs().visible;
-				visInner.push( thisVis, $(this).attr("id") );
-				vis.push( visInner );
-			});
-			
-			vis.sort( function(a, b){return b[0]-a[0]} );
-		
-			// ID OF MOST VISIBLE
-			var thisId = vis[0][1]; // $("#"+thisId)
-			
-			// GET CURRENT POSITION
-			var thisTop = $("#"+thisId).offset().top;
-		
-			// GET CURRENT HEIGHT
-			var thisH = $(this).height();
-			
-			// STORE IN ARRAY
-			var ulRow = [];
-			ulRow[0] = thisId;
-			ulRow[1] = thisTop;
-			ulRow[2] = thisH;
-
-			ulCalc.push(ulRow);
-
-		});
-
-		console.log(ulCalc.length);
-
-		// REDEFINE ANIMATIONS (ALL ULs NOW HAVE SAME HEIGHT)
-		
-		/*
-		for (var i = 0; i < ulCalc.length; i++) {
-
-			var currentTop = ulCalc[i][0];
-			var destination = ulCalc[i][0] + ulCalc[i][1];
-			console.log(i, currentTop, destination);
-
-		    // Odd/even to create alternating animations
-		    if ( i % 2 === 0) {
-				
-				// UP
-				
-				$.keyframe.define({
-				    name: 'exit-' + i,
-				    from: {
-				        'transform': 'translateY(' + currentTop + 'px)' // current position
-				    },
-				    to: {
-				        'transform': 'translateY(-' + destination + 'px)' 
-				    }
-				});
-
-				$.keyframe.define({
-				    name: 'enter-' + i,
-				    from: {
-				        'transform': 'translateY(' + destination + 'px)'
-				    },
-				    to: {
-				        'transform': 'translateY(-' + destination + 'px)'
-				    }
-				});
-
-		    } else {
-				
-				// DOWN
-
-				$.keyframe.define({
-				    name: 'exit-' + i,
-				    from: {
-				    	'transform': 'translateY(-' + destination + 'px)'  
-				    },
-				    to: {
-				        'transform': 'translateY(' + currentTop + 'px)'
-				    }
-				});
-
-				$.keyframe.define({
-				    name: 'enter-' + i,
-				    from: {
-				    	'transform': 'translateY(-' + destination + 'px)'  
-				    },
-				    to: {
-				        'transform': 'translateY(' + destination + 'px)'
-				    }
-				});
-		    
-		    }
-
-		}
-		*/
-
-
-	}
-
+	
 	function wrapperShift () {
 		/*
 		Is there a way to simplify this ??
@@ -514,12 +293,14 @@ $( document ).ready(function() {
 	function imagesInit () {
 
 		imagesHtmlPrep( "init" ); // no. of columns // initial load
-		// noCols(); // assigns class to container
 		imagesInject( ); // no. of imgs/col
 		imagesAnim( true );
 		// Check if images have loaded
 		$("#load_wrapper").imagesLoaded().done( function(){
 		    imagesFadeIn();
+
+		    // Receipt slide up
+			$("#receipt_wrapper").css("top","0px");
   		});	
 
 	}
@@ -580,10 +361,6 @@ $( document ).ready(function() {
 
 *****************************************************************************/
 
-	// 3.1 PAGE START — RECEIPT SLIDE UP
-
-	// Needs a page load event probably
-	$("#receipt_wrapper").css("top","0px");
 
 	// 3.2. VITRINE TOGGLE
 
@@ -638,7 +415,7 @@ $( document ).ready(function() {
 				scrollTarget = artist.offset().top - 60;
 				
 				artistVitrineOpen( artist );
-			
+
 			} else {
 				scrollTarget = $( "#toggle-main" ).offset().top - 60;
 			}
@@ -651,6 +428,9 @@ $( document ).ready(function() {
 				target.removeClass("no_close");
 			}, 2000);
 
+			// stop image jump
+			$("#index_bis .index_artist_image img").css("margin-top", "24px");
+
 		} else {
 
 			// CLOSE
@@ -661,19 +441,7 @@ $( document ).ready(function() {
 			
 			if ( artistVitrine ) {
 				// close artist vitrine
-				
-				/* NEEDS WORK CLEANER TRANSITION */
-
-				$("#artist_vitrine").css("height", "0px").removeClass("clicked");
-				setTimeout( function(){
-					$("#artist_vitrine").show();
-				}, 500);
-				// reset html elements from index_bis
-				$(".hidden").show().removeClass("hidden");
-				// empty #index_bis	
-				$("#index_bis .index_results").empty().siblings().remove();
-				// animate wrapper height
-				$(".sub_index").css("height", $("#index .index_results").height() );
+				artistVitrineClose();
 			}
 
 		}	
@@ -838,6 +606,39 @@ $( document ).ready(function() {
 
 	}
 
+	function artistVitrineClose () {
+
+		$("#artist_vitrine").css("height", "0px").removeClass("clicked");
+		
+		// stop image jump
+		$("#index_bis .index_artist_image img").css("margin-top", "0px");
+		//$("#index_bis").css("padding-top", "0px");
+		$("#index").css("padding-bottom", "24px");
+
+		setTimeout( function(){
+			// reset html elements from index_bis
+			$(".hidden").show().removeClass("hidden");
+			// empty #index_bis	
+			$("#index_bis .index_results").empty().siblings().remove();
+			// animate wrapper height
+			$(".sub_index").css({
+				"-webkit-transition": "height 0s",
+				"transition": "height 0s", 
+				"height": $("#index .index_results").height() 
+			});
+			setTimeout( function(){
+				$(".sub_index").css({
+					"-webkit-transition": "",
+					"transition": "" 
+				});
+			}, 1000);
+
+			$("#index").css("padding-bottom", "");
+
+		}, 1000);
+
+	}
+
 	// CLICK EVENTS
 
 		// INFO TOGGLE
@@ -856,9 +657,8 @@ $( document ).ready(function() {
 		
 		/* CHECK WHETHER ARTIST IS SELECTED, IN INDEX_BIS?? */
 
-
 		// IN BG SECTION 2.2
-		// artistVitrineToggle( $(this) ); 		
+		artistVitrineToggle( $(this) ); 		
 	});
 
 	// 3.7. SEARCH FUNCTION
@@ -894,6 +694,8 @@ $( document ).ready(function() {
 	$(document).click(function(e) { 
 	    if ( !$(e.target).closest("#index_search").length ) {
 	        $("#index_search input").hide().prev().show();
+	        // REMOVE UNDERLINE
+	        $(".index_menu a").css("border-bottom","");
 	    }        
 	});
 
@@ -905,18 +707,9 @@ $( document ).ready(function() {
 
 	$(window).on("load", function(){
 		imagesInit();
-
-		setInterval( function(){
-			console.log( 
-				$("#ul0a").offset().top,
-
-				$("#ul0b").offset().top
-
-			);
-		}, 1000 );
-
+		justify();	
 	}).on("resize", function(){
-		imagesAnim();
+		//imagesAnim();
 	}).on("scroll", function(){
 		vitrineCloseOnScroll();
 	});
@@ -931,15 +724,17 @@ $( document ).ready(function() {
 	        noCols(1);
 	    } else if (mql.m.matches) {
 	        // More than 600px wide
-			noCols(2);			
+			noCols(2);		
 	    } else {
 	    	// More than 900px wide
 			noCols(4);
+			// LINE STRETCH
+			justify();	
 	    }
 	}
 
 	var mql = {};
-	mql.s = window.matchMedia("(max-width: 600px)");
+	mql.s = window.matchMedia("(max-width: 660px)");
 	mql.m = window.matchMedia("(max-width: 900px)");
 	mql.s.addListener(function(){
 		handleMediaChange(mql);

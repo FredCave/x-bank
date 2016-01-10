@@ -23,20 +23,9 @@ function x_images ( $noPosts ) {
 		$j = 1;
 		echo "<ul id='init' class='img_loop'>";
 		while ( $the_query->have_posts() ): $the_query->the_post(); 
-			
-			/* NEED TO LOOP THROUGH IMAGE ROWS AND ACCESS INFORMATION THERE */
-			/*
-				ATTACHED IMAGE INFO/LINKS:
-				—	ARTIST NAME
-				—	TITLE??
-				—	WEBSHOP LINK (TO ARTIST)	
-						OR OPTIONAL EXTERNAL LINK
-					SOCIAL MEDIA SHARE
-			*/
 
 			$imgName = get_the_title();
 			
-
 			if ( have_rows("index_images") ) :
 							
 				while ( have_rows("index_images") ) : the_row(); ?>
@@ -44,7 +33,7 @@ function x_images ( $noPosts ) {
 					<li id="<?php echo "j" . $j; ?>" class="img">
 						
 						<span class="img_info_top img_info">
-							See more / Buy it
+							<a href="">See more</a> / <a href="">Buy it</a>
 						</span>
 
 						<!-- image object function in functions.php -->
@@ -57,11 +46,13 @@ function x_images ( $noPosts ) {
 						
 						<span class="img_info_bottom img_info">
 							<ul class="img_info_icons">
-								<li><img src="<?php bloginfo('template_url'); ?>/img/icon_facebook.svg" /></li>
-								<li><img src="<?php bloginfo('template_url'); ?>/img/icon_instagram.svg" /></li>
-								<li><img src="<?php bloginfo('template_url'); ?>/img/icon_twitter.svg" /></li>
+								<li><a href=""><img src="<?php bloginfo('template_url'); ?>/img/icon_facebook.svg" /></a></li>
+								<li><a href=""><img src="<?php bloginfo('template_url'); ?>/img/icon_instagram.svg" /></a></li>
+								<li><a href=""><img src="<?php bloginfo('template_url'); ?>/img/icon_twitter.svg" /></a></li>
 							</ul>
 						</span>
+
+						<!--
 
 						<div class="image_info hide">
 							
@@ -73,15 +64,15 @@ function x_images ( $noPosts ) {
 											<?php the_sub_field( "index_image_link_title" ); ?>
 										</a>
 									<?php } else { ?>
-										<!-- NEED TO ADD LINK TO WEBSHOP -->
 										<a href="">Go to the webshop</a>
 									<?php } ?>
 								</span>
 								<span>
-									<!-- SOCIAL MEDIA LINKS -->
 								</span>
 							
 						</div>
+
+						-->
 						
 					</li> 
 				
@@ -152,11 +143,9 @@ function x_images ( $noPosts ) {
 
 </div>
 
-<!-- IMAGE INFO BLOCK -->
+<!-- IMAGE INFO BLOCK FOR SMALL SCREENS -->
 <div id="img_info_fixed">
 
 </div>
-
-
 
 
