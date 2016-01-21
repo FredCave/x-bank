@@ -27,17 +27,6 @@ function create_post_types() {
         'menu_position' => 5
         )
     );
-    register_post_type( 'x-logos',
-    array(
-      'labels' => array(
-        'name' => __( 'Logos' )
-      ),
-      'public' => true,
-      'has_archive' => true,
-      'supports' => array('editor','title'),
-      'menu_position' => 6
-    )
-  );
 }
 
 // GET CATEGORIES FOR EACH ARTIST
@@ -59,8 +48,8 @@ function addBreak() {
 // IMAGE OBJECT
 
 function x_image_object( $image ) {
-    $width = $image['sizes'][ $size . '-width' ];
-    $height = $image['sizes'][ $size . '-height' ];
+    $width = $image['sizes'][ 'thumbnail-width' ];
+    $height = $image['sizes'][ 'thumbnail-height' ];
     $thumb = $image['sizes'][ "thumbnail" ];
     $medium = $image['sizes'][ "medium" ];
     $large = $image['sizes'][ "large" ];
@@ -73,10 +62,24 @@ function x_image_object( $image ) {
         $thumb = $image['sizes'][ "medium" ];
         $medium = $image['sizes'][ "large" ];
         $large = $image['url'];
-    }
+    } 
 
-    echo "<img class='bg_image' src='". $medium ."' />";
+    echo "<img class='bg_image lazyload'
+    data-src=' " . $thumb . " ' 
+    width=' " . $width . " ' 
+    height=' " . $height . " ' 
+    data-sizes='auto' 
+    data-srcset=' " . $large . " 1280w, 
+        " . $medium . " 800w, 
+        " . $thumb . " 300w' 
+    src=' " . $thumb . " ' />";
+
 }
+
+
+
+
+
 
 // STAR FILLER
 

@@ -4,13 +4,17 @@
 
 	<?php addBreak(); ?>
 	<div class="section_head">
-		<h1>Upcoming Shows</h1>
+		<h1>Upcoming</h1>
 		<div class="back_to_top"><a href=""><img src="<?php bloginfo('template_url'); ?>/img/up_arrow.svg" /></a></div>
 	</div>
 	<?php addBreak(); ?>
 
 	<!-- SECTION CONTENT -->
 	<div class="section_content">
+
+		<h1>Coming Soon</h1>
+
+		<?php /*
 
 		<div id="r_upcoming_list">
 			<ul>
@@ -42,5 +46,7 @@
 		</div>
 
 	</div>
+
+	*/ ?>
 
 </section>

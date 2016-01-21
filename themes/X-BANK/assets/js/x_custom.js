@@ -35,7 +35,7 @@ $( document ).ready(function() {
 
 	*/
 
-	// $.keyframe.debug = true;
+$.keyframe.debug = true;
 
 /*****************************************************************************
     
@@ -81,6 +81,15 @@ $( document ).ready(function() {
 		$(this).text(text);
 	});
 
+	// 1.5. SCROLL TO 
+
+	function scroller ( thisClick ) {
+		var target = thisClick.parents("section").find(".scroll_target");
+		console.log(target.offset().top);
+		$("html,body").animate({
+			scrollTop: target.offset().top - 80
+		}, 500);
+	}
 
 /*****************************************************************************
     
@@ -155,30 +164,86 @@ $( document ).ready(function() {
 	$.fn.randomize=function(a){(a?this.find(a):this).parent().each(function(){$(this).children(a).sort(function(){return Math.random()-0.5}).detach().appendTo(this)});return this};
 
 	function imagesInject ( ) {
-		
+
 		// IMAGES INJECTED INTO CURRENT WRAPPER
 		var target = $(".current");
-		var noImages = $(".current").find(".load_wrapper .img_loop li.img").length;
-		var source = target.find(".container .load_wrapper");		
-		var noCols = parseInt ( target.find(".container").attr("data-cols") );
-		// GOOD IDEA? ALWAYS LOAD 4?
-		nocols = 4;
+		var source = target.find(".container .load_wrapper");
 		
-		// IMAGES INJECTED INTO ALL AVAILABLE ULs
-		source.find("li.img").each( function(){
-			$(this).clone().appendTo( target.find(".img_loop") ); 	
-		});
+		// if 4 column view
+		if ( source.find(".column_view") ) {
 
-		// IF MULTIPLE ULs, COLs 2-4 ARE SHUFFLED
-		if ( noCols > 1 ) {
-			for ( i=1; i < noCols; i++ ) {
-				var parent = $(".movable_wrapper").eq( i ).find(".img_loop");
-			    parent.find("li.img").randomize();
+			// loop through 4 existing columns
+			source.find(".column_view").each( function(i){
+
+				$(this).find("li.img").each( function(){
+					$(this).clone().appendTo( target.find(".movable_wrapper").eq(i).find(".img_loop") ); 	
+				});
+
+			});
+
+			// copy imgs depending on how many images there are
+
+			for ( var j = 0; j < 2; j++ ) {
+				
+				$(".movable_wrapper li.img").each( function(){
+
+					var thisParent = $(this).parents(".img_loop");
+					$(this).clone().appendTo( thisParent  ).addClass("duplicate");
+
+				});
+
 			}
+
+
+
+		// default image injection
+		} else {
+
+			var noImages = $(".current").find(".load_wrapper .img_loop li.img").length;
+					
+			var noCols = parseInt ( target.find(".container").attr("data-cols") );
+			nocols = 4;
+			
+			// IMAGES INJECTED INTO ALL AVAILABLE ULs
+			source.find("li.img").each( function(){
+				$(this).clone().appendTo( target.find(".img_loop") ); 	
+			});
+
+			// IF MULTIPLE ULs, COLs 2-4 ARE SHUFFLED
+			if ( noCols > 1 ) {
+				for ( i=1; i < noCols; i++ ) {
+					var parent = $(".movable_wrapper").eq( i ).find(".img_loop");
+				    parent.find("li.img").randomize();
+				}
+			} 
+
+		} // end of 4 column check
+
+		// IF 4 COLUMN VIEW
+
+		if ( $(".current .container").hasClass("container_2") || $(".current .container").hasClass("container_1") ) {
+			fourCols();			
 		} 
+
+		console.log( $(".img_loop").height() );
+
 	}
 
- 	function imagesAnim ( init ) {
+ 	function imagesAnim ( cols ) {
+
+ 		
+
+		/* FOUR COLUMN VIEW */
+		// Check if not first time
+
+		if ( !firstTime ) {
+			console.log("not first time");
+			fourCols(cols);
+
+		}
+		firstTime = false;
+
+		/* IMAGES ANIM */
 
  		// GET UL + WIN HEIGHT
  		var ulH = $(".img_loop").height();
@@ -188,17 +253,17 @@ $( document ).ready(function() {
 		$.keyframe.define({
 		    name: 'up',
 		    from: {
-		    	'transform': 'translateY(0px)'  
+		    	'transform': 'translateY(' + 0 + 'px)'  
 		    },
 		    to: {
-		        'transform': 'translateY(-' + ( ulH - winH ) + 'px)'  
+		        'transform': 'translateY(' + ( ulH - ( winH * 2 ) ) + 'px)'  
 		    }
 		});
 
 		$.keyframe.define({
 		    name: 'down',
 		    from: {
-		    	'transform': 'translateY(-' + ( ulH - winH ) + 'px)'   
+		    	'transform': 'translateY(' + ( ulH - ( winH * 2 ) ) + 'px)'   
 		    },
 		    to: {
 		        'transform': 'translateY(0px)' 
@@ -212,7 +277,15 @@ $( document ).ready(function() {
 		    duration: '90s', 
 		    timingFunction: 'ease-out',
 		    direction: 'alternate',
-		    iterationCount: 'infinite'
+		    complete: function () {
+				$(".movable_wrapper:nth-child(1) .img_loop, .movable_wrapper:nth-child(3) .img_loop").playKeyframe({
+				    name: 'up', 
+				    duration: '90s', 
+				    timingFunction: 'ease-in-out',
+				    direction: 'alternate',
+				    iterationCount: 'infinite'
+				});	    	
+		    }
 		});
 
 		$(".movable_wrapper:nth-child(2) .img_loop, .movable_wrapper:nth-child(4) .img_loop").playKeyframe({
@@ -220,7 +293,15 @@ $( document ).ready(function() {
 		    duration: '90s', 
 		    timingFunction: 'ease-out',
 		    direction: 'alternate', 
-		    iterationCount: 'infinite'
+		    complete: function(){
+		    	$(".movable_wrapper:nth-child(2) .img_loop, .movable_wrapper:nth-child(4) .img_loop").playKeyframe({
+				    name: 'down', 
+				    duration: '90s', 
+				    timingFunction: 'ease-in-out',
+				    direction: 'alternate', 
+				    iterationCount: 'infinite'
+				});	
+		    }
 		});	
 
 	}
@@ -229,6 +310,36 @@ $( document ).ready(function() {
 		$(".current").animate({
 			"opacity": "1"
 		}, 2000);	
+	}
+
+	/* IF FOUR COLUMN VIEW IS USED */
+	function fourCols ( cols ) {
+
+		if ( cols === 4 ) {
+
+			$(".appended").remove();
+		} else {
+
+			// check if four column view is activated
+			if ( $(".load_wrapper ul").hasClass("column_view") ) {
+				// IF 2 OR 1 COLUMNS ALL COLUMNS ARE THE SAME
+				// HIDE DUPLICATES
+				$(".duplicate").hide();
+
+				// COPY ULs FROM 2, 3, 4 TO 1
+				$(".current .movable_wrapper").each( function(i){
+					if ( i > 0 ) {
+						// JUST FROM 1st UL IN COLUMN
+						$(this).find(".img_loop:first-child .img").each( function(){
+							$(this).clone().appendTo(".current .movable_wrapper:first-child ul").addClass("appended");
+							$(this).clone().appendTo(".current .movable_wrapper:nth-child(2) ul").addClass("appended");
+						});
+					}
+				});
+			}
+
+		}
+
 	}
 
 	/* CLICK ON IMAGES */
@@ -251,7 +362,7 @@ $( document ).ready(function() {
 	}
 
 	$(".wrapper").on("click", "li.img", function(){
-		imagesClick( $(this) );
+		// imagesClick( $(this) );
 	});
 
 	
@@ -290,11 +401,13 @@ $( document ).ready(function() {
 
 		// 2.2.1. INITIATE ON LOAD
 
+	var firstTime = true;
+
 	function imagesInit () {
 
 		imagesHtmlPrep( "init" ); // no. of columns // initial load
 		imagesInject( ); // no. of imgs/col
-		imagesAnim( true );
+		// imagesAnim( );
 		// Check if images have loaded
 		$("#load_wrapper").imagesLoaded().done( function(){
 		    imagesFadeIn();
@@ -323,8 +436,6 @@ $( document ).ready(function() {
 		// 		loaded = true;
 		// 	}
 		// });
-
-
 
 		// prepare html
 		imagesHtmlPrep( postId );
@@ -412,12 +523,13 @@ $( document ).ready(function() {
 			var scrollTarget;
 			if ( artistVitrine ) {
 				var artist = $( "#result-" + thisA );
-				scrollTarget = artist.offset().top - 60;
+				scrollTarget = artist.offset().top;
 				
 				artistVitrineOpen( artist );
 
 			} else {
-				scrollTarget = $( "#toggle-main" ).offset().top - 60;
+				scrollTarget = $( "#toggle-main" ).offset().top;
+				console.log($( "#toggle-main" ).offset().top, scrollTarget);
 			}
 			$("html,body").animate({
 				scrollTop: scrollTarget
@@ -476,7 +588,8 @@ $( document ).ready(function() {
 			following.children().each( function(){
 				contentsH += $(this).outerHeight(true);
 			}).height();
-			following.css( "height", contentsH ).addClass("clicked");		
+			following.css( "height", contentsH ).addClass("clicked");
+			scroller( $(this) );		
 		}
 	});
 
@@ -722,14 +835,17 @@ $( document ).ready(function() {
 	    if (mql.s.matches) {
 	        // Less than 600px wide     
 	        noCols(1);
+	        imagesAnim();
 	    } else if (mql.m.matches) {
 	        // More than 600px wide
-			noCols(2);		
+			noCols(2);
+			imagesAnim();		
 	    } else {
 	    	// More than 900px wide
 			noCols(4);
 			// LINE STRETCH
-			justify();	
+			justify();
+			imagesAnim(4);	
 	    }
 	}
 

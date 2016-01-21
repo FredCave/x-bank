@@ -31,7 +31,7 @@
 <section id="about">
 	
 	<?php 
-	$x_query = new WP_Query("name=about");
+	$x_query = new WP_Query("name=info");
 	if ( $x_query -> have_posts() ) :
 		while ( $x_query -> have_posts() ) : $x_query->the_post(); ?>
 			
@@ -39,7 +39,7 @@
 
 			<?php addBreak(); ?>
 			<div class="section_head">
-				<h1><?php the_title(); ?></h1>
+				<h1>About X Bank</h1>
 				<div class="back_to_top"><a href=""><img src="<?php bloginfo('template_url'); ?>/img/up_arrow.svg" /></a></div>
 			</div>
 			<?php addBreak(); ?>

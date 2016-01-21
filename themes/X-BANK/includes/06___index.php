@@ -10,7 +10,11 @@
 	<?php addBreak(); ?>
 
 	<div class="section_content">
+
+		<h1>Coming Soon</h1>
 		
+		<?php /*
+
 		<!--<p class="index_menu"><a href="">Previous Shows</a></p>-->
 
 		<!-- CATEGORIES -->
@@ -55,6 +59,8 @@
 		<ul class="index_results"></ul>
 
 	</div>
+
+	*/ ?>
 
 </section>
 

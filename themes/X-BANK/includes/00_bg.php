@@ -106,22 +106,54 @@ function x_images ( $noPosts ) {
 				while ( $wp_query->have_posts() ) : $wp_query->the_post();
 					// If activate field is checked
 					if( get_field('bg_activate') ) {		
-						// Create UL
-						echo "<ul>";
-							// Loop through images
-							if ( have_rows("bg_images") ) :
-								while ( have_rows("bg_images") ) : the_row(); ?>
-									<li id="<?php echo $i; ?>" class="img">
-										<?php 
-										$image = get_sub_field("bg_image");
-										//echo $image["ID"];
-										x_image_object( $image["ID"] );
-										?>
-									</li>
-								<?php
+						// If 4 column view in use
+						if ( get_field('bg_column_activate') ) {
+							if ( have_rows("bg_column_images") ) :
+								// While corresponds to columns
+								while ( have_rows("bg_column_images") ) : the_row();
+									
+									
+									echo "<ul class='column_view'>";
+		
+										if ( have_rows("bg_column") ) :
+											echo "check";
+											while ( have_rows("bg_column") ) : the_row(); ?>
+												<li id="" class="img">
+													<?php 
+													$image = get_sub_field("bg_column_image");
+													
+													x_image_object( $image );
+													?>
+												</li>
+											<?php
+											endwhile;
+										endif;
+
+									echo "</ul>";
+									
 								endwhile;
 							endif;
-						echo "</ul>";
+						} else {
+							// Mixed curated background images
+							// Create UL
+							echo "<ul>";
+								// Loop through images
+								if ( have_rows("bg_images") ) :
+									while ( have_rows("bg_images") ) : the_row(); ?>
+										<li id="<?php echo $i; ?>" class="img">
+											<?php 
+											$image = get_sub_field("bg_image");
+											//echo $image["ID"];
+											x_image_object( $image["ID"] );
+											?>
+										</li>
+									<?php
+									endwhile;
+								endif;
+							echo "</ul>";
+
+						}
+
 					} else {
 						
 						// IF DEACTIVATED USE DEFAULT RANDOM IMAGE FUNCTION
