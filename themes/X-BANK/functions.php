@@ -27,6 +27,18 @@ function create_post_types() {
         'menu_position' => 5
         )
     );
+    register_post_type( 'show',
+    array(
+        'labels' => array(
+            'name' => __( 'Shows' )
+        ),
+        'public' => true,
+        'taxonomies' => array('category'),
+        'has_archive' => true,
+        'supports' => array('editor','title'),
+        'menu_position' => 6
+        )
+    );
 }
 
 // GET CATEGORIES FOR EACH ARTIST

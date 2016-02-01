@@ -5,14 +5,16 @@
 	<?php addBreak(); ?>
 	<div class="section_head">
 		<h1>Upcoming</h1>
-		<div class="back_to_top"><a href=""><img src="<?php bloginfo('template_url'); ?>/img/up_arrow.svg" /></a></div>
+		<div class="back_to_top"><a href=""><img src="<?php bloginfo('template_url'); ?>/img/up_arrow.png" /></a></div>
 	</div>
 	<?php addBreak(); ?>
+
+	
 
 	<!-- SECTION CONTENT -->
 	<div class="section_content">
 
-		<h1>Coming Soon</h1>
+		Coming Soon
 
 		<?php /*
 
@@ -45,8 +47,10 @@
 			</ul>
 		</div>
 
+	*/ ?>
+
 	</div>
 
-	*/ ?>
+	
 
 </section>

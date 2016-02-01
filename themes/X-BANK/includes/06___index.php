@@ -3,19 +3,37 @@
 	<!-- SECTION HEADER -->
 
 	<?php addBreak(); ?>
-	<div class="section_head">
+	<div id="index" class="section_head"><!-- ID HERE IS TEMPORARY -->
 		<h1>Index</h1>
-		<div class="back_to_top"><a href=""><img src="<?php bloginfo('template_url'); ?>/img/up_arrow.svg" /></a></div>
+		<div class="back_to_top"><a href=""><img src="<?php bloginfo('template_url'); ?>/img/up_arrow.png" /></a></div>
 	</div>
 	<?php addBreak(); ?>
 
 	<div class="section_content">
 
-		<h1>Coming Soon</h1>
-		
+		Coming Soon
+
 		<?php /*
+		
+		<img class="coming_soon" src="<?php bloginfo('template_url'); ?>/img/coming_soon.png" />
+	
+		
 
 		<!--<p class="index_menu"><a href="">Previous Shows</a></p>-->
+
+		<!-- LETTERS -->
+
+  		<ul id="index_letters" class="index_menu">
+  			<?php
+  			// Create a range of letters
+ 			$letters = range('A', 'Z');
+ 			// Loop through letters
+ 			foreach ( $letters as $letter ) {			
+ 				// Create individual LIs
+  				echo "<li class='index_letter'><a href=''>" . $letter . "</a></li>";
+  			} ?>
+  		</ul>
+
 
 		<!-- CATEGORIES -->
 		<ul id="index_categories" class="index_menu">
@@ -24,6 +42,7 @@
 			<li><a href="">Design</a></li>
 			<div class="clear"></div>
 		</ul>
+
 
 		<!-- SEARCH -->
 
@@ -35,8 +54,12 @@
 		</p>
 
 		<!-- DIVs WITH CONTENT -->
+
+		*/?>
 		
-		<?php include("06_a_index.php"); ?>
+		<?php /*include("06_a_index.php");*/ ?>
+		
+		
 
 	</div>
 
@@ -60,10 +83,9 @@
 
 	</div>
 
-	*/ ?>
+	
 
 </section>
-
 
 
 

@@ -8,6 +8,7 @@ $( document ).ready(function() {
 		1.2. INIT SMOOTHSCROLL
 		1.3. JUSTIFY LINES
 		1.4. STARS FOR H1
+		1.4. SCROLLER FUNCTION
 
 	2. BACKGROUND
 
@@ -35,7 +36,7 @@ $( document ).ready(function() {
 
 	*/
 
-$.keyframe.debug = true;
+// $.keyframe.debug = true;
 
 /*****************************************************************************
     
@@ -62,7 +63,6 @@ $.keyframe.debug = true;
 			var thisW = $("#receipt").width() * 0.85;
 			// get text width
 			var noChars = $(this).text().trim().length;
-			console.log(noChars);
 			var fontS = parseFloat( $(this).css("font-size") );
 			var textW = fontS * noChars * 0.5;
 			// this ratio (0.595) can be played with
@@ -85,7 +85,6 @@ $.keyframe.debug = true;
 
 	function scroller ( thisClick ) {
 		var target = thisClick.parents("section").find(".scroll_target");
-		console.log(target.offset().top);
 		$("html,body").animate({
 			scrollTop: target.offset().top - 80
 		}, 500);
@@ -225,84 +224,85 @@ $.keyframe.debug = true;
 			fourCols();			
 		} 
 
-		console.log( $(".img_loop").height() );
-
 	}
 
- 	function imagesAnim ( cols ) {
+ 	function imagesAnim ( first ) {
 
- 		
+ 		if ( first ) {
 
-		/* FOUR COLUMN VIEW */
-		// Check if not first time
+ 			firstTime = false;
 
-		if ( !firstTime ) {
-			console.log("not first time");
-			fourCols(cols);
+ 		} else {
 
-		}
-		firstTime = false;
+			/* IMAGES ANIM */
 
-		/* IMAGES ANIM */
+	 		// GET UL + WIN HEIGHT
+	 		var ulH = $(".img_loop").height();
+			var winH = $(window).height();
+			var target = ulH - ( winH * 2 );
+			var time = target / 18.6;
 
- 		// GET UL + WIN HEIGHT
- 		var ulH = $(".img_loop").height();
-		var winH = $(window).height();
+			// speed = distance / time
+			// time = distance / speed
 
-		// DEFINE ANIMATIONS		
-		$.keyframe.define({
-		    name: 'up',
-		    from: {
-		    	'transform': 'translateY(' + 0 + 'px)'  
-		    },
-		    to: {
-		        'transform': 'translateY(' + ( ulH - ( winH * 2 ) ) + 'px)'  
-		    }
-		});
+			// DEFINE ANIMATIONS		
+			$.keyframe.define({
+			    name: 'up',
+			    from: {
+			    	'transform': 'translateY(' + 0 + 'px)'  
+			    },
+			    to: {
+			        'transform': 'translateY(-' + ( ulH - ( winH * 2 ) ) + 'px)'  
+			    }
+			});
 
-		$.keyframe.define({
-		    name: 'down',
-		    from: {
-		    	'transform': 'translateY(' + ( ulH - ( winH * 2 ) ) + 'px)'   
-		    },
-		    to: {
-		        'transform': 'translateY(0px)' 
-		    }
-		});
+			$.keyframe.define({
+			    name: 'down',
+			    from: {
+			    	'transform': 'translateY(-' + ( ulH - ( winH * 2 ) ) + 'px)'   
+			    },
+			    to: {
+			        'transform': 'translateY(0px)' 
+			    }
+			});
 
-		// ASSIGN ANIMATIONS
+			// ASSIGN ANIMATIONS
 
-		$(".movable_wrapper:nth-child(1) .img_loop, .movable_wrapper:nth-child(3) .img_loop").playKeyframe({
-		    name: 'up', 
-		    duration: '90s', 
-		    timingFunction: 'ease-out',
-		    direction: 'alternate',
-		    complete: function () {
-				$(".movable_wrapper:nth-child(1) .img_loop, .movable_wrapper:nth-child(3) .img_loop").playKeyframe({
-				    name: 'up', 
-				    duration: '90s', 
-				    timingFunction: 'ease-in-out',
-				    direction: 'alternate',
-				    iterationCount: 'infinite'
-				});	    	
-		    }
-		});
+			$(".img_loop").resetKeyframe();
 
-		$(".movable_wrapper:nth-child(2) .img_loop, .movable_wrapper:nth-child(4) .img_loop").playKeyframe({
-		    name: 'down', 
-		    duration: '90s', 
-		    timingFunction: 'ease-out',
-		    direction: 'alternate', 
-		    complete: function(){
-		    	$(".movable_wrapper:nth-child(2) .img_loop, .movable_wrapper:nth-child(4) .img_loop").playKeyframe({
-				    name: 'down', 
-				    duration: '90s', 
-				    timingFunction: 'ease-in-out',
-				    direction: 'alternate', 
-				    iterationCount: 'infinite'
-				});	
-		    }
-		});	
+			$(".movable_wrapper:nth-child(1) .img_loop, .movable_wrapper:nth-child(3) .img_loop").playKeyframe({
+			    name: 'up', 
+			    duration: time + 's', 
+			    timingFunction: 'ease-out',
+			    direction: 'alternate',
+			    complete: function () {
+					$(".movable_wrapper:nth-child(1) .img_loop, .movable_wrapper:nth-child(3) .img_loop").playKeyframe({
+					    name: 'up', 
+					    duration: time + 's', 
+					    timingFunction: 'ease-in-out',
+					    direction: 'alternate',
+					    iterationCount: 'infinite'
+					});	    	
+			    }
+			});
+
+			$(".movable_wrapper:nth-child(2) .img_loop, .movable_wrapper:nth-child(4) .img_loop").playKeyframe({
+			    name: 'down', 
+			    duration: time + 's',  
+			    timingFunction: 'ease-out',
+			    direction: 'alternate', 
+			    complete: function(){
+			    	$(".movable_wrapper:nth-child(2) .img_loop, .movable_wrapper:nth-child(4) .img_loop").playKeyframe({
+					    name: 'down', 
+					    duration: time + 's', 
+					    timingFunction: 'ease-in-out',
+					    direction: 'alternate', 
+					    iterationCount: 'infinite'
+					});	
+			    }
+			});	
+
+		} // end of first time check
 
 	}
 
@@ -318,6 +318,8 @@ $.keyframe.debug = true;
 		if ( cols === 4 ) {
 
 			$(".appended").remove();
+			$(".duplicate").show();
+
 		} else {
 
 			// check if four column view is activated
@@ -401,13 +403,11 @@ $.keyframe.debug = true;
 
 		// 2.2.1. INITIATE ON LOAD
 
-	var firstTime = true;
-
 	function imagesInit () {
 
 		imagesHtmlPrep( "init" ); // no. of columns // initial load
 		imagesInject( ); // no. of imgs/col
-		// imagesAnim( );
+		imagesAnim();
 		// Check if images have loaded
 		$("#load_wrapper").imagesLoaded().done( function(){
 		    imagesFadeIn();
@@ -503,7 +503,6 @@ $.keyframe.debug = true;
 		var target;
 		var artistVitrine = false;
 		
-		console.log(thisA);
 		if ( thisA === "main" )  {
 			// Main vitrine
 			target = $("#r_vitrine").next(".r_hole");		
@@ -529,7 +528,7 @@ $.keyframe.debug = true;
 
 			} else {
 				scrollTarget = $( "#toggle-main" ).offset().top;
-				console.log($( "#toggle-main" ).offset().top, scrollTarget);
+				
 			}
 			$("html,body").animate({
 				scrollTop: scrollTarget
@@ -548,8 +547,6 @@ $.keyframe.debug = true;
 			// CLOSE
 
 			target.css("height", "0px").removeClass("clicked");
-			
-			console.log("reset");
 			
 			if ( artistVitrine ) {
 				// close artist vitrine
@@ -580,6 +577,7 @@ $.keyframe.debug = true;
 
 	$(".show_toggle").on("click", function(e){
 		e.preventDefault();
+		/*
 		var following = $(this).next(".show_content");
 		if ( following.hasClass("clicked") ) {
 			following.css( "height", 0 ).removeClass("clicked");
@@ -591,6 +589,7 @@ $.keyframe.debug = true;
 			following.css( "height", contentsH ).addClass("clicked");
 			scroller( $(this) );		
 		}
+		*/
 	});
 
 	// 3.5. INDEX CLICK
@@ -827,25 +826,38 @@ $.keyframe.debug = true;
 		vitrineCloseOnScroll();
 	});
 
+	/*
+	
+
+
+
+
+
+
+	*/
+
 	// MEDIA QUERY LISTENERS
 
+	var firstTime = true;
 	var handleMediaChange = function (mql) {
 		
 	    // Gives number of columns for image injection
 	    if (mql.s.matches) {
 	        // Less than 600px wide     
 	        noCols(1);
+	        fourCols();
 	        imagesAnim();
 	    } else if (mql.m.matches) {
 	        // More than 600px wide
 			noCols(2);
+			fourCols();
 			imagesAnim();		
 	    } else {
 	    	// More than 900px wide
 			noCols(4);
-			// LINE STRETCH
 			justify();
-			imagesAnim(4);	
+			fourCols( 4 );
+			imagesAnim( firstTime ); // need to check if first time
 	    }
 	}
 

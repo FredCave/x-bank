@@ -3,38 +3,67 @@
 	<!-- SECTION CONTENT -->
 	<div class="section_content">
 
-		<div id="r_current_text">
-			<ul>
-				<li>From*01/03/16</li>
-				<li>To*18/05/16</li>
-			</ul>
-		</div>
+		<?php
+		$args = array(
+			'post_type' => 'show',
+			'posts_per_page' => 1
+		);		
+		$show_query = new WP_Query( $args );
+		if ( $show_query->have_posts() ):
+			while ( $show_query->have_posts() ): $show_query->the_post(); ?> 
 
-		<a href="" class="show_toggle scroller">
-			<div id="r_current_image">
-					<img src="<?php bloginfo('template_url'); ?>/img/spijkers_temp.png" />	
-			</div>
-		</a>
-		
-		<div id="r_current_content" class="show_content scroll_target">
-			<h1>Spijkers en Spijkers</h1>
-			<div>
-				 It wasn't a dream. His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.
-			</div>
-
-			<?php /*
-
-			<div class="show_share">
+			<div id="r_current_text">
 				<ul>
-					<li><a href=""><img src="<?php bloginfo('template_url'); ?>/img/icon_facebook.svg" /></a></li>
-					<li><a href=""><img src="<?php bloginfo('template_url'); ?>/img/icon_instagram.svg" /></a></li>
-					<li><a href=""><img src="<?php bloginfo('template_url'); ?>/img/icon_twitter.svg" /></a></li>
-				</ul>				
-			</div>
+					<li>From*24/02/16</li>
+					<li>To*27/03/16</li>
+				</ul>
+			</div>	
 
-			*/ ?><!-- end of #r_current_content -->
-		</div>
+			<!--<a href="" class="show_toggle scroller">-->
+				<div id="r_current_image">
+					<?php $image = get_field( "show_title" ); 
+					$width = $image['sizes'][ 'thumbnail-width' ];
+				    $height = $image['sizes'][ 'thumbnail-height' ];
+				    $thumb = $image['sizes'][ "thumbnail" ];
+				    $medium = $image['sizes'][ "medium" ];
+				    $large = $image['sizes'][ "large" ];
+					echo "<img class='lazyload'
+				    data-src=' " . $thumb . " ' 
+				    width=' " . $width . " ' 
+				    height=' " . $height . " ' 
+				    data-sizes='auto' 
+				    data-srcset=' " . $large . " 1280w, 
+				        " . $medium . " 800w, 
+				        " . $thumb . " 300w' 
+				    src=' " . $thumb . " ' />";
+					?>
+				</div>
+			<!--</a>-->		
 
-	</div>
+			<div id="r_current_content" class="show_content scroll_target">
+				<h1><?php the_title(); ?></h1>
+
+				<div>
+					<!-- TEXT GOES HERE -->
+					<?php the_field( "show_text" ); ?>
+				</div>
+			
+				<?php /*
+				<div class="show_share">
+					<ul>
+						<li><a href=""><img src="<?php bloginfo('template_url'); ?>/img/icon_facebook.svg" /></a></li>
+						<li><a href=""><img src="<?php bloginfo('template_url'); ?>/img/icon_instagram.svg" /></a></li>
+						<li><a href=""><img src="<?php bloginfo('template_url'); ?>/img/icon_twitter.svg" /></a></li>
+					</ul>				
+				</div>
+				*/ ?>
+		
+			</div><!-- end of #r_current_content -->
+		
+		<?php endwhile;
+		endif; ?>
+
+
+	</div><!-- end of .section_content -->
 
 </section>

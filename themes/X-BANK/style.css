@@ -14,6 +14,21 @@ Author URI:		http://www.fredcave.com
     margin-bottom: 0px !important;
 }
 
+.coming_soon {
+/*    border: 1px solid orange;*/
+    position: absolute;
+    width: 50%;
+    left: 25%;
+    top: -80px;
+    z-index: 99;
+
+}
+
+#about {
+    padding-top: 0 !important;
+    margin-top: -24px !important;
+}
+
 /************************************************
     CSS RESET
 ************************************************/
@@ -45,7 +60,6 @@ html, body {
     font-family: "PES", "Courier New", Courier, monospace;
     font-size: 1.1em;
     text-rendering: optimizeLegibility;
-    -moz-osx-font-smoothing: grayscale;
      -webkit-font-smoothing: antialiased;
     /*-webkit-text-stroke: 0.5px black;*/
     line-height: 1.4;
@@ -67,9 +81,27 @@ input::-moz-focus-inner {
     border: 0; 
 }
 
-a:hover {
-/*    border-bottom: 1px solid black;*/
+.highlight:hover:before, .highlight:hover:after  {
+    content: "*";
 }
+
+.highlight-left:hover:after  {
+    content: "";
+}
+
+/* NEED TO CHANGE THIS, ADD CLASS */
+/*
+.show_toggle:hover:before, 
+.show_toggle:hover:after, 
+#r_top_links a:hover:after,
+.index_letter a:hover:before,
+.index_letter a:hover:after,
+.back_to_top a:hover:before,
+.back_to_top a:hover:after,
+.img a:hover:before,
+.img a:hover:after {
+    content: "";
+}*/
 
 b, strong {
     font-weight: bold;
@@ -91,8 +123,8 @@ h1 {
 }
 
 p {
-    text-align: justify;
     text-align: center;
+
 }
 
 .clear {
@@ -496,7 +528,7 @@ section {
 }
 
 #r_logo img {
-    width: 35%;
+    width: 50%;
     height: auto;
 }
 
@@ -517,6 +549,10 @@ section {
     text-align: left;  
 }
 
+#r_address a {
+	display: block; 
+}
+
 #r_top_links {
 /*    border: 1px solid orange;*/
     position: absolute;
@@ -527,13 +563,12 @@ section {
     line-height: 1.6;   
 }
 
-    @media ( max-width: 660px ) {
+    @media ( max-width: 800px ) {
         #r_logo img {
             margin-top: 0px;
             width: 67%;
         }
         #r_address {
-            /*border: 1px solid green;*/
             position: relative;
             top: 0;
             left: 0; 
@@ -543,7 +578,6 @@ section {
             text-align: center;  
         }   
         #r_top_links {
-           /* border: 1px solid red;*/
             position: relative;
             top: 0;
             right: 0;
@@ -558,6 +592,10 @@ section {
 
 #r_vitrine, #r_vitrine_bis {
     padding: 2px 0px;
+}
+
+#r_vitrine .section_content {
+    margin-top: 16px;
 }
 
 .main_vitrine {
@@ -596,6 +634,10 @@ section {
     width: 85%;
     margin-left: 7.5%;
     display: block;
+}
+
+#r_menu  {
+    padding-bottom: 12px;
 }
 
 #r_menu ul {
@@ -671,6 +713,10 @@ section {
     margin: 24px auto 48px auto;
 }
 
+#index .section_content {
+    margin-bottom: 12px; /* TMP - why necessary ?? */
+}
+
 .index_menu li a {
     border-bottom: 1px solid #fcfff3;
     border-bottom: 1px solid transparent;
@@ -690,17 +736,41 @@ section {
 }
 
 #index_letters {
+/*    border: 1px solid green;*/
     width: 105%;
     margin-left: -2.5%;
     text-align: center;
+    overflow: visible;
 }
 
 #index_letters li {
 /*    border: 1px solid purple;*/
     display: inline-block;
-    margin: 0.45px;
-    padding: 5px 6px 4px 6px;
+    margin: 0.4px;
+    padding: 0px;
 }
+
+#index_letters li a {
+    padding: 6.1px;
+}
+
+    @media ( max-width: 880px ) {
+        #index_letters li {
+            margin: 1vw;
+        }
+        #index_letters li a {
+            padding: 5px 0.7vw;
+        }
+    }
+
+    @media ( max-width: 660px ) {
+        #index_letters li {
+            margin: 1vw;
+        }
+        #index_letters li a {
+           
+        }
+    }
 
 #index_categories {
     text-align: center;
@@ -824,6 +894,11 @@ section {
     margin-bottom: 48px;
 }
 
+.about_text p {
+	margin-bottom: 24px;
+}
+
+    
 #index_bis {
     padding-top: 0px;
 }
@@ -831,5 +906,3 @@ section {
 #index_bis .index_artist_image img {
     margin-top: 0px;
 }
-
-

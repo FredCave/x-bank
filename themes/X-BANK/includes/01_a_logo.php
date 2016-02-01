@@ -1,6 +1,6 @@
 <!-- TEST IMAGE -->
 
-<?php $the_query = new WP_Query( array("post_type" => "x-logos") ); ?>
+<?php $the_query = new WP_Query( array("name" => "logos") ); ?>
 <?php if ( $the_query->have_posts() ) { ?>
 	<?php while ( $the_query->have_posts() ) : $the_query->the_post(); ?>
 	

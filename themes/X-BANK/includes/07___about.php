@@ -40,7 +40,7 @@
 			<?php addBreak(); ?>
 			<div class="section_head">
 				<h1>About X Bank</h1>
-				<div class="back_to_top"><a href=""><img src="<?php bloginfo('template_url'); ?>/img/up_arrow.svg" /></a></div>
+				<div class="back_to_top"><a href=""><img src="<?php bloginfo('template_url'); ?>/img/up_arrow.png" /></a></div>
 			</div>
 			<?php addBreak(); ?>
 
@@ -48,8 +48,20 @@
 
 			<div class="section_content">
 				<div class="about_text">
-					<?php the_content(); ?>
+					<?php the_field("info_about"); ?>
 				</div>
+
+				<h1 id="vault">The Vault</h1>
+				<div class="about_text">
+					<?php the_field("info_vault_text"); ?>
+				</div>
+
+				<!--
+				<h1 id="coin">The Coin</h1>
+				<div class="about_text">
+					Coming Soon
+				</div>
+				-->
 
 				<h1>Opening Times:</h1>
 

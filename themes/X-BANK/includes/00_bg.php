@@ -119,11 +119,16 @@ function x_images ( $noPosts ) {
 											echo "check";
 											while ( have_rows("bg_column") ) : the_row(); ?>
 												<li id="" class="img">
-													<?php 
-													$image = get_sub_field("bg_column_image");
-													
-													x_image_object( $image );
-													?>
+													<!-- TEMP FACEBOOK LINK -->
+													<a href="https://www.facebook.com/X-BANK-893775603976100/?fref=ts" target="_blank">
+
+														<?php 
+														$image = get_sub_field("bg_column_image");
+														
+														x_image_object( $image );
+														?>
+
+													</a>
 												</li>
 											<?php
 											endwhile;
@@ -179,5 +184,3 @@ function x_images ( $noPosts ) {
 <div id="img_info_fixed">
 
 </div>
-
-
