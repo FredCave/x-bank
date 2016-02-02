@@ -76,9 +76,15 @@ $( document ).ready(function() {
 
 	// 1.4. H1 STARS
 
+	var text;
 	$("h1").each( function(){
-		var text = $(this).text().replace(/\s/g, "*");
-		$(this).text(text);
+		if ( $(this).find("a").length ) {
+			text = $(this).find("a").text().replace(/\s/g, "*");
+			$(this).find("a").text(text);
+		} else {
+			text = $(this).text().replace(/\s/g, "*");
+			$(this).text(text);
+		}		
 	});
 
 	// 1.5. SCROLL TO 
@@ -169,7 +175,7 @@ $( document ).ready(function() {
 		var source = target.find(".container .load_wrapper");
 		
 		// if 4 column view
-		if ( source.find(".column_view") ) {
+		if ( source.find(".column_view").length ) {
 
 			// loop through 4 existing columns
 			source.find(".column_view").each( function(i){
@@ -181,19 +187,14 @@ $( document ).ready(function() {
 			});
 
 			// copy imgs depending on how many images there are
-
 			for ( var j = 0; j < 2; j++ ) {
 				
 				$(".movable_wrapper li.img").each( function(){
-
 					var thisParent = $(this).parents(".img_loop");
 					$(this).clone().appendTo( thisParent  ).addClass("duplicate");
-
 				});
 
 			}
-
-
 
 		// default image injection
 		} else {
@@ -312,7 +313,7 @@ $( document ).ready(function() {
 		}, 2000);	
 	}
 
-	/* IF FOUR COLUMN VIEW IS USED */
+	/* IF CURATED BG COLUMNS ARE USED */
 	function fourCols ( cols ) {
 
 		if ( cols === 4 ) {
@@ -364,7 +365,7 @@ $( document ).ready(function() {
 	}
 
 	$(".wrapper").on("click", "li.img", function(){
-		// imagesClick( $(this) );
+		imagesClick( $(this) );
 	});
 
 	
@@ -420,13 +421,29 @@ $( document ).ready(function() {
 
 		// 2.2.2. ON ARTIST CLICK
 
-	function artistVitrineToggle ( thisClick ) {
+	function artistImages ( thisClick ) {
 
 		// get ID of post to load
 		var postId = thisClick.parents("li").attr("id");
 		// get number of columns
 		var noCols = thisClick.parents("li").attr("data-cols");
 		
+		// check if not loaded already
+		if ( $("body").find("#wrapper-" + postId).length ) {
+
+			// imagesHtmlPrep( postId ); // prepare html with id of wrapper_postId
+
+			// ajax call
+
+			// imagesInject();
+
+			// noCols ( noCols );
+
+			// imagesAnim();
+
+			// update url
+
+		}
 
 		// check if loaded already or not
 		
@@ -472,6 +489,13 @@ $( document ).ready(function() {
 
 *****************************************************************************/
 
+	// 3.1. ADDRESS HIGHLIGHT ON HOVER
+
+	$("#r_address").hover( function(){
+		$(this).find("p").addClass("highlight-right");
+	}, function(){
+		$(this).find("p").removeClass("highlight-right");
+	});
 
 	// 3.2. VITRINE TOGGLE
 
@@ -631,7 +655,7 @@ $( document ).ready(function() {
 		$(".sub_index").css("height", resultWrapper.height() );
 	});
 
-	// 3.6. ARTIST NAME CLICK
+	// 3.6. ARTIST NAME IN INDEX CLICK
 
 	function artistInfoToggle ( target ) {
 		// target = .index_artist_title a
@@ -770,7 +794,7 @@ $( document ).ready(function() {
 		/* CHECK WHETHER ARTIST IS SELECTED, IN INDEX_BIS?? */
 
 		// IN BG SECTION 2.2
-		artistVitrineToggle( $(this) ); 		
+		artistImages( $(this) ); 		
 	});
 
 	// 3.7. SEARCH FUNCTION

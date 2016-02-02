@@ -1,14 +1,6 @@
 <?php
 
-/* 
-	INITIAL BG IMAGE SELECTION HERE
-
-	CHECK BG IMAGE POST (BOTTOM OF PAGE)
-		IF ACTIVATED USE IMAGES FROM THAT SELECTION
-		ELSE USE DEFAULT RANDOM IMAGE SELECTION
-*/
-
-/* DEFAULT RANDOM IMAGES */
+/* DEFAULT RANDOM IMAGE FUNCTION */
 
 function x_images ( $noPosts ) {
 	// Loop through number of index posts corresponding to $noPosts
@@ -20,7 +12,6 @@ function x_images ( $noPosts ) {
 	$the_query = new WP_Query( $args );
 	if ( $the_query->have_posts() ) :
 			
-		$j = 1;
 		echo "<ul id='init' class='img_loop'>";
 		while ( $the_query->have_posts() ): $the_query->the_post(); 
 
@@ -30,10 +21,15 @@ function x_images ( $noPosts ) {
 							
 				while ( have_rows("index_images") ) : the_row(); ?>
 					
-					<li id="<?php echo "j" . $j; ?>" class="img">
+					<li class="img">
 						
 						<span class="img_info_top img_info">
-							<a href="">See more</a> / <a href="">Buy it</a>
+							<!-- 
+							LINK TO INDEX SECTION
+							LINK TO WEBSHOP
+							-->
+
+							<a href="#index">See more</a> <!--/ <a href="">Buy it</a>-->
 						</span>
 
 						<!-- image object function in functions.php -->
@@ -46,38 +42,29 @@ function x_images ( $noPosts ) {
 						
 						<span class="img_info_bottom img_info">
 							<ul class="img_info_icons">
+
+								<!-- 
+								GENERIC SHARE PHRASE:
+								*NAME* AVAILABLE AT *LINK*
+								-->
+
+								<!-- FACEBOOK -->
 								<li><a href=""><img src="<?php bloginfo('template_url'); ?>/img/icon_facebook.svg" /></a></li>
-								<li><a href=""><img src="<?php bloginfo('template_url'); ?>/img/icon_instagram.svg" /></a></li>
-								<li><a href=""><img src="<?php bloginfo('template_url'); ?>/img/icon_twitter.svg" /></a></li>
+								<!-- TWITTER -->
+								<li>
+									<a class="twitter-share-button" 
+										target="_blank" 
+										href="https://twitter.com/intent/tweet?text=<?php echo $imgName; ?> available at xbank.amsterdam">
+										<img src="<?php bloginfo('template_url'); ?>/img/icon_twitter.svg" />
+									</a>
+								</li>
 							</ul>
 						</span>
-
-						<!--
-
-						<div class="image_info hide">
-							
-								<span><?php echo $imgName; ?></span>
-								<span><?php the_sub_field( "index_image_title" ); ?></span>
-								<span>
-									<?php if ( has_sub_field( "index_image_link_url" ) ) { ?>
-										<a href="<?php the_sub_field( "index_image_link_url" ); ?>">
-											<?php the_sub_field( "index_image_link_title" ); ?>
-										</a>
-									<?php } else { ?>
-										<a href="">Go to the webshop</a>
-									<?php } ?>
-								</span>
-								<span>
-								</span>
-							
-						</div>
-
-						-->
 						
 					</li> 
 				
 				<?php 
-				$j++;
+
 				endwhile;
 				
 			endif; // end of image rows loop
@@ -85,7 +72,6 @@ function x_images ( $noPosts ) {
 		endwhile;
 		echo "</ul>";
 		wp_reset_postdata();
-
 		
 	endif;
 }
@@ -106,64 +92,39 @@ function x_images ( $noPosts ) {
 				while ( $wp_query->have_posts() ) : $wp_query->the_post();
 					// If activate field is checked
 					if( get_field('bg_activate') ) {		
-						// If 4 column view in use
-						if ( get_field('bg_column_activate') ) {
-							if ( have_rows("bg_column_images") ) :
-								// While corresponds to columns
-								while ( have_rows("bg_column_images") ) : the_row();
-									
-									
-									echo "<ul class='column_view'>";
-		
-										if ( have_rows("bg_column") ) :
-											echo "check";
-											while ( have_rows("bg_column") ) : the_row(); ?>
-												<li id="" class="img">
-													<!-- TEMP FACEBOOK LINK -->
-													<a href="https://www.facebook.com/X-BANK-893775603976100/?fref=ts" target="_blank">
 
-														<?php 
-														$image = get_sub_field("bg_column_image");
-														
-														x_image_object( $image );
-														?>
+						if ( have_rows("bg_column_images") ) :
+							// While corresponds to columns
+							while ( have_rows("bg_column_images") ) : the_row();
+															
+								echo "<ul class='column_view'>";
+	
+									if ( have_rows("bg_column") ) :
+										
+										while ( have_rows("bg_column") ) : the_row(); ?>
+											<li id="" class="img">
 
-													</a>
-												</li>
-											<?php
-											endwhile;
-										endif;
+												<?php 
+												$image = get_sub_field("bg_column_image");
+												
+												x_image_object( $image );
+												?>
 
-									echo "</ul>";
-									
-								endwhile;
-							endif;
-						} else {
-							// Mixed curated background images
-							// Create UL
-							echo "<ul>";
-								// Loop through images
-								if ( have_rows("bg_images") ) :
-									while ( have_rows("bg_images") ) : the_row(); ?>
-										<li id="<?php echo $i; ?>" class="img">
-											<?php 
-											$image = get_sub_field("bg_image");
-											//echo $image["ID"];
-											x_image_object( $image["ID"] );
-											?>
-										</li>
-									<?php
-									endwhile;
-								endif;
-							echo "</ul>";
+											</li>
+										<?php
+										endwhile;
+									endif;
 
-						}
-
-					} else {
+								echo "</ul>";
+								
+							endwhile;
+						endif;
+						
+					// If activate field is unchecked
+					} else {						
 						
 						// IF DEACTIVATED USE DEFAULT RANDOM IMAGE FUNCTION
 						x_images( 16 );
-					
 					}
 					$i++;
 				endwhile;

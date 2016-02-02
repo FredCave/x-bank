@@ -11,7 +11,7 @@
 		while ( $index_query->have_posts() ): $index_query->the_post(); ?>
 			<?php 
 			$initial = get_the_title();
-			// no. of cols
+			// get no. of cols defined in post
 			if ( get_field("index_no_columns") ) {
 				$noCols = get_field("index_no_columns");
 			} else {
@@ -59,7 +59,7 @@
 		<?php	
 		endwhile;
 	endif;
-	wp_reset_postdata; ?>
+	wp_reset_postdata(); ?>
 
 	<ul class="index_results">
 		<!-- RESULTS GO HERE -->

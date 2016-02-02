@@ -3,9 +3,9 @@
 // ENQUEUE CUSTOM SCRIPTS
 function enqueue_cpr_scripts() {
   
-    // wp_deregister_script( 'jquery' );
-    // wp_register_script( 'jquery', '//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js');
-    // wp_enqueue_script( 'jquery' );  
+    wp_deregister_script( 'jquery' );
+    wp_register_script( 'jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js');
+    wp_enqueue_script( 'jquery' );  
     
     wp_enqueue_script('all-scripts', get_template_directory_uri() . '/js/scripts.min.js', array('jquery'), true);
 
@@ -44,7 +44,7 @@ function create_post_types() {
 // GET CATEGORIES FOR EACH ARTIST
 
 function print_categories() {       
-    if( get_field("index_categories").length ):
+    if( get_field("index_categories") ):
         $categories = get_field_object("index_categories");
         $values = $categories['value'];
         return strtolower ( join(' ', $values) );
@@ -87,11 +87,6 @@ function x_image_object( $image ) {
     src=' " . $thumb . " ' />";
 
 }
-
-
-
-
-
 
 // STAR FILLER
 

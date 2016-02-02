@@ -14,10 +14,6 @@
 	<!-- SECTION CONTENT -->
 	<div class="section_content">
 
-		Coming Soon
-
-		<?php /*
-
 		<div id="r_upcoming_list">
 			<ul>
 				<li>
@@ -47,10 +43,6 @@
 			</ul>
 		</div>
 
-	*/ ?>
-
 	</div>
-
-	
 
 </section>

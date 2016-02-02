@@ -3,21 +3,13 @@
 	<!-- SECTION HEADER -->
 
 	<?php addBreak(); ?>
-	<div id="index" class="section_head"><!-- ID HERE IS TEMPORARY -->
+	<div class="section_head"><!-- ID HERE IS TEMPORARY -->
 		<h1>Index</h1>
 		<div class="back_to_top"><a href=""><img src="<?php bloginfo('template_url'); ?>/img/up_arrow.png" /></a></div>
 	</div>
 	<?php addBreak(); ?>
 
 	<div class="section_content">
-
-		Coming Soon
-
-		<?php /*
-		
-		<img class="coming_soon" src="<?php bloginfo('template_url'); ?>/img/coming_soon.png" />
-	
-		
 
 		<!--<p class="index_menu"><a href="">Previous Shows</a></p>-->
 
@@ -54,12 +46,9 @@
 		</p>
 
 		<!-- DIVs WITH CONTENT -->
-
-		*/?>
 		
-		<?php /*include("06_a_index.php");*/ ?>
-		
-		
+		<?php include("06_a_index.php"); ?>
+				
 
 	</div>
 
