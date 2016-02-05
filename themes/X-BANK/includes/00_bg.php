@@ -1,5 +1,20 @@
 <?php
 
+/* SLUG GENERATOR */
+
+function toAscii($str, $replace=array(), $delimiter='-') {
+	if( !empty($replace) ) {
+		$str = str_replace((array)$replace, ' ', $str);
+	}
+
+	$clean = iconv('UTF-8', 'ASCII//TRANSLIT', $str);
+	$clean = preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $clean);
+	$clean = strtolower(trim($clean, '-'));
+	$clean = preg_replace("/[\/_|+ -]+/", $delimiter, $clean);
+
+	return $clean;
+}
+
 /* DEFAULT RANDOM IMAGE FUNCTION */
 
 function x_images ( $noPosts ) {
@@ -16,20 +31,20 @@ function x_images ( $noPosts ) {
 		while ( $the_query->have_posts() ): $the_query->the_post(); 
 
 			$imgName = get_the_title();
+			global $post;
+    		$post_slug = $post->post_name;
 			
 			if ( have_rows("index_images") ) :
 							
 				while ( have_rows("index_images") ) : the_row(); ?>
 					
-					<li class="img">
+					<li id="<?php echo $imgName; ?>" class="img">
 						
 						<span class="img_info_top img_info">
 							<!-- 
-							LINK TO INDEX SECTION
-							LINK TO WEBSHOP
+							LINK TO INDEX SECTION / LINK TO WEBSHOP
 							-->
-
-							<a href="#index">See more</a> <!--/ <a href="">Buy it</a>-->
+							<a id="see_more" href="#index" data-artist="<?php echo $post_slug; ?>">See more</a> <!--/ <a href="">Buy it</a>-->
 						</span>
 
 						<!-- image object function in functions.php -->
@@ -102,13 +117,35 @@ function x_images ( $noPosts ) {
 									if ( have_rows("bg_column") ) :
 										
 										while ( have_rows("bg_column") ) : the_row(); ?>
+
 											<li id="" class="img">
 
+												<span class="img_info_top img_info">
+													<!-- LINK TO INDEX SECTION / LINK TO WEBSHOP -->
+													<?php $customSlug = toAscii( get_sub_field("bg_column_name") ); ?>
+													<a id="see_more" href="#index" data-artist="<?php echo $customSlug; ?>">See More</a> <!--/ <a href="">Buy it</a>-->
+												</span>
+
 												<?php 
-												$image = get_sub_field("bg_column_image");
-												
-												x_image_object( $image );
+												$image = get_sub_field("bg_column_image"); 
+												x_image_object( $image ); 
 												?>
+
+												<span class="img_info_bottom img_info">
+													<ul class="img_info_icons">
+
+														<!-- FACEBOOK -->
+														<li><a href=""><img src="<?php bloginfo('template_url'); ?>/img/icon_facebook.svg" /></a></li>
+														<!-- TWITTER -->
+														<li>
+															<a class="twitter-share-button" 
+																target="_blank" 
+																href="https://twitter.com/intent/tweet?text=available at xbank.amsterdam">
+																<img src="<?php bloginfo('template_url'); ?>/img/icon_twitter.svg" />
+															</a>
+														</li>
+													</ul>
+												</span>
 
 											</li>
 										<?php

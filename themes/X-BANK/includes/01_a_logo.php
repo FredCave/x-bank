@@ -22,6 +22,7 @@
 
 				<img class="lazyload"
 					data-src="<?php echo $thumb; ?>" 
+					src="<?php echo $thumb; ?>" 
 					width="<?php echo $width; ?>" 
 					height="<?php echo $height; ?>" 
 					data-sizes="auto" 

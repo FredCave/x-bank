@@ -91,10 +91,12 @@ function x_image_object( $image ) {
 // STAR FILLER
 
 function starFiller ( $noChars, $firstString, $secondString ) {
-    $secondString = str_replace(' ', '', $secondString);
-    $secondString = str_replace('–', '-', $secondString);
-    $a = strlen( trim($firstString) );
-    $b = strlen( trim($secondString) );
+    $converted = str_replace(' ', '', $firstString);
+    $converted = str_replace('–', '-', $converted);
+    $converted = preg_replace( "/&#?[a-z0-9]+;/i", "x", $converted);
+    
+    $a = strlen( utf8_decode( trim($converted) ) );
+    $b = strlen( utf8_decode( trim($secondString) ) );
     // calculate no. of asterisks
     $filler = $noChars - $a - $b;
     echo "<span class='stars'>***</span>" . $firstString . "<span class='stars'>***</span><br class='star_break'><span class='star_filler'>";

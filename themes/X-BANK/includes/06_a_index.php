@@ -11,6 +11,7 @@
 		while ( $index_query->have_posts() ): $index_query->the_post(); ?>
 			<?php 
 			$initial = get_the_title();
+			$slug = toAscii( get_the_title() );
 			// get no. of cols defined in post
 			if ( get_field("index_no_columns") ) {
 				$noCols = get_field("index_no_columns");
@@ -18,14 +19,18 @@
 				$noCols = 2;
 			}
 			?>
-			<li id="<?php the_ID(); ?>" class="index_artist <?php echo print_categories(); ?>" data-initial="<?php echo $initial[0]; ?>" data-cols="<?php echo $noCols; ?>">
+			<li id="<?php the_ID(); ?>" 
+				class="index_artist <?php echo print_categories(); ?>" 
+				data-initial="<?php echo $initial[0]; ?>" 
+				data-slug="<?php echo $slug; ?>" 
+				data-cols="<?php echo $noCols; ?>">
 				
 				<!-- TITLE, VISIBLE IN LIST -->
 				<div class="index_artist_title asterisks">
 					<a href="">
 						<?php 
 						$a = get_the_title();
-						$b = "01/01/2001 - 03/05/2005";
+						$b = "";
 						echo "<p class='line_stretch'>";
 						starFiller( 42, $a, $b );
 						echo "</p>";
@@ -48,7 +53,7 @@
 					</div>
 
 					<div class="index_artist_shop_link">
-						Visit*the*shop
+						
 					</div>
 
 					<div class="clear"></div>
