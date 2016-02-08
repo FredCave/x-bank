@@ -123,7 +123,7 @@ function x_images ( $noPosts ) {
 												<span class="img_info_top img_info">
 													<!-- LINK TO INDEX SECTION / LINK TO WEBSHOP -->
 													<?php $customSlug = toAscii( get_sub_field("bg_column_name") ); ?>
-													<a id="see_more" href="#index" data-artist="<?php echo $customSlug; ?>">See More</a> <!--/ <a href="">Buy it</a>-->
+													<a class="see_more" href="#index" data-artist="<?php echo $customSlug; ?>">See More</a> <!--/ <a href="">Buy it</a>-->
 												</span>
 
 												<?php 

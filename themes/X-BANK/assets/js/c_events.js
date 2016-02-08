@@ -31,7 +31,7 @@ $( document ).ready(function() {
 	$(".wrapper").on("click", "li.img", function(e){
 		if ( e.target.tagName.toLowerCase() === "a" ) {		
 			// IF SEE MORE LINK
-			if ( e.target.id = "see_more" ) { 
+			if ( e.target.className = "see_more" ) { 
 				e.preventDefault(); // TMP
 				var link = e.target.attributes["data-artist"].value;
 				seeMore( link );
@@ -41,6 +41,13 @@ $( document ).ready(function() {
 			imagesClick( $(this) );		
 		}
 	});
+
+	// IMG_INFO_FIXED HERE
+
+	$("#img_info_fixed").on("click", ".see_more", function(){
+		seeMore( $(this).attr("data-artist") );
+	});
+
 
 // 3.2. RECEIPT EVENTS
 
@@ -201,19 +208,23 @@ $( document ).ready(function() {
 	    if (mql.s.matches) {
 	        // Less than 600px wide     
 	        noCols(1, "current");
-	        // manageCols();
+	        manageCols();
 	        imagesAnim("current", first);
 	    } else if (mql.m.matches) {
 	        // More than 600px wide
 			noCols(2, "current");
-			// manageCols();
-			imagesAnim("current", first);		
+			manageCols();
+			imagesAnim("current", first);
+			// reset any image infos
+			infoReset();		
 	    } else {
 	    	// More than 900px wide
 			noCols(4, "current");
 			justify();
-			// manageCols( 4 );
+			manageCols( 4 );
 			imagesAnim("current", first); // need to check if first time
+			// reset any image infos
+			infoReset();
 	    }
 	}
 

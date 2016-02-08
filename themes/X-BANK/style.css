@@ -8,26 +8,6 @@ Author URI:		http://www.fredcave.com
     display: none !important;
 }
 
-/* TMP */
-
-#upcoming .section_content h1, #index .section_content h1 {
-    margin-bottom: 0px !important;
-}
-
-.coming_soon {
-    position: absolute;
-    width: 50%;
-    left: 25%;
-    top: -80px;
-    z-index: 99;
-
-}
-
-#about {
-    padding-top: 0 !important;
-    margin-top: -24px !important;
-}
-
 /************************************************
     CSS RESET
 ************************************************/
@@ -345,6 +325,7 @@ br.star_break {
             left: 0;
             right: 0;
             width: 100%;
+            display: none;
         }
     }
 
@@ -378,24 +359,42 @@ br.star_break {
 }
 
 #img_info_fixed {
+/*    border: 1px solid red;*/
     position: fixed;
+    -webkit-font-smoothing: subpixel-antialiased;
+    text-align: center;
     z-index: 9999;
     height: 100px;
-    width: 80%;
-    left: 10%;
+    width: 50%;
+    left: 25%;
     top: 45%;
-    -webkit-transform: translateY(-50%);
-        -ms-transform: translateY(-50%);
-            transform: translateY(-50%);
+    -webkit-transform: translateY(-50%) rotate(1deg);
+        -ms-transform: translateY(-50%) rotate(1deg);
+            transform: translateY(-50%) rotate(1deg);
+    padding: 24px 0 36px 0;
+    pointer-events: none;
+    -webkit-transform-origin: center;
+        -ms-transform-origin: center;    
+            transform-origin: center;
     display: none;
-    /* TMP HIDE */
-    opacity: 0;
+}
+
+#img_info_fixed.active {
+    box-shadow: 18px 18px 23px 0px rgba(0,0,0,0.35);
+    background-color: #fbfdf8;
+    pointer-events: auto;
+}
+
+#img_info_fixed .img_info_bottom {
+    margin-bottom: 0px;
 }
 
     @media ( max-width: 660px ) {
         #img_info_fixed {
             display: block;
-            pointer-events: none;
+        }
+        #img_info_fixed .img_info {
+            display: block;
         }
     }
 
@@ -478,9 +477,6 @@ span.break_inner {
 }
 
 section {
-    background-color: #fcfff3;
-    background-color: #f5f0f3;
-    background-color: #f9f9f9;
     background-color: #fbfdf8;
     -webkit-font-smoothing: subpixel-antialiased;
     padding: 2px;

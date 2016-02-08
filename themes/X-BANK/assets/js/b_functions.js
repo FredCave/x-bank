@@ -79,9 +79,10 @@
 		} else {
 			target = $(".toLoad");
 		}
-
+		
 		var mQuery = parseInt( number );
 		var maxCols = parseInt( target.find(".container").attr("data-cols") );
+		
 		var noCols;
 		if ( isNumber(mQuery) ) {
 			noCols = Math.min(maxCols, mQuery);	
@@ -96,7 +97,7 @@
 		} else {
 			target.find(".container").addClass("container_4").removeClass("container_1 container_2");
 		}
-
+		
 	}
 
 	// 2.1.4. SHUFFLE FUNCTION
@@ -160,19 +161,25 @@
 			});
 
 			// IF MULTIPLE ULs, COLs 2-4 ARE SHUFFLED
+			
 			if ( noCols > 1 ) {
+				
 				for ( i=1; i < noCols; i++ ) {
 					var parent = $(".movable_wrapper").eq( i ).find(".img_loop");
 				    parent.find("li.img").randomize();
 				}
 			} 
+			
 
 		} // end of 4 column check
 
 		// IF 4 COLUMN VIEW
 		if ( target.find(".container").hasClass("container_2") || target.find(".container").hasClass("container_1") ) {
-			manageCols();			
-		} 
+			manageCols();
+						
+		} else {
+				
+		}
 
 	}
 
@@ -183,15 +190,15 @@
 
 		if ( when ) {
 			first = false;
+			console.log("imagesAnim break");
 		} else {
 
 	 		var target;
 			if ( where === "current" ) {
 				target = $(".current");
-				console.log("current");
 			} else {
 				target = $(".toLoad");
-				console.log("to load");
+				
 			}
 
 	 		// GET UL + WIN HEIGHT
@@ -199,8 +206,6 @@
 			var winH = $(window).height();
 			var dest = ulH - ( winH * 2 );
 			var time = dest / 18.6;
-
-			console.log( "ulH", ulH );
 
 			// speed = distance / time
 			// time = distance / speed
@@ -279,6 +284,7 @@
 
 	function manageCols ( cols ) {
 		console.log("manageCols");
+
 		if ( cols === 4 ) {
 			$(".appended").remove();
 			$(".duplicate").show();
@@ -290,21 +296,45 @@
 				$(".duplicate").hide();
 
 				// COPY ULs FROM 2, 3, 4 TO 1
+
+				var target_1 = $(".current .col_1 .img_loop");
+				var target_2 = $(".current .col_2 .img_loop");				
 				$(".current .movable_wrapper").each( function(i){
+					
 					if ( i > 0 ) {
 						// JUST FROM 1st UL IN COLUMN
-						$(this).find(".img_loop:first-child .img").each( function(){
-							$(this).clone().appendTo(".current .movable_wrapper:first-child ul").addClass("appended");
-							$(this).clone().appendTo(".current .movable_wrapper:nth-child(2) ul").addClass("appended");
-						});
+						
+						var targetImgs = $(this).find(".img_loop:first-child .img");
+						var noImages = targetImgs.length;
+						var appendHtml = [];
+						var appendImg,
+							clonedImg;
+						for ( var i = 0; i < noImages; i++ ) {
+							appendImg = targetImgs.eq(i);
+							clonedImg = appendImg.clone().addClass("appended");
+							appendHtml.push( clonedImg );
+						}
+						target_1.append(appendHtml);
+						target_2.append(appendHtml);
+
 					}
 				});
+				
 			}
 		}
 
 	}
 
 	// 2.1.9. CLICK ON IMAGES
+
+	function infoReset () {
+		console.log("infoReset");
+		$(".img_loop").removeClass("paused");
+
+		// HIDE INFO
+		$(".img_info").css("opacity","0");
+		$("#img_info_fixed").empty().removeClass("active");		
+	}
 
 	function imagesClick ( thisLi ) {
 		console.log("imagesClick");
@@ -314,16 +344,10 @@
 			// SHOW INFO			
 			$(".img_info").css("opacity","0");
 			thisLi.find(".img_info").css("opacity","1").clone().appendTo("#img_info_fixed");
-
+			$("#img_info_fixed").addClass("active");
 		} else {
-			
-			$(".img_loop").removeClass("paused");
-
-			// HIDE INFO
-			$(".img_info").css("opacity","0");
-			$("#img_info_fixed").empty();
+			infoReset();
 		}
-
 	}
 
 	// 2.1.10. WRAPPER SHIFT
@@ -673,15 +697,15 @@
 	// 2.2.7. SEE MORE
 
 	function seeMore ( slug ) {
-
+		console.log("seeMore");
 		// SCROLL DOWN TO INDEX ANCHOR
 		var indexOffset = $("#index").offset().top;
-		$("html,body").animate({
-			scrollTop: indexOffset
-		}, 500);	
+		// need to account for closing vitrine
+		var vitrineH = $(".r_hole").height();
 
-		// OPEN SUB INDEX WITH ARTIST'S NAME
-		console.log(slug);
+		$("html,body").animate({
+			scrollTop: indexOffset + vitrineH
+		}, 500);	
 
 		// SHOW IN INDEX_RESULTS
 			// empty results wrapper
@@ -707,10 +731,7 @@
 
 		// UNPAUSE ANIMATION
 
-		$(".img_loop").removeClass("paused");
-			// Hide info
-		$(".img_info").css("opacity","0");
-		$("#img_info_fixed").empty();
+		infoReset();
 
 	}
 
