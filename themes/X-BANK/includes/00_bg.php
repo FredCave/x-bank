@@ -1,20 +1,5 @@
 <?php
 
-/* SLUG GENERATOR */
-
-function toAscii($str, $replace=array(), $delimiter='-') {
-	if( !empty($replace) ) {
-		$str = str_replace((array)$replace, ' ', $str);
-	}
-
-	$clean = iconv('UTF-8', 'ASCII//TRANSLIT', $str);
-	$clean = preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $clean);
-	$clean = strtolower(trim($clean, '-'));
-	$clean = preg_replace("/[\/_|+ -]+/", $delimiter, $clean);
-
-	return $clean;
-}
-
 /* DEFAULT RANDOM IMAGE FUNCTION */
 
 function x_images ( $noPosts ) {
@@ -120,6 +105,37 @@ function x_images ( $noPosts ) {
 
 											<li id="" class="img">
 
+												<?php
+													// GET IMAGE
+													$image = get_sub_field("bg_column_image");
+
+													// twitter cards hack
+													if(is_single() || is_page()) {
+														$twitter_url    = get_permalink();
+														$twitter_title  = get_sub_field("bg_column_name");
+														$twitter_desc   = get_sub_field("bg_column_name") . "available at xbank.amsterdam";
+														$twitter_thumbs = $image;
+														$twitter_thumb  = $image;
+														// if(!$twitter_thumb) {
+														// 	$twitter_thumb = 'http://www.gravatar.com/avatar/8eb9ee80d39f13cbbad56da88ef3a6ee?rating=PG&size=75';
+														// }
+														$twitter_name   = str_replace('@', '', get_the_author_meta('twitter'));
+														?>
+														<meta name="twitter:card" value="summary" />
+														<meta name="twitter:url" value="<?php echo $twitter_url; ?>" />
+														<meta name="twitter:title" value="<?php echo $twitter_title; ?>" />
+														<meta name="twitter:description" value="<?php echo $twitter_desc; ?>" />
+														<meta name="twitter:image" value="<?php echo $twitter_thumb; ?>" />
+														<meta name="twitter:site" value="@libdemvoice" />
+														<?
+															if($twitter_name) {
+															?>
+															<meta name="twitter:creator" value="@<?php echo $twitter_name; ?>" />
+															<?
+														}
+													}
+												?>
+
 												<span class="img_info_top img_info">
 													<!-- LINK TO INDEX SECTION / LINK TO WEBSHOP -->
 													<?php $customSlug = toAscii( get_sub_field("bg_column_name") ); ?>
@@ -127,7 +143,7 @@ function x_images ( $noPosts ) {
 												</span>
 
 												<?php 
-												$image = get_sub_field("bg_column_image"); 
+												 
 												x_image_object( $image ); 
 												?>
 
@@ -140,7 +156,7 @@ function x_images ( $noPosts ) {
 														<li>
 															<a class="twitter-share-button" 
 																target="_blank" 
-																href="https://twitter.com/intent/tweet?text=available at xbank.amsterdam">
+																href="https://twitter.com/intent/tweet?text=<?php the_sub_field("bg_column_name"); ?> available at xbank.amsterdam">
 																<img src="<?php bloginfo('template_url'); ?>/img/icon_twitter.svg" />
 															</a>
 														</li>

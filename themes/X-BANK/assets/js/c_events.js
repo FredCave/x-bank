@@ -190,6 +190,7 @@ $( document ).ready(function() {
 	// 3.3.1. WINDOW LOAD 
 
 	$(window).on("load", function(){
+		removeHash();
 		imagesInit();
 		justify();	
 	});

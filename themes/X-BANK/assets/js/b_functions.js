@@ -15,13 +15,15 @@
 			2.1.11. INITIATE ON LOAD
 			2.1.12. ARTIST IMAGES LOAD
 		2.2. RECEIPT
-			2.2.1. VITRINE CLOSE ON SCROLL
-			2.2.2. FILTER INDEX
-			2.2.3. ARTIST INFO TOGGLE
-			2.2.4. VITRINE TOGGLE
-			2.2.5. ARTIST VITRINE OPEN
-			2.2.6. ARTIST VITRINE CLOSE
-			2.2.7. SEE MORE
+			2.2.1. REMOVE HASH
+			2.2.2. URL DETECT
+			2.2.3. VITRINE CLOSE ON SCROLL
+			2.2.4. FILTER INDEX
+			2.2.5. ARTIST INFO TOGGLE
+			2.2.6. VITRINE TOGGLE
+			2.2.7. ARTIST VITRINE OPEN
+			2.2.8. ARTIST VITRINE CLOSE
+			2.2.9. SEE MORE
 
 *****************************************************************************/
 
@@ -54,7 +56,7 @@
 			// create new wrapper
 			var newWrapper = $("<div></div>");
 			// add load_wrapper for subsequent containers
-			ulHTML += "<ul class='load_wrapper hide'></ul>";
+			ulHTML += "<ul class='load_wrapper column_view hide'></ul>";
 			newWrapper.attr( "id", "wrapper-" + moment ).attr("data-cols", "4" ).html( ulHTML );
 			// add classes depending on no. of cols
 			newWrapper.addClass("container container_4");
@@ -151,7 +153,8 @@
 		} else {
 
 			var noImages = target.find(".load_wrapper .img_loop li.img").length;
-					
+
+
 			var noCols = parseInt ( target.find(".container").attr("data-cols") );
 			nocols = 4;
 			
@@ -159,6 +162,16 @@
 			source.find("li.img").each( function(){
 				$(this).clone().appendTo( target.find(".img_loop") ); 	
 			});
+
+			// copy imgs depending on how many images there are
+			for ( var j = 0; j < 2; j++ ) {
+				
+				$(".movable_wrapper li.img").each( function(){
+					var thisParent = $(this).parents(".img_loop");
+					$(this).clone().appendTo( thisParent ).addClass("duplicate");
+				});
+
+			}
 
 			// IF MULTIPLE ULs, COLs 2-4 ARE SHUFFLED
 			
@@ -175,11 +188,10 @@
 
 		// IF 4 COLUMN VIEW
 		if ( target.find(".container").hasClass("container_2") || target.find(".container").hasClass("container_1") ) {
+
 			manageCols();
 						
-		} else {
-				
-		}
+		} 
 
 	}
 
@@ -200,14 +212,16 @@
 				target = $(".toLoad");
 				
 			}
+			/* TMP TEST */
+			target = $(".current");
 
 	 		// GET UL + WIN HEIGHT
 	 		var ulH = target.find(".img_loop").height();
 			var winH = $(window).height();
 			var dest = ulH - ( winH * 2 );
 			var time = dest / 18.6;
+			// console.log(211, ulH, winH, dest, time);
 
-			// speed = distance / time
 			// time = distance / speed
 
 			// DEFINE ANIMATIONS		
@@ -286,11 +300,14 @@
 		console.log("manageCols");
 
 		if ( cols === 4 ) {
+
 			$(".appended").remove();
 			$(".duplicate").show();
 		} else {
+
 			// check if four column view is activated
 			if ( $(".load_wrapper ul").hasClass("column_view") ) {
+
 				// IF 2 OR 1 COLUMNS ALL COLUMNS ARE THE SAME
 				// HIDE DUPLICATES
 				$(".duplicate").hide();
@@ -368,8 +385,9 @@
 			$("#wrapper_2").css("left", "0%");
 			// Declare which wrapper can be loaded in
 			$(".toLoad").removeClass("toLoad").addClass("current");
-			$("#wrapper_2").addClass("toLoad").removeClass("current");
+			$("#wrapper_1").addClass("toLoad").removeClass("current");
 		} else {
+
 			// Move wrappers
 			$("#wrapper_2").css("left", "100%");
 			setTimeout( function(){
@@ -378,10 +396,11 @@
 			$("#wrapper_1").css("left", "0%");
 			// Declare which wrapper can be loaded in
 			$(".toLoad").removeClass("toLoad").addClass("current");
-			$("#wrapper_1").addClass("toLoad").removeClass("current");	
-
-			imagesFadeIn();					
+			$("#wrapper_2").addClass("toLoad").removeClass("current");	
+							
 		}
+
+		imagesFadeIn();	
 	}
 
 	// 2.1.11. INITIATE ON LOAD
@@ -407,6 +426,8 @@
 		console.log("artistImages");
 		// get ID of post to load
 		var postId = thisArtist.attr("id");
+		postId = postId.split("-")[1];
+
 		// get number of columns
 		var cols = thisArtist.attr("data-cols");
 
@@ -414,29 +435,17 @@
 		if ( $("body").find("#wrapper-" + postId).length === 0 ) {
 
 			// prepare html with id of wrapper_postId
-			// imagesHtmlPrep( postId ); 
+			imagesHtmlPrep( postId ); 
 
 			// ajax call
-			/*$( "#wrapper-" + postId ).find(".load_wrapper").load("?p=" + postId, function () {
-				console.log("loaded");
-			});*/
-			
-			// $.load("?p=" + postId, function (response) {
-			// 	// "#" + postId refers to newly created (or not) in bg
-			// 	$( "#wrapper-" + postId ).find(".load_wrapper").html( response );                   
-			// }).done(function () {
-
-			// 	imagesInject( "toLoad" );
-
-			// 	noCols ( cols, "toLoad" );
-
-			// 	imagesAnim( );
-				
-			// 	// wrapperShift
-
-			// 	// update url
-
-			// }); 
+			$( "#wrapper-" + postId ).find(".load_wrapper").load("?p=" + postId, function () {
+			// 	console.log("loaded");
+				noCols ( cols, "toLoad" );	
+				imagesInject( "toLoad" );	
+				$(".toLoad").find(".duplicate").show();			
+				wrapperShift();
+				imagesAnim( ); /* NEEDS FIXING */
+			});
 			
 		} 
 
@@ -445,6 +454,31 @@
 // 2.2. RECEIPT
 
 	// 2.2.1. VITRINE CLOSE ON SCROLL
+
+	function removeHash () { 
+	    history.pushState("", document.title, window.location.pathname + window.location.search);
+	}
+
+	// 2.2.2. URL DETECT
+
+	function urlDetect() {
+		var hash = window.location.hash;
+		// IF HASH EXISTS
+		if ( hash.length ) {
+			console.log( 753, hash );
+			// See More function
+			seeMore( hash.substring(1) );
+
+		} else {
+			// PAGE RESET ??
+			// CLOSE ALL / SCROLL TO TOP
+			$("html,body").animate({
+				scrollTop: 0
+			}, 500);
+		}
+	}
+
+	// 2.2.3. VITRINE CLOSE ON SCROLL
 
 	function vitrineCloseOnScroll () {	
 		console.log("vitrineCloseOnScroll");	
@@ -461,7 +495,7 @@
 		});
 	}
 
-	// 2.2.2. FILTER INDEX
+	// 2.2.4. FILTER INDEX
 
 	function filterIndex ( thisClick ) {
 		console.log("filterIndex");
@@ -488,8 +522,10 @@
 			$(".sub_index li").each( function(){
 				var initial = $(this).data("initial");
 				if ( initial === thisLetter ) {
+					// add new id to avoid conflicts
+					var newId = "result-" + $(this).attr("id");
 					// append any results to result wrapper
-					$(this).clone().addClass("result").appendTo(resultWrapper);
+					$(this).clone().attr("id", newId).addClass("result").appendTo(resultWrapper);
 				}
 			});
 		}
@@ -501,7 +537,7 @@
 
 	}
 
-	// 2.2.3. ARTIST INFO TOGGLE
+	// 2.2.5. ARTIST INFO TOGGLE
 
 	function artistInfoToggle ( target ) {
 		console.log("artistInfoToggle");	 
@@ -509,7 +545,9 @@
 
 		var resultWrapper = $("#index .index_results");
 		var childrenH = 0;
+
 		if ( !target.hasClass("clicked") ) {
+
 			$(".index_artist_content").removeClass("clicked").css("height","0");
 			// get height of content and declare css to get animation
 			target.children().each( function(){
@@ -529,11 +567,21 @@
 				);
 				resultWrapper.addClass("open");							
 			}
+			
+			// update url
+			var name = target.parents("li").attr("data-slug");
+			window.location.hash = name;
+		
 		} else {
+			
 			target.removeClass("clicked").css(
 				"height", "0px"
 			);	
 			resultWrapper.removeClass("open");	
+
+			// clear url
+			removeHash();
+		
 		}
 		// animate wrapper height
 		// calculate height based on LI's height + height of child
@@ -547,10 +595,10 @@
 		var targetOffset = target.offset().top - 60;
 		$("html,body").animate({
 			scrollTop: targetOffset
-		}, 500);
+		}, 1000);
 	}
 
-	// 2.2.4. VITRINE TOGGLE
+	// 2.2.6. VITRINE TOGGLE
 
 	function vitrineToggle ( thisId ) {
 		console.log("vitrineToggle");
@@ -574,22 +622,18 @@
 		}
 
 		if ( !target.hasClass("clicked") ) {
-			
 			// OPEN
-
 			target.css("height", winH * 0.7).addClass("clicked no_close");
-
 				// scroll up
 			var scrollTarget;
 			if ( artistVitrine ) {
-				var artist = $( "#result-" + thisA );
-				scrollTarget = artist.offset().top;
-				
-				artistVitrineOpen( artist );
 
+				var artist = $( "#result-" + thisA );
+				var scrollTarget = $( "#result-" + thisA ).offset().top;
+				// scrollTarget = artist.offset().top;				
+				artistVitrineOpen( artist );				
 			} else {
 				scrollTarget = $( "#toggle-main" ).offset().top;
-				
 			}
 			$("html,body").animate({
 				scrollTop: scrollTarget
@@ -617,7 +661,7 @@
 		}	
 	}
 
-	// 2.2.5. ARTIST VITRINE OPEN
+	// 2.2.7. ARTIST VITRINE OPEN
 
 	function artistVitrineOpen ( thisArtist ) {
 		console.log("artistVitrineOpen");
@@ -659,7 +703,7 @@
 
 	}
 
-	// 2.2.6. ARTIST VITRINE CLOSE
+	// 2.2.8. ARTIST VITRINE CLOSE
 
 	function artistVitrineClose () {
 		console.log("artistVitrineClose");
@@ -694,7 +738,7 @@
 
 	}
 
-	// 2.2.7. SEE MORE
+	// 2.2.9. SEE MORE
 
 	function seeMore ( slug ) {
 		console.log("seeMore");
@@ -705,7 +749,7 @@
 
 		$("html,body").animate({
 			scrollTop: indexOffset + vitrineH
-		}, 500);	
+		}, 1000);	
 
 		// SHOW IN INDEX_RESULTS
 			// empty results wrapper
@@ -734,6 +778,5 @@
 		infoReset();
 
 	}
-
 
 	

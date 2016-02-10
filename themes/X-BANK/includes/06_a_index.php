@@ -32,7 +32,7 @@
 						$a = get_the_title();
 						$b = "";
 						echo "<p class='line_stretch'>";
-						starFiller( 42, $a, $b );
+						starFiller( 43, $a, $b );
 						echo "</p>";
 						?>
 						<div class="clear"></div>

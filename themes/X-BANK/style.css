@@ -840,6 +840,7 @@ section {
 .index_artist_title p {
     white-space: nowrap;
     text-align: center;
+/*    text-align: left;*/
 }
 
 .index_artist_content {
