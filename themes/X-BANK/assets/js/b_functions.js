@@ -24,10 +24,13 @@
 			2.2.7. ARTIST VITRINE OPEN
 			2.2.8. ARTIST VITRINE CLOSE
 			2.2.9. SEE MORE
+<<<<<<< HEAD
 			2.2.10. CATEGORY CLICK
 			2.2.11. SCROLLER
 			2.2.12. SHOW IMAGES
 			2.2.13. SHOW TOGGLE
+=======
+>>>>>>> 3564134f44d211b0ea349ddc87cc1c90ab000e7d
 
 *****************************************************************************/
 
@@ -460,8 +463,12 @@
 	// 2.2.1. VITRINE CLOSE ON SCROLL
 
 	function removeHash () { 
+<<<<<<< HEAD
 	    // PUSH STATE NEEDS FALLBACK FOR IE
 	    // history.pushState("", document.title, window.location.pathname + window.location.search);
+=======
+	    history.pushState("", document.title, window.location.pathname + window.location.search);
+>>>>>>> 3564134f44d211b0ea349ddc87cc1c90ab000e7d
 	}
 
 	// 2.2.2. URL DETECT
@@ -502,6 +509,7 @@
 
 	// 2.2.4. FILTER INDEX
 
+<<<<<<< HEAD
 	function filterInit () {
 		console.log("filterInit");
 		// RUN FILTER INDEX WITH FASHION IS DEFAULT
@@ -562,6 +570,43 @@
 			$(".sub_cat").hide();
 			$("#sub_cat_wrapper").css( "height", "0px" );
 		}
+=======
+	function filterIndex ( thisClick ) {
+		console.log("filterIndex");
+
+		// empty results wrapper
+		var resultWrapper = $("#index .index_results");
+		resultWrapper.empty();
+		
+		if ( thisClick.parents("#index_categories").length ) { // CATEGORIES
+			var thisCat = thisClick.text().toLowerCase();
+			// loop through LIs
+			$(".sub_index li").each( function(){
+				if ( $(this).hasClass(thisCat) ) {	
+					// append any results to result wrapper
+					// add new id to avoid conflicts
+					var newId = "result-" + $(this).attr("id");
+					$(this).clone().attr("id", newId).addClass("result").appendTo(resultWrapper);
+				}
+			});
+		} else { // LETTERS
+			// get clicked letter
+			var thisLetter = thisClick.text();
+			// loop through LIs
+			$(".sub_index li").each( function(){
+				var initial = $(this).data("initial");
+				if ( initial === thisLetter ) {
+					// add new id to avoid conflicts
+					var newId = "result-" + $(this).attr("id");
+					// append any results to result wrapper
+					$(this).clone().attr("id", newId).addClass("result").appendTo(resultWrapper);
+				}
+			});
+		}
+		// underline clicked letter or cat
+		$(".index_menu a").css("border-bottom","");
+		thisClick.css("border-bottom","1px solid black");
+>>>>>>> 3564134f44d211b0ea349ddc87cc1c90ab000e7d
 		// animate wrapper height
 		$(".sub_index").css("height", resultWrapper.height() );
 
@@ -809,6 +854,7 @@
 
 	}
 
+<<<<<<< HEAD
 	// 2.2.10. CATEGORY CLICK
 
 	function catClick ( thisId ) {
@@ -919,4 +965,6 @@
 		}, 1000 );			
 	}
 
+=======
+>>>>>>> 3564134f44d211b0ea349ddc87cc1c90ab000e7d
 	

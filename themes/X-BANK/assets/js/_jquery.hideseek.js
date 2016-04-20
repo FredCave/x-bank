@@ -33,8 +33,11 @@
 
   */
 
+<<<<<<< HEAD
 console.log('hideseek init');
 
+=======
+>>>>>>> 3564134f44d211b0ea349ddc87cc1c90ab000e7d
 ;(function($, window, undefined) {
   "use strict";
 

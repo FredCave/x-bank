@@ -21,9 +21,13 @@ $( document ).ready(function() {
 
 // 1.2. INIT SMOOTHSCROLL
 
+<<<<<<< HEAD
 	$('a').smoothScroll({
 		offset: -60
 	});
+=======
+	$('a').smoothScroll();
+>>>>>>> 3564134f44d211b0ea349ddc87cc1c90ab000e7d
 
 
 // 1.3. H1 STARS
@@ -38,6 +42,18 @@ $( document ).ready(function() {
 			$(this).text(text);
 		}		
 	});
+<<<<<<< HEAD
  
+=======
+
+// 1.4. SCROLL TO 
+
+	function scroller ( thisClick ) {
+		var target = thisClick.parents("section").find(".scroll_target");
+		$("html,body").animate({
+			scrollTop: target.offset().top - 80
+		}, 500);
+	}
+>>>>>>> 3564134f44d211b0ea349ddc87cc1c90ab000e7d
 
 });
