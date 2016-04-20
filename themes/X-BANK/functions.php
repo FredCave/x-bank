@@ -43,31 +43,18 @@ function create_post_types() {
 
 // GET CATEGORIES FOR EACH ARTIST
 
-<<<<<<< HEAD
 function print_categories( $thisId ) {       
     $thisCat = get_the_category( $thisId );
     foreach( $thisCat as $cat ) {
         echo $cat->slug . " ";
     }
-=======
-function print_categories() {       
-    if( get_field("index_categories") ):
-        $categories = get_field_object("index_categories");
-        $values = $categories['value'];
-        return strtolower ( join(' ', $values) );
-    endif; 
->>>>>>> 3564134f44d211b0ea349ddc87cc1c90ab000e7d
 } 
 
 // INCLUDE BREAKS
 
 function addBreak() {
-<<<<<<< HEAD
     //echo '<p class="break"><span class="break_inner">*********************************************</span></p>';
     echo '<p class="break"><span class="break_inner">–––––––––––––––––––––––––––––––––––––––––––––</span></p>';
-=======
-    echo '<p class="break"><span class="break_inner">*********************************************</span></p>';
->>>>>>> 3564134f44d211b0ea349ddc87cc1c90ab000e7d
 }
 
 // IMAGE OBJECT
@@ -89,11 +76,7 @@ function x_image_object( $image ) {
         $large = $image['url'];
     } 
 
-<<<<<<< HEAD
     echo "<img class='bg_image lazyload " . $class . "' 
-=======
-    echo "<img class='bg_image lazyload'
->>>>>>> 3564134f44d211b0ea349ddc87cc1c90ab000e7d
     data-src=' " . $thumb . " ' 
     width=' " . $width . " ' 
     height=' " . $height . " ' 
@@ -102,10 +85,6 @@ function x_image_object( $image ) {
         " . $medium . " 800w, 
         " . $thumb . " 300w' 
     src=' " . $thumb . " ' />";
-<<<<<<< HEAD
-=======
-
->>>>>>> 3564134f44d211b0ea349ddc87cc1c90ab000e7d
 }
 
 // STAR FILLER
