@@ -21,6 +21,7 @@
 				?>
 
 				<img class="lazyload"
+					alt="X Bank logo" 
 					data-src="<?php echo $thumb; ?>" 
 					src="<?php echo $thumb; ?>" 
 					width="<?php echo $width; ?>" 
@@ -30,7 +31,7 @@
 						<?php echo $medium; ?> 800w, 
 						<?php echo $thumb; ?> 300w" />
 				<noscript>
-					<img src="<?php echo $large; ?>" />										
+					<img alt="X Bank logo" src="<?php echo $large; ?>" />										
 				</noscript>
 
 			<?php endif; ?>

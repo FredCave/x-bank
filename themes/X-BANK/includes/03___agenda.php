@@ -26,20 +26,23 @@
 				<a href="" class="show_toggle scroller">
 					<div id="r_current_image">
 						<?php $image = get_field( "show_title" ); 
-						$width = $image['sizes'][ 'thumbnail-width' ];
-					    $height = $image['sizes'][ 'thumbnail-height' ];
-					    $thumb = $image['sizes'][ "thumbnail" ];
-					    $medium = $image['sizes'][ "medium" ];
-					    $large = $image['sizes'][ "large" ];
-						echo "<img class='lazyload'
-					    data-src=' " . $thumb . " ' 
-					    width=' " . $width . " ' 
-					    height=' " . $height . " ' 
-					    data-sizes='auto' 
-					    data-srcset=' " . $large . " 1280w, 
-					        " . $medium . " 800w, 
-					        " . $thumb . " 300w' 
-					    src=' " . $thumb . " ' />";
+						if ( !empty($image) ) {
+							$width = $image['sizes'][ 'thumbnail-width' ];
+						    $height = $image['sizes'][ 'thumbnail-height' ];
+						    $thumb = $image['sizes'][ "thumbnail" ];
+						    $medium = $image['sizes'][ "medium" ];
+						    $large = $image['sizes'][ "large" ];
+							echo "<img class='lazyload' 
+							alt='" . get_the_title() . "' 
+						    data-src='" . $thumb . "' 
+						    width='" . $width . "' 
+						    height='" . $height . "' 
+						    data-sizes='auto' 
+						    data-srcset='" . $large . " 1280w, 
+						        " . $medium . " 800w, 
+						        " . $thumb . " 300w' 
+						    src=' " . $thumb . "' />";
+						}
 						?>
 					</div>
 
@@ -109,14 +112,16 @@
 								<li>
 									<?php 
 									$image = get_sub_field( "show_image" );
-									x_image_object( $image );
+									if( !empty( $image ) ) {
+										x_image_object( $image );	
+									}
 									?> 
 								</li>
 							<?php endwhile; ?>
 						</ul>
 						<div class="show_images_nav">
-							<a href="" class="show_images_nav_left"><</a> 
-							<a href="" class="show_images_nav_right">></a> 
+							<a href="" class="show_images_nav_left">&lt;</a> 
+							<a href="" class="show_images_nav_right">&gt;</a> 
 						</div>
 					<?php endif; ?>
 

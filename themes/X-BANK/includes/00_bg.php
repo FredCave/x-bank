@@ -1,8 +1,64 @@
 <?php
 
+/* IMAGE WRAPPER OBJECT FUNCTION */
+
+function bg_wrapper ( $img, $a_obj ) { 
+	// $A_OBJ = POST ID
+	$a_declared = false; 
+	if ( $a_obj ) {
+		$a_declared = true; 
+		// OVERRIDE $POST
+		$post = $a_obj;
+		setup_postdata( $post ); 
+		$a_name = $post->post_title;
+		$a_slug = $post->post_name;
+		// RESET $POST
+		wp_reset_postdata();
+	}
+	?>
+
+	<?php if ( $a_declared ) : ?>
+		<span class="img_info_top img_info">
+			<!-- LINK TO INDEX SECTION / LINK TO WEBSHOP -->	
+			<a class="see_more" href="#index" data-artist="<?php echo $a_slug; ?>">See More</a> <!--/ <a href="">Buy it</a>-->
+		</span>
+	<?php endif; ?>
+
+	<?php x_image_object( $img ); ?>
+
+	<!-- IF NAME DECLARED -->
+	<?php if ( $a_declared ) : ?>
+		<span class="img_info_bottom img_info">
+			<ul class="img_info_icons">
+
+				<!-- FACEBOOK -->
+				<li>
+					<a target="_blank" href="<?php echo createFBUrl ( $img, $a_name ); ?>">
+						<img src="<?php bloginfo('template_url'); ?>/img/icon_facebook.png" alt="Facebook icon" />
+					</a>
+				</li>
+				<!-- TWITTER -->
+				<li>
+					<a class="twitter-share-button" 
+						target="_blank" 
+						data-url="<?php echo createTwitterUrl ( $img, $a_name )[1]; ?>" 
+						href="<?php echo createTwitterUrl ( $img, $a_name )[2]; ?>">
+						<img src="<?php bloginfo('template_url'); ?>/img/icon_twitter.png" alt="Twitter icon" />
+					</a>
+				</li>
+			</ul>
+		</span>
+	<?php endif; ?>
+
+<?php
+} // END OF BG_WRAPPER_OBJECT FUNCTION
+
 /* DEFAULT RANDOM IMAGE FUNCTION */
 
 function x_images ( $noPosts ) {
+
+	// DEACTIVATED !! NOT FULLY WORKING !!!!
+
 	// Loop through number of index posts corresponding to $noPosts
 	$args = array(
 		"post_type" => "index",
@@ -18,55 +74,30 @@ function x_images ( $noPosts ) {
 			$imgName = get_the_title();
 			global $post;
     		$post_slug = $post->post_name;
+    		echo $post_slug . ", ";
 			
 			if ( have_rows("index_images") ) :
-							
-				while ( have_rows("index_images") ) : the_row(); ?>
-					
-					<li id="<?php echo $imgName; ?>" class="img">
-						
-						<span class="img_info_top img_info">
-							<!-- 
-							LINK TO INDEX SECTION / LINK TO WEBSHOP
-							-->
-							<a id="see_more" href="#index" data-artist="<?php echo $post_slug; ?>">See more</a> <!--/ <a href="">Buy it</a>-->
-						</span>
-
-						<!-- image object function in functions.php -->
-						<?php $image = get_sub_field('index_image'); 
-						
-	                    if( !empty($image) ): 
-							x_image_object( $image );
-	                    endif; ?>
-						<!-- image info/links -->
-						
-						<span class="img_info_bottom img_info">
-							<ul class="img_info_icons">
-
-								<!-- 
-								GENERIC SHARE PHRASE:
-								*NAME* AVAILABLE AT *LINK*
-								-->
-
-								<!-- FACEBOOK -->
-								<li><a href=""><img src="<?php bloginfo('template_url'); ?>/img/icon_facebook.svg" /></a></li>
-								<!-- TWITTER -->
-								<li>
-									<a class="twitter-share-button" 
-										target="_blank" 
-										href="https://twitter.com/intent/tweet?text=<?php echo $imgName; ?> available at xbank.amsterdam">
-										<img src="<?php bloginfo('template_url'); ?>/img/icon_twitter.svg" />
-									</a>
-								</li>
-							</ul>
-						</span>
-						
-					</li> 
-				
-				<?php 
-
+				echo "yes"; /*			
+				// GET FIRST ROW
+				$i = 0;
+				while ( have_rows("index_images") ) : the_row(); 
+					if ( $i === 0 ) { ?>				
+						<li id="<?php echo $imgName; ?>" class="img">						
+							<?php 
+							// GET DATA
+							$image = get_sub_field('index_image'); 
+							// IMAGE OBJECT
+							if( !empty($image) ): 
+								bg_wrapper( $image, false );
+							endif; 
+							?>
+						</li> 			
+					<?php 
+					}
+				$i++;
 				endwhile;
-				
+				*/
+
 			endif; // end of image rows loop
 
 		endwhile;
@@ -74,6 +105,43 @@ function x_images ( $noPosts ) {
 		wp_reset_postdata();
 		
 	endif;
+}
+
+function encodeURIComponent( $str ) {
+    $revert = array('%21'=>'!', '%2A'=>'*', '%27'=>"'", '%28'=>'(', '%29'=>')');
+    return strtr(rawurlencode($str), $revert);
+}
+
+function createFBUrl ( $_image, $_name ) {
+	if ( $_name !== "" ) {
+		$_text = encodeURIComponent( $_name . " available at xbank.amsterdam" );
+	} else {
+		$_text = "xbank.amsterdam";
+	}	
+	$fb_url = "http://www.facebook.com/dialog/feed?app_id=" . 1196911897000591 .
+		"&link=" . "http://xbank.amsterdam" .
+		"&picture=" . $_image["url"] .
+		"&name=" . $_text . 
+		"&caption=xbank.amsterdam" . 
+		"&redirect_uri=" . get_bloginfo( "url" ) . "/popupclose.html" . 
+		"&display=popup"; 
+	return $fb_url; 
+}
+
+function createTwitterUrl ( $_image, $_name ) {
+	$twitter_url = [];
+	if ( $_name !== "" ) {
+		$_text = $_name . " available at xbank.amsterdam";
+	} else {
+		$_text = "xbank.amsterdam";
+	}	
+	// $_url = encodeURIComponent ( "http://xbank.amsterdam?artist=" . $_name . "&image=" . $_image["url"] );
+	$_url = encodeURIComponent ( "http://xbank.amsterdam" );
+	$twitter_url[1] = $_url;
+	$twitter_url[2] = "https://twitter.com/share" . 
+		"?text=" . $_text . 
+		"&hashtags=XBank, Amsterdam, " . str_replace( " ", "", $_name );		
+	return $twitter_url;  
 }
 
 ?>
@@ -91,7 +159,9 @@ function x_images ( $noPosts ) {
 				$i = 0;
 				while ( $wp_query->have_posts() ) : $wp_query->the_post();
 					// If activate field is checked
-					if( get_field('bg_activate') ) {		
+					/* TEMP DEACTIVATED – SEE BELOW
+					if( get_field('bg_activate') ) {	
+					*/	
 
 						if ( have_rows("bg_column_images") ) :
 							// While corresponds to columns
@@ -103,68 +173,18 @@ function x_images ( $noPosts ) {
 										
 										while ( have_rows("bg_column") ) : the_row(); ?>
 
-											<li id="" class="img">
+											<li class="img">
 
 												<?php 
-													// GET IMAGE
-													$image = get_sub_field("bg_column_image");
-
-												/*
-													// twitter cards hack
-													if(is_single() || is_page()) {
-														$twitter_url    = get_permalink();
-														$twitter_title  = get_sub_field("bg_column_name");
-														$twitter_desc   = get_sub_field("bg_column_name") . "available at xbank.amsterdam";
-														$twitter_thumbs = $image;
-														$twitter_thumb  = $image;
-														// if(!$twitter_thumb) {
-														// 	$twitter_thumb = 'http://www.gravatar.com/avatar/8eb9ee80d39f13cbbad56da88ef3a6ee?rating=PG&size=75';
-														// }
-														$twitter_name   = str_replace('@', '', get_the_author_meta('twitter'));
-														?>
-														<meta name="twitter:card" value="summary" />
-														<meta name="twitter:url" value="<?php echo $twitter_url; ?>" />
-														<meta name="twitter:title" value="<?php echo $twitter_title; ?>" />
-														<meta name="twitter:description" value="<?php echo $twitter_desc; ?>" />
-														<meta name="twitter:image" value="<?php echo $twitter_thumb; ?>" />
-														<meta name="twitter:site" value="@libdemvoice" />
-														<?
-															if($twitter_name) {
-															?>
-															<meta name="twitter:creator" value="@<?php echo $twitter_name; ?>" />
-															<?
-														}
-													}
+												// GET DATA
+												$image = get_sub_field("bg_column_image");
+												$artist_obj = get_sub_field("bg_column_name");
+												// IMAGE OBJECT
+												if( !empty($image) ): 
+													bg_wrapper( $image, $artist_obj );
+												endif; 
 												?>
 
-												<span class="img_info_top img_info">
-													<!-- LINK TO INDEX SECTION / LINK TO WEBSHOP -->
-													<?php $customSlug = toAscii( get_sub_field("bg_column_name") ); ?>
-													<a class="see_more" href="#index" data-artist="<?php echo $customSlug; ?>">See More</a> <!--/ <a href="">Buy it</a>-->
-												</span>
-
-												<?php 
-												 */
-												x_image_object( $image ); 
-												/*
-												?>
-
-												<span class="img_info_bottom img_info">
-													<ul class="img_info_icons">
-
-														<!-- FACEBOOK -->
-														<li><a href=""><img src="<?php bloginfo('template_url'); ?>/img/icon_facebook.svg" /></a></li>
-														<!-- TWITTER -->
-														<li>
-															<a class="twitter-share-button" 
-																target="_blank" 
-																href="https://twitter.com/intent/tweet?text=<?php the_sub_field("bg_column_name"); ?> available at xbank.amsterdam">
-																<img src="<?php bloginfo('template_url'); ?>/img/icon_twitter.svg" />
-															</a>
-														</li>
-													</ul>
-												</span>
-												*/ ?>
 											</li>
 										<?php
 										endwhile;
@@ -176,11 +196,15 @@ function x_images ( $noPosts ) {
 						endif;
 						
 					// If activate field is unchecked
+					/* 
 					} else {						
 						
 						// IF DEACTIVATED USE DEFAULT RANDOM IMAGE FUNCTION
+						// TEMPORARILY DEACTIVATED AS NOT SURE ALL INDEX POSTS HAVE IMAGES
+						// NECESSARY TO KEEP ??
 						x_images( 16 );
 					}
+					*/ 
 					$i++;
 				endwhile;
 				wp_reset_postdata();

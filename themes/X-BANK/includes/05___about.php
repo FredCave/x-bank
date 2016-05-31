@@ -40,7 +40,7 @@
 			<?php addBreak(); ?>
 			<div class="section_head">
 				<h1>About</h1>
-				<div class="back_to_top"><a href=""><img src="<?php bloginfo('template_url'); ?>/img/up_arrow.png" /></a></div>
+				<div class="back_to_top"><a href=""><img src="<?php bloginfo('template_url'); ?>/img/up_arrow.png" alt="Back to top" /></a></div>
 			</div>
 			<?php addBreak(); ?>
 
@@ -49,7 +49,7 @@
 			<div class="section_content">
 				<!-- X BANK -->
 				<?php if ( get_field("info_about") ) { ?>
-					<h1 id="">X Bank</h1>
+					<h1>X Bank</h1>
 					<div class="about_text">
 						<?php the_field("info_about"); ?>
 					</div>
@@ -57,7 +57,7 @@
 
 				<!-- W AMSTERDAM -->
 				<?php if ( get_field("info_w_amsterdam") ) { ?>
-					<h1 id="">W Amsterdam</h1>
+					<h1>W Amsterdam</h1>
 					<div class="about_text">
 						<?php the_field("info_w_amsterdam"); ?>
 					</div>
@@ -65,7 +65,7 @@
 
 				<!-- THE VAULT -->
 				<?php if ( get_field("info_vault_text") ) { ?>
-					<h1 id="">The Vault</h1>
+					<h1 id="vault">The Vault</h1>
 					<div class="about_text">
 						<?php the_field("info_vault_text"); ?>
 					</div>

@@ -50,6 +50,16 @@ function print_categories( $thisId ) {
     }
 } 
 
+// ADD CUSTOM URL QUERIES
+
+add_filter('query_vars', 'add_my_var');
+
+function add_my_var($public_query_vars) {
+    $public_query_vars[] = 'artist';
+    $public_query_vars[] = 'image';
+    return $public_query_vars;
+}
+
 // INCLUDE BREAKS
 
 function addBreak() {
@@ -77,14 +87,15 @@ function x_image_object( $image ) {
     } 
 
     echo "<img class='bg_image lazyload " . $class . "' 
-    data-src=' " . $thumb . " ' 
-    width=' " . $width . " ' 
-    height=' " . $height . " ' 
+    alt='X Bank'  
+    data-src='" . $thumb . "' 
+    width='" . $width . "' 
+    height='" . $height . "' 
     data-sizes='auto' 
-    data-srcset=' " . $large . " 1280w, 
+    data-srcset='" . $large . " 1280w, 
         " . $medium . " 800w, 
         " . $thumb . " 300w' 
-    src=' " . $thumb . " ' />";
+    src=' " . $thumb . "' />";
 }
 
 // STAR FILLER

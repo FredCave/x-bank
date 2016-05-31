@@ -3,22 +3,6 @@
     "title": "Background Images",
     "fields": [
         {
-            "key": "field_5687eba272c34",
-            "label": "Activate?",
-            "name": "bg_activate",
-            "type": "true_false",
-            "instructions": "Choose whether to use current selection or not. If not, a random selection of images is used.",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "message": "",
-            "default_value": 0
-        },
-        {
             "key": "field_569d3fd90e806",
             "label": "4 Column Images",
             "name": "bg_column_images",
@@ -84,7 +68,7 @@
                             "key": "field_56b4b79d7fb00",
                             "label": "Artist \/ Designer Name",
                             "name": "bg_column_name",
-                            "type": "text",
+                            "type": "post_object",
                             "instructions": "",
                             "required": 0,
                             "conditional_logic": 0,
@@ -93,13 +77,14 @@
                                 "class": "",
                                 "id": ""
                             },
-                            "default_value": "",
-                            "placeholder": "",
-                            "prepend": "",
-                            "append": "",
-                            "maxlength": "",
-                            "readonly": 0,
-                            "disabled": 0
+                            "post_type": [
+                                "index"
+                            ],
+                            "taxonomy": [],
+                            "allow_null": 1,
+                            "multiple": 0,
+                            "return_format": "object",
+                            "ui": 1
                         }
                     ]
                 }
@@ -139,5 +124,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1460492399
+    "modified": 1464706683
 }

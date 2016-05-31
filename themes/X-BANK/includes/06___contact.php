@@ -5,7 +5,7 @@
 <?php addBreak(); ?>
 <div class="section_head">
 	<h1>Contact</h1>
-	<div class="back_to_top"><a href=""><img src="<?php bloginfo('template_url'); ?>/img/up_arrow.png" /></a></div>
+	<div class="back_to_top"><a href=""><img src="<?php bloginfo('template_url'); ?>/img/up_arrow.png" alt="Back to top" /></a></div>
 </div>
 <?php addBreak(); ?>
 
@@ -61,19 +61,19 @@
 				<!-- FACEBOOK -->
 				<li>
 					<a target="_blank" href="https://www.facebook.com/X-BANK-893775603976100/">
-						<img src="<?php bloginfo('template_url'); ?>/img/icon_facebook.svg" onerror="this.src='<?php bloginfo('template_url'); ?>/img/icon_facebook.png'" />
+						<img src="<?php bloginfo('template_url'); ?>/img/icon_facebook.svg" onerror="this.src='<?php bloginfo('template_url'); ?>/img/icon_facebook.png'" alt="Facebook icon" />
 					</a>
 				</li>
 				<!-- INSTAGRAM -->
 				<li>
 					<a target="_blank" href="https://www.instagram.com/xbank.amsterdam/">
-						<img src="<?php bloginfo('template_url'); ?>/img/icon_instagram.svg" onerror="this.src='<?php bloginfo('template_url'); ?>/img/icon_instagram.png'" />
+						<img src="<?php bloginfo('template_url'); ?>/img/icon_instagram.svg" onerror="this.src='<?php bloginfo('template_url'); ?>/img/icon_instagram.png'" alt="Instagram icon" />
 					</a>
 				</li>	
 				<!-- TWITTER -->
 				<li>
 					<a target="_blank" href="https://twitter.com/xbank_amsterdam">
-						<img src="<?php bloginfo('template_url'); ?>/img/icon_twitter.svg" onerror="this.src='<?php bloginfo('template_url'); ?>/img/icon_twitter.png'" />
+						<img src="<?php bloginfo('template_url'); ?>/img/icon_twitter.svg" onerror="this.src='<?php bloginfo('template_url'); ?>/img/icon_twitter.png'" alt="Twitter icon" />
 					</a>
 				</li>
 			</ul>

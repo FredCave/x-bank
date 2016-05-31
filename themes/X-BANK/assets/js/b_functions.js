@@ -571,18 +571,21 @@
 
 	function artistInfoToggle ( target ) {
 		console.log("artistInfoToggle");	 
-		// target = .index_artist_title a
+		// TARGET = .INDEX_ARTIST_CONTENT
 
 		var resultWrapper = $("#index .index_results");
 		var childrenH = 0;
 
 		if ( !target.hasClass("clicked") ) {
-
+			console.log(580);
+			// CLOSE EXISTING POSTS 
 			$(".index_artist_content").removeClass("clicked").css("height","0");
-			// get height of content and declare css to get animation
+			
+			// GET HEIGHT OF CONTENT AND DECLARE CSS TO GET ANIMATION
 			target.children().each( function(){
 				childrenH += $(this).outerHeight(true);
 			});
+			console.log(587, childrenH);
 			// if info already open — setTimeout to wait until content has closed before re-opening
 			if ( resultWrapper.hasClass("open") ) {
 				setTimeout( function(){
@@ -603,7 +606,7 @@
 			window.location.hash = name;
 		
 		} else {
-			
+			console.log(606);			
 			target.removeClass("clicked").css(
 				"height", "0px"
 			);	
@@ -613,19 +616,24 @@
 			removeHash();
 		
 		}
-		// animate wrapper height
-		// calculate height based on LI's height + height of child
+		// ANIMATE WRAPPER HEIGHT
+		// CALCULATE HEIGHT BASED ON LI'S HEIGHT + HEIGHT OF CHILD
 		var calcH = childrenH;
+		console.log(623, calcH);
 		$(".index_artist_title").each( function(){
 			calcH += $(this).height();
-		});
+		});		
+		console.log(627, calcH);
 		$(".sub_index").css("height", calcH );
 		
-		// scroll
-		var targetOffset = target.offset().top - 60;
-		$("html,body").animate({
-			scrollTop: targetOffset
-		}, 1000);
+		// SCROLL TO TOP OF POST	
+		setTimeout( function(){
+			var targetOffset = target.offset().top - 60;
+			$("html,body").animate({
+				scrollTop: targetOffset
+			}, 1000);			
+		}, 500 );
+
 	}
 
 	// 2.2.6. VITRINE TOGGLE
@@ -771,7 +779,7 @@
 	// 2.2.9. SEE MORE
 
 	function seeMore ( slug ) {
-		console.log("seeMore");
+		console.log( "seeMore", slug );
 		// SCROLL DOWN TO INDEX ANCHOR
 		var indexOffset = $("#index").offset().top;
 		// need to account for closing vitrine
@@ -782,11 +790,11 @@
 		}, 1000);	
 
 		// SHOW IN INDEX_RESULTS
-			// empty results wrapper
+			// EMPTY RESULTS WRAPPER
 		var resultWrapper = $("#index .index_results");
 		resultWrapper.empty();
 
-			// loop through index
+			// LOOP THROUGH INDEX
 		var newId;
 		$(".sub_index li").each( function(){
 			if ( $(this).attr("data-slug") === slug ) {
@@ -795,16 +803,11 @@
 			}
 		});
 
-			// animate wrapper height
-		$(".sub_index").css("height", resultWrapper.height() );
-
-		// TOGGLE INFO CONTAINER
-
+			// TOGGLE INFO CONTAINER
 		var target = $("#" + newId).find(".index_artist_content");
 		artistInfoToggle( target );
 
 		// UNPAUSE ANIMATION
-
 		infoReset();
 
 	}
@@ -861,13 +864,19 @@
 
 	function showImgsInit () {
 		console.log("showImgsInit");
-		// RESIZE SLIDESHOW – WIDTH = HEIGHt
+		// RESIZE SLIDESHOW – WIDTH = HEIGHT
 		var imgW = $(".show_images").width();
 		$(".show_images").css( "height", imgW );
 		// IF NO VISIBLE IMG – SET ONE
 		if ( !$(".show_images").find(".visible").length ) {
 			$(".show_images li:first-child").addClass("visible");
 		} 
+		// IF MULTIPLE IMAGES – SHOW NAV
+		var imgCount = $(".show_images li").length;
+		// console.log( 873, imgCount );
+		if ( imgCount > 1 ) {
+			$(".show_images_nav").show();
+		} 		
 	}
 
 	function showImgsBack ( click ) {

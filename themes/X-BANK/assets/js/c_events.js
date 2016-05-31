@@ -31,21 +31,27 @@ $( document ).ready(function() {
 
 	// 3.1.1. ON IMAGE CLICK
 
-	$(".wrapper").on("click", "li.img", function(e){
-		if ( e.target.tagName.toLowerCase() === "a" ) {		
-			// IF SEE MORE LINK
-			if ( e.target.className = "see_more" ) { 
-				e.preventDefault(); // TMP
-				var link = e.target.attributes["data-artist"].value;
-				seeMore( link );
-			} 
-		} else {
-			// normal pause / unpause function
-			imagesClick( $(this) );		
-		}
+	$(".wrapper").on("click", ".bg_image", function(e){
+		// console.log( 35, e.target );
+		e.preventDefault();		
+		// PAUSE / UNPAUSE FUNCTION
+		imagesClick( $(this).parents("li") );		
 	});
 
-	// IMG_INFO_FIXED HERE
+		// ON LINK CLICK
+
+	// $(".wrapper").on("click", ".img_info_icons a", function(e){
+	// 	// console.log( 55, e.target );
+	// 	// e.preventDefault();
+	// });		
+	
+	// SEE MORE
+
+	$(".wrapper").on("click", ".see_more", function(e){
+		seeMore( $(this).attr("data-artist") );
+	});	
+
+		// IMG_INFO_FIXED HERE
 
 	$("#img_info_fixed").on("click", ".see_more", function(){
 		seeMore( $(this).attr("data-artist") );
@@ -139,10 +145,10 @@ $( document ).ready(function() {
 
 	$(".index_results").on("click", ".index_artist_title a", function(e){
 		e.preventDefault();
-		/*
+		
 		var target = $(this).parents(".index_artist_title").next(".index_artist_content");
 		artistInfoToggle( target );
-		*/
+		
 	});
 
 	// 3.2.8. ARTIST VITRINE TOGGLE
@@ -150,7 +156,7 @@ $( document ).ready(function() {
 	$(".index").on("click", ".artist_vitrine_toggle", function(e){
 		e.preventDefault();
 		// VITRINE OPEN / CLOSE FUNCTION
-		vitrineToggle( $(this).attr("id") );
+		vitrineToggle( $(this).attr("data-id") );
 		
 		// CHECK WHETHER ARTIST IS SELECTED, IN INDEX_BIS?? 
 		
@@ -197,6 +203,7 @@ $( document ).ready(function() {
 		// }
 
 		// animate wrapper height
+		console.log( resultWrapper.height() );
 		$(".sub_index").css("height", resultWrapper.height() );
 
 	});

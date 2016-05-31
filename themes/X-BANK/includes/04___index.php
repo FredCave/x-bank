@@ -5,7 +5,7 @@
 	<?php addBreak(); ?>
 	<div class="section_head"><!-- ID HERE IS TEMPORARY -->
 		<h1>Index</h1>
-		<div class="back_to_top"><a href=""><img src="<?php bloginfo('template_url'); ?>/img/up_arrow.png" /></a></div>
+		<div class="back_to_top"><a href=""><img src="<?php bloginfo('template_url'); ?>/img/up_arrow.png" alt="Back to top" /></a></div>
 	</div>
 	<?php addBreak(); ?>
 
@@ -36,7 +36,7 @@
 				<span>
 					<li><a href="">Books</a></li>
 					<li><a href="">Chinaware</a></li>
-					<li><a href="">Accesories</a></li>
+					<li><a href="">Accessories</a></li>
 				</span>
 				<span>
 					<li><a href="">Food & Drinks</a></li>
@@ -98,11 +98,4 @@
 
 	</div>
 
-	
-
 </section>
-
-
-
-
-

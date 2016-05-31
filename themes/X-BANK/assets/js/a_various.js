@@ -25,7 +25,6 @@ $( document ).ready(function() {
 		offset: -60
 	});
 
-
 // 1.3. H1 STARS
 
 	var text;
@@ -38,6 +37,14 @@ $( document ).ready(function() {
 			$(this).text(text);
 		}		
 	});
- 
+
+// 1.4. SCROLL TO 
+
+	function scroller ( thisClick ) {
+		var target = thisClick.parents("section").find(".scroll_target");
+		$("html,body").animate({
+			scrollTop: target.offset().top - 80
+		}, 500);
+	}
 
 });
