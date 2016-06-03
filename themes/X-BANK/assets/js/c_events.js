@@ -10,6 +10,7 @@
 			3.2.4. 	CURRENT SHOW TOGGLE
 			3.2.5. 	MENU CATEGORY CLICK
 			3.2.6. 	INDEX CLICK ON LETTER OR CATEGORY
+			3.2.	INDEX PAGINATION NAV
 			3.2.7. 	ARTIST INFO TOGGLE
 			3.2.8. 	ARTIST VITRINE TOGGLE
 			3.2.9. 	SEARCH TOGGLE
@@ -141,6 +142,13 @@ $( document ).ready(function() {
 		filterIndex( $(this) );
 	});	
 
+	// 3.2.X. INDEX PAGINATION NAV
+
+	$("#index_nav").on("click", ".index_nav", function (e) {
+		e.preventDefault();	
+		paginationNav( $(this) );
+	});
+
 	// 3.2.7. ARTIST INFO TOGGLE
 
 	$(".index_results").on("click", ".index_artist_title a", function(e){
@@ -155,8 +163,10 @@ $( document ).ready(function() {
 
 	$(".index").on("click", ".artist_vitrine_toggle", function(e){
 		e.preventDefault();
+		wrapperShift( $(this).attr("data-id") );
+
 		// VITRINE OPEN / CLOSE FUNCTION
-		vitrineToggle( $(this).attr("data-id") );
+		// vitrineToggle( $(this).attr("data-id") );
 		
 		// CHECK WHETHER ARTIST IS SELECTED, IN INDEX_BIS?? 
 		
@@ -192,17 +202,20 @@ $( document ).ready(function() {
 		var thisCat = $("#index").attr("data-cat");
 		if ( $("#index").attr("data-cat").length ) {
 			$(".sub_index li").each( function(){
-				if ( $(this).hasClass("result") && $(this).hasClass( thisCat ) ) {
-					console.log( $(this) );
-					$(this).clone().appendTo(resultWrapper).hide();
+				if ( $(this).hasClass("hideseek_result") && $(this).hasClass( thisCat ) ) {
+					// $(this).clone().appendTo(resultWrapper).hide();
+					$(this).clone().appendTo(resultWrapper);
 				}
-			});		
-		} 
-		// else {
-		// 	resultWrapper.text("Please select a category.");
-		// }
+			});	
 
-		// animate wrapper height
+			// RUN PAGINATION FILTER
+			paginationFilter();		
+
+		} else {
+			resultWrapper.text("Please select a category.");
+		}
+
+		// ANIMATE WRAPPER HEIGHT
 		console.log( resultWrapper.height() );
 		$(".sub_index").css("height", resultWrapper.height() );
 
@@ -264,8 +277,16 @@ $( document ).ready(function() {
 	// 3.3.2. WINDOW SCROLL THROTTLED
 
 	$(window).on('scroll', _.throttle(function() {
-		vitrineCloseOnScroll();
+		vitrineManageScroll( $(window).scrollTop() );
 	}, 500 ));
+
+		// STOP SCROLL ANIMATIONS ON MANUAL SCROLL
+
+	var page = $("html, body");
+
+	page.on("scroll mousedown wheel DOMMouseScroll mousewheel keyup touchmove", function(){
+       page.stop();
+	});
 
 	// 3.3.3. RESIZE HANDLER
 	

@@ -96,6 +96,9 @@
 
 		<ul class="index_results"></ul>
 
+		<!-- INDEX NAVIGATION -->
+		<div id="index_nav"></div>
+
 	</div>
 
 </section>

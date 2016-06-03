@@ -85,8 +85,9 @@
 	endif;
 	wp_reset_postdata(); ?>
 
-	<ul class="index_results">
+	<ul class="index_results" data-block="">
 		<!-- RESULTS GO HERE -->
 	</ul>
-	
+
 </ul><!-- END OF #SUB_INDEX -->
+

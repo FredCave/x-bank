@@ -84,14 +84,14 @@
             if (treaty) {
 
               //$(this).hide();
-              $(this).removeClass("result");
+              $(this).removeClass("hideseek_result");
 
               $this.trigger('_after_each');
 
             } else {
 
               //$this.opts.highlight ? $(this).removeHighlight().highlight(q).show() : $(this).show();
-              $this.opts.highlight ? $(this).removeHighlight().highlight(q).show() : $(this).addClass("result");
+              $this.opts.highlight ? $(this).removeHighlight().highlight(q).show() : $(this).addClass("hideseek_result");
 
 
               $this.trigger('_after_each');

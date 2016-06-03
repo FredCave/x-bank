@@ -2,28 +2,28 @@
     
 	2. FUNCTIONS
 		2.1. BACKGROUND
-			2.1.1. PREPARE HTML FOR IMAGES
-			2.1.2. NUMBER CHECKER
-			2.1.3. ATTRIBUTE CLASS FOR NUMBER OF COLUMNS
-			2.1.4. SHUFFLE FUNCTION
-			2.1.5. INJECT IMAGES
-			2.1.6. ANIMATE IMAGES
-			2.1.7. FADE IN IMAGES
-			2.1.8. MANAGE FOUR COLUMNS
-			2.1.9. CLICK ON IMAGES
+			2.1.1. 	PREPARE HTML FOR IMAGES
+			2.1.2. 	NUMBER CHECKER
+			2.1.3. 	ATTRIBUTE CLASS FOR NUMBER OF COLUMNS
+			2.1.4. 	SHUFFLE FUNCTION
+			2.1.5. 	INJECT IMAGES
+			2.1.6. 	ANIMATE IMAGES
+			2.1.7. 	FADE IN IMAGES
+			2.1.8. 	MANAGE FOUR COLUMNS
+			2.1.9. 	CLICK ON IMAGES
 			2.1.10. WRAPPER SHIFT
 			2.1.11. INITIATE ON LOAD
 			2.1.12. ARTIST IMAGES LOAD
 		2.2. RECEIPT
-			2.2.1. REMOVE HASH
-			2.2.2. URL DETECT
-			2.2.3. VITRINE CLOSE ON SCROLL
-			2.2.4. FILTER INDEX
-			2.2.5. ARTIST INFO TOGGLE
-			2.2.6. VITRINE TOGGLE
-			2.2.7. ARTIST VITRINE OPEN
-			2.2.8. ARTIST VITRINE CLOSE
-			2.2.9. SEE MORE
+			2.2.1. 	REMOVE HASH
+			2.2.2. 	URL DETECT
+			2.2.3. 	VITRINE CLOSE ON SCROLL
+			2.2.4. 	FILTER INDEX
+			2.2.5. 	ARTIST INFO TOGGLE
+			2.2.6. 	VITRINE TOGGLE
+			2.2.7. 	ARTIST VITRINE OPEN
+			2.2.8. 	ARTIST VITRINE CLOSE
+			2.2.9. 	SEE MORE
 			2.2.10. CATEGORY CLICK
 			2.2.11. SCROLLER
 			2.2.12. SHOW IMAGES
@@ -56,7 +56,6 @@
 		if ( moment === "init" ) {
 			$("#init_container").prepend( ulHTML ).attr("data-cols", "4" );	
 		} else {
-
 			// create new wrapper
 			var newWrapper = $("<div></div>");
 			// add load_wrapper for subsequent containers
@@ -197,6 +196,14 @@
 						
 		} 
 
+		// TMP ADD NUMBERS TO EACH LI
+
+		// $(".current .img_loop").each( function(i){
+		// 	$(this).find("li.img").each( function(j){
+		// 		$(this).append("<p>" + i + "/" + j + "</p>");
+		// 	});
+		// });
+
 	}
 
 	// 2.1.6. ANIMATE IMAGES
@@ -219,14 +226,19 @@
 			/* TMP TEST */
 			target = $(".current");
 
+
 	 		// GET UL + WIN HEIGHT
 	 		var ulH = target.find(".img_loop").height();
 			var winH = $(window).height();
 			var dest = ulH - ( winH * 2 );
 			var time = dest / 18.6;
-			// console.log(211, ulH, winH, dest, time);
+			// TMP
+			// time = dest / 99;
+			// target.find(".img_loop").each( function(){
+			// 	console.log( 236, $(this).height() );				
+			// });
 
-			// time = distance / speed
+			//	time = distance / speed
 
 			// DEFINE ANIMATIONS		
 			$.keyframe.define({
@@ -253,39 +265,58 @@
 
 			target.find(".img_loop").resetKeyframe();
 
-			target.find(".movable_wrapper:nth-child(1) .img_loop, .movable_wrapper:nth-child(3) .img_loop").playKeyframe({
+			// $.keyframe.debug = true;
+
+			// SAFARI TEST
+			var isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+						   navigator.userAgent && !navigator.userAgent.match('CriOS');
+
+			var count = 1;
+			if ( isSafari ) {
+				count = "infinite";
+			} 
+
+			target.find(".movable_wrapper:nth-child(odd) .img_loop").playKeyframe({
 			    name: 'up', 
 			    duration: time + 's', 
-			    timingFunction: 'ease-out',
+			    timingFunction: "ease-out",
 			    direction: 'alternate',
-			    complete: function () {
-					target.find(".movable_wrapper:nth-child(1) .img_loop, .movable_wrapper:nth-child(3) .img_loop").playKeyframe({
-					    name: 'up', 
-					    duration: time + 's', 
-					    timingFunction: 'ease-in-out',
-					    direction: 'alternate',
-					    iterationCount: 'infinite'
-					});	    	
-			    }
+			    iterationCount: count, 
+			  	complete: function () {
+			  		if ( !isSafari ) {
+			  			console.log("secondary loop fired");
+						target.find(".movable_wrapper:nth-child(odd) .img_loop").playKeyframe({
+						    name: 'up', 
+						    duration: time + 's', 
+						    timingFunction: 'ease-in-out',
+						    direction: 'alternate',
+						    iterationCount: 'infinite'
+						});	
+			  		}
+   			  	}
 			});
 
-			target.find(".movable_wrapper:nth-child(2) .img_loop, .movable_wrapper:nth-child(4) .img_loop").playKeyframe({
+			target.find(".movable_wrapper:nth-child(even) .img_loop").playKeyframe({
 			    name: 'down', 
 			    duration: time + 's',  
-			    timingFunction: 'ease-out',
+			    timingFunction: "ease-out",
 			    direction: 'alternate', 
+			    iterationCount: count,
 			    complete: function(){
-			    	target.find(".movable_wrapper:nth-child(2) .img_loop, .movable_wrapper:nth-child(4) .img_loop").playKeyframe({
-					    name: 'down', 
-					    duration: time + 's', 
-					    timingFunction: 'ease-in-out',
-					    direction: 'alternate', 
-					    iterationCount: 'infinite'
-					});	
+			    	if ( !isSafari ) {
+						console.log("secondary loop fired");
+				    	target.find(".movable_wrapper:nth-child(even) .img_loop").playKeyframe({
+						    name: 'down', 
+						    duration: time + 's', 
+						    timingFunction: 'ease-in-out',
+						    direction: 'alternate', 
+						    iterationCount: 'infinite'
+						});	
+					}
 			    }
 			});	
 
-		} // end of first time check
+		} // END OF FIRST TIME CHECK
 
 	}
 
@@ -373,38 +404,37 @@
 
 	// 2.1.10. WRAPPER SHIFT
 
-	function wrapperShift () {
+	function wrapperShift ( artistId ) {
 		console.log("wrapperShift");
-
-		// Is there a way to simplify this ??
-
-		// check where wrapper_1 is
-		if ( parseInt ( $("#wrapper_1").css("left") ) === 0 ) {
-
-			// Move wrappers
-			$("#wrapper_1").css("left", "-100%");
+		var wr_1 = $("#wrapper_1"),
+			wr_2 = $("#wrapper_2");
+		// CHECK WHERE WRAPPER_1 IS
+		if ( parseInt ( wr_1.css("left") ) === 0 ) {
+			// MOVE WRAPPERS
+			wr_1.css("left", "-100%");
 			setTimeout( function(){
-				$("#wrapper_1").css("opacity", "0");	
+				wr_1.css("opacity", "0");	
 			}, 1500 );
-			$("#wrapper_2").css("left", "0%");
+			wr_2.css("left", "0%");
 			// Declare which wrapper can be loaded in
 			$(".toLoad").removeClass("toLoad").addClass("current");
-			$("#wrapper_1").addClass("toLoad").removeClass("current");
+			wr_1.addClass("toLoad").removeClass("current");
 		} else {
-
-			// Move wrappers
-			$("#wrapper_2").css("left", "100%");
+			// MOVE WRAPPERS
+			wr_2.css("left", "100%");
 			setTimeout( function(){
-				$("#wrapper_2").css("opacity", "0");	
+				wr_2.css("opacity", "0");	
 			}, 1500 );
-			$("#wrapper_1").css("left", "0%");
+			wr_1.css("left", "0%");
 			// Declare which wrapper can be loaded in
 			$(".toLoad").removeClass("toLoad").addClass("current");
-			$("#wrapper_2").addClass("toLoad").removeClass("current");	
-							
+			wr_2.addClass("toLoad").removeClass("current");							
 		}
 
-		imagesFadeIn();	
+		// imagesFadeIn();	
+
+		// CALL ARTISTIMAGES
+		artistImages( artistId );
 	}
 
 	// 2.1.11. INITIATE ON LOAD
@@ -428,17 +458,16 @@
 
 	function artistImages ( thisArtist ) {
 		console.log("artistImages");
-		// get ID of post to load
-		var postId = thisArtist.attr("id");
-		postId = postId.split("-")[1];
+		// GET ID OF POST TO LOAD
+		var postId = thisArtist.split("-")[1];
 
-		// get number of columns
-		var cols = thisArtist.attr("data-cols");
+		// GET NUMBER OF COLUMNS
+		var cols = $("#" + postId).attr("data-cols");
 
-		// check if not loaded already
+		// CHECK IF NOT LOADED ALREADY
 		if ( $("body").find("#wrapper-" + postId).length === 0 ) {
 
-			// prepare html with id of wrapper_postId
+			// PREPARE HTML WITH ID OF WRAPPER_POSTID
 			imagesHtmlPrep( postId ); 
 
 			// ajax call
@@ -447,11 +476,13 @@
 				noCols ( cols, "toLoad" );	
 				imagesInject( "toLoad" );	
 				$(".toLoad").find(".duplicate").show();			
-				wrapperShift();
+				// wrapperShift();
 				imagesAnim( ); /* NEEDS FIXING */
 			});
 			
-		} 
+		} else {
+			console.log("Artist already loaded.");
+		}
 
 	}
 
@@ -485,17 +516,28 @@
 
 	// 2.2.3. VITRINE CLOSE ON SCROLL
 
-	function vitrineCloseOnScroll () {	
-		console.log("vitrineCloseOnScroll");	
+	var firstTime = true;
+	function vitrineManageScroll ( scroll ) {	
+		// console.log("vitrineManageScroll");	
+
+		// ON FIRST SCROLL OPEN MAIN VITRINE
+		if ( firstTime ) {
+			// console.log(526, firstTime);
+			// vitrineToggle ( "toggle-main" );
+			// firstTime = false;
+		}
+
 		$(".r_hole").each( function(){			
 			var thisOffset = $(this).offset().top;
 			var winH = $(window).height();
+			var vitrH = $(this).height();
 			// detect if vitrine is visible or not
-			if ( $(window).scrollTop() < thisOffset - ( winH / 2 ) || $(window).scrollTop() > thisOffset + ( winH / 2 ) ) {
+			if ( scroll < thisOffset - ( winH / 2 ) || scroll > thisOffset + ( winH / 2 ) ) {
 				// detect if vitrine has class .no_close
 				if ( !$(this).hasClass("no_close") ) {
 					$(this).css("height", "0px").removeClass("clicked");	
 				}
+
 			}
 		});
 	}
@@ -505,7 +547,107 @@
 	function filterInit () {
 		console.log("filterInit");
 		// RUN FILTER INDEX WITH FASHION IS DEFAULT
-		$( "#index_categories li:first-child a" ).trigger( "click" );
+		// $( "#index_categories li:first-child a" ).trigger( "click" );
+	}
+
+	function showBlock ( blockNo ) {
+		// BLOCK PARAMETER GIVES BLOCK LENGTH
+		console.log( "showBlock", blockNo );
+		// blockNo 2 => blockNo > 25 && blockNo <= 50 
+		// blockNo X => blockNo > (X-1)*25 && blockNo <= X * 25
+		
+		// RECORD CURRENT BLOCK
+		$("#index .index_results").attr( "data-block", blockNo );
+
+		// HIGHLIGHT SELECTED BLOCK
+		$("#index_nav_" + blockNo).css({
+			"border-bottom" : "1px solid black"
+		}).siblings().css({
+			"border-bottom" : ""			
+		});
+
+		$("#index .index_results li").each( function(i){
+			if ( i >= ( ( blockNo - 1 ) * 25 ) && i < ( blockNo * 25 ) ) {
+				$(this).addClass("result");					
+			} else {
+				$(this).removeClass("result");		
+			}
+		});
+	}
+
+	function paginationNav ( click ) {
+		console.log("paginationNav");
+		// GET ID
+		var stem = click.attr("id").substring(10),
+			currentBlock = parseInt( $("#index .index_results").attr( "data-block" ) ),
+			maxBlock = parseInt( $("#index .index_results").attr( "data-max" ) ),
+			stemNo;
+		console.log( 547, stem );
+		if ( stem === "left" ) {
+			// LEFT
+			stemNo = currentBlock - 1;
+			if ( stemNo !== 0 ) {
+				console.log(580);
+				showBlock( stemNo );	
+			}
+		} else if ( stem === "right" ) {
+			// RIGHT
+			stemNo = currentBlock + 1;
+			if ( stemNo <= maxBlock ) {
+				console.log(587);
+				showBlock( stemNo );	
+			}
+		} else {
+			// NUMBER
+			stemNo = parseInt( stem );
+			showBlock( stemNo );		
+		}
+		
+		// ANIMATE WRAPPER HEIGHT
+		var resultWrapper = $("#index .index_results");
+		$(".sub_index").css("height", resultWrapper.height() );
+	}
+
+	function paginationFilter () {
+		console.log("paginationFilter");
+		// IF MORE THAN 40 RESULTS
+		var maxResults = 30,
+			block = 25,
+			results = $("#index .index_results li").length;
+		console.log( 549, results );
+		if ( results > maxResults ) {
+			console.log(552);
+
+			// COUNT HOW MANY BLOCKS ARE NEEDED
+			var blocks = Math.ceil(results / block);
+				// REGISTER THIS NUMBER
+			$("#index .index_results").attr("data-max", blocks);
+			console.log( 563, blocks );
+
+			var navHtml = "<a id='index_nav_left' class='index_nav' href=''><</a>";
+			// FOR EACH BLOCK ADD A NUMBER LINK
+			for ( var i = 1; i <= blocks; i++ ) {
+				navHtml += "<a id='index_nav_" + i + "' class='index_nav' href=''>" + i + "</a>";
+			}
+			navHtml += "<a id='index_nav_right' class='index_nav' href=''>></a>";
+
+			// APPEND TO HTML + SHOW 
+			$("#index_nav").html(navHtml).show();
+
+			// FIND FIRST BLOCK AND ADD RESULT CLASS
+			showBlock( 1 );
+
+		} else {
+			// NO FILTER – ALL RESULTS APPENDED TO FINAL AREA
+			console.log(554);
+			$("#index .index_results li").each( function(){
+				// ADD RESULT CLASS TO MAKE VISIBLE
+				$(this).addClass("result");
+			});
+
+			// HIDE NAV
+			$("#index_nav").hide();
+		}
 	}
 
 	function filterIndex ( thisClick ) {
@@ -513,11 +655,16 @@
 
 		// MODIFIED TO BE BASED ON CATEGORIES AND NOT LETTERS
 
-		// empty results wrapper
+		// EMPTY RESULTS WRAPPER
 		var resultWrapper = $("#index .index_results");
 		resultWrapper.empty();
 
-		// get clicked letter
+		// EMPTY SEARCH FIELD IF NOT SUB-CAT
+		if ( !thisClick.parents().hasClass("sub_cat") ) {
+			$("#search").val("");
+		}
+
+		// GET CLICKED LETTER (CAT)
 		var thisCat = thisClick.text().toLowerCase();
 		// loop through LIs 
 
@@ -525,13 +672,17 @@
 			// console.log( thisCat, thisLetter );
 			// var initial = $(this).data("initial");
 			if ( $(this).hasClass(thisCat) ) {
-				console.log("x");
 				// add new id to avoid conflicts
 				var newId = "result-" + $(this).attr("id");
-				// append any results to result wrapper
-				$(this).clone().attr("id", newId).addClass("result").appendTo(resultWrapper);
+
+				// APPEND ANY RESULTS TO RESULT WRAPPER WITHOUT ADDING CLASS "RESULT"
+				// $(this).clone().attr("id", newId).addClass("result").appendTo(resultWrapper);
+				$(this).clone().attr("id", newId).appendTo(resultWrapper);
 			} 
-		});			
+		});	
+
+		// RUN PAGINATION FILTER
+		paginationFilter();		
 		
 		// underline clicked letter or cat
 		// $(".index_menu a").css("border-bottom","");
