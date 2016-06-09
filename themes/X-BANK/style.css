@@ -1056,6 +1056,10 @@ input.disabled {
     width: 100%;
 }
 
+.index_disabled {
+    cursor: text;
+}
+
 .index_artist_title > a {
     padding: 0px;
 }

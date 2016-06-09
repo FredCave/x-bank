@@ -3,6 +3,22 @@
     "title": "Index",
     "fields": [
         {
+            "key": "field_57582c32c9f89",
+            "label": "Activate?",
+            "name": "index_activate",
+            "type": "true_false",
+            "instructions": "Choose to activate (make content visible).",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0
+        },
+        {
             "key": "field_56e312e1cc221",
             "label": "Artist Portrait",
             "name": "index_artist_portrait",
@@ -153,5 +169,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1460492410
+    "modified": 1465396407
 }

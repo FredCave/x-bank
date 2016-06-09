@@ -28,10 +28,14 @@
 			
 				<!-- TITLE, VISIBLE IN LIST -->
 				<div class="index_artist_title asterisks">
-					<a href="">
+					<a href="" class="<?php if ( !get_field("index_activate") ) { echo "index_disabled"; } ?>" >
 						<?php 
 						$a = get_the_title();
-						$b = "";
+						if ( get_field("index_activate") ) {
+							$b = "See More";
+						} else {
+							$b = "";							
+						}
 						echo "<p class='line_stretch'>";
 						starFiller( 43, $a, $b );
 						echo "</p>";

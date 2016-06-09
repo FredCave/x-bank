@@ -3,9 +3,9 @@
 // ENQUEUE CUSTOM SCRIPTS
 function enqueue_cpr_scripts() {
   
-    wp_deregister_script( 'jquery' );
-    wp_register_script( 'jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js');
-    wp_enqueue_script( 'jquery' );  
+    // wp_deregister_script( 'jquery' );
+    // wp_register_script( 'jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js');
+    // wp_enqueue_script( 'jquery' );  
     
     wp_enqueue_script('all-scripts', get_template_directory_uri() . '/js/scripts.min.js', array('jquery'), true);
 
@@ -101,22 +101,49 @@ function x_image_object( $image ) {
 // STAR FILLER
 
 function starFiller ( $noChars, $firstString, $secondString ) {
-    // $converted = str_replace(' ', '', $firstString);
-    //$converted = str_replace('–', '-', $converted);
     $converted = str_replace('–', '-', $firstString);
     $converted = preg_replace( "/&#?[a-z0-9]+;/i", "x", $converted);
     
     $a = strlen( utf8_decode( trim($converted) ) );
     $b = strlen( utf8_decode( trim($secondString) ) );
-    // calculate no. of asterisks
+    // CALCULATE NO. OF ASTERISKS
     $filler = $noChars - $a - $b;
-    echo "<span class='stars'>***</span>" . $firstString . "<span class='stars'>***</span><br class='star_break'><span class='star_filler'>";
+    echo "<span class='stars'>---</span>" . $firstString . "<span class='stars'>---</span><br class='star_break'><span class='star_filler'>";
     for ( $i=0; $i < $filler; $i++ ) {
-        echo "*";
+        echo "-";
     }   
-    // echo "</span>" . $secondString;
     echo "</span>" . $secondString;
 
+}
+
+// DATE CHECKERS
+
+    // IS AFTER
+
+function isPast ( $date ) {
+    // CURRENT DATE
+    $today = explode( "/", date("d/m/Y") );
+    $today_day = $today[0];
+    $today_month = $today[1];
+    $today_year = $today[2];
+    // INPUT DATE
+    $show = explode( "/", $date );
+    $show_day = $show[0];
+    $show_month = $show[1];
+    $show_year = $show[2];
+    $past = False;
+    if ( $show_year < $today_year ) {
+        $past = True;
+    } else if (  $show_year === $today_year ) {
+        if ( $show_month < $today_month ) {
+            $past = True;
+        } else if ( $show_month === $today_month ) {
+            if ( $show_day < $today_day ) {
+               $past = True; 
+            }
+        }
+    }
+    return $past;
 }
 
 // SLUG GENERATOR

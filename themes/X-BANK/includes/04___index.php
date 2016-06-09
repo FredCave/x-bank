@@ -63,7 +63,6 @@
   		-->
 
 		<!-- SEARCH -->
-
 		<p id="index_search" class="index_menu">
 			<!-- SEARCH TOGGLE BUTTON -->
 			<!-- <a href="">Search</a> -->

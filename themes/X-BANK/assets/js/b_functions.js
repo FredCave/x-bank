@@ -965,6 +965,20 @@
 
 	// 2.2.10. CATEGORY CLICK
 
+				// GET CATEGORY OF PARENT IF SUB-CAT
+				// if ( $(this).parents(".sub_cat").length ) {
+				// 	var parentCat = $(this).parents(".sub_cat").attr("id").split("_")[0];
+				// 	// FIND PARENT CAT
+				// 	$("#index_categories li").each( function(){
+				// 		if ( $(this).find("a").text().toLowerCase() === parentCat ) {
+				// 			// REMOVE UNDERLINE
+				// 			$(this).css(
+				// 				"border-bottom", "1px solid transparent"
+				// 			);
+				// 		}
+				// 	});
+				// }
+
 	function catClick ( thisId ) {
 		// CLEAR RESULTS
 		var resultWrapper = $("#index .index_results");
@@ -972,17 +986,31 @@
 
 		// CHANGE INDEX TITLE – REMOVED
 		catName = thisId.split("_");
-		console.log( catName[1] );
+		console.log( 975, catName[1] );
 		// $("#index .section_head h1").text( catName[1] + " Index" );
 		
 		// ADD ATTRIBUTE TO INDEX
 		$("#index").attr( "data-cat", catName[1] );
+
+		// IF PARENT CAT DE-UNDERLINE SUB-CATS
+		$("#index_categories li").each( function(){
+			if ( catName[1] === $(this).find("a").text().toLowerCase() ) {
+				console.log(998);
+				$(".sub_cat li").css(
+					"border-bottom", "1px solid transparent"
+				);
+			}
+		});
+
 		// UNDERLINE CATEGORY IN INDEX
 		$("#index_categories li, .sub_cat li").each( function(){
 			if ( $(this).text().toLowerCase() === catName[1] ) {
+
+				// REMOVES UNDERLINE ON OTHER SUB-CATS UNDER SAME CAT
 				$(this).parents(".sub_cat").find("li").css(
 					"border-bottom", "1px solid transparent"
 				);
+				// UNDERLINES THIS
 				$(this).css(
 					"border-bottom", "1px solid black"
 				).siblings().css(

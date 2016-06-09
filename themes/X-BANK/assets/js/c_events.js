@@ -153,10 +153,10 @@ $( document ).ready(function() {
 
 	$(".index_results").on("click", ".index_artist_title a", function(e){
 		e.preventDefault();
-		
-		var target = $(this).parents(".index_artist_title").next(".index_artist_content");
-		artistInfoToggle( target );
-		
+		if ( !$(this).hasClass("index_disabled") ) {
+			var target = $(this).parents(".index_artist_title").next(".index_artist_content");
+			artistInfoToggle( target );
+		} 	
 	});
 
 	// 3.2.8. ARTIST VITRINE TOGGLE
