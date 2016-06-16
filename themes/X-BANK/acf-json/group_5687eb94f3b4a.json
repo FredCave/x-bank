@@ -68,7 +68,7 @@
                             "key": "field_56b4b79d7fb00",
                             "label": "Artist \/ Designer Name",
                             "name": "bg_column_name",
-                            "type": "post_object",
+                            "type": "relationship",
                             "instructions": "",
                             "required": 0,
                             "conditional_logic": 0,
@@ -81,10 +81,13 @@
                                 "index"
                             ],
                             "taxonomy": [],
-                            "allow_null": 1,
-                            "multiple": 0,
-                            "return_format": "object",
-                            "ui": 1
+                            "filters": [
+                                "search"
+                            ],
+                            "elements": "",
+                            "min": "",
+                            "max": "",
+                            "return_format": "id"
                         }
                     ]
                 }
@@ -124,5 +127,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1464706683
+    "modified": 1465666277
 }

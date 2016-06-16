@@ -2,18 +2,22 @@
     
 	2. FUNCTIONS
 		2.1. BACKGROUND
-			2.1.1. 	PREPARE HTML FOR IMAGES
-			2.1.2. 	NUMBER CHECKER
-			2.1.3. 	ATTRIBUTE CLASS FOR NUMBER OF COLUMNS
-			2.1.4. 	SHUFFLE FUNCTION
-			2.1.5. 	INJECT IMAGES
-			2.1.6. 	ANIMATE IMAGES
-			2.1.7. 	FADE IN IMAGES
-			2.1.8. 	MANAGE FOUR COLUMNS
-			2.1.9. 	CLICK ON IMAGES
-			2.1.10. WRAPPER SHIFT
-			2.1.11. INITIATE ON LOAD
-			2.1.12. ARTIST IMAGES LOAD
+			2.1.1. VARIOUS BACKGROUND FUNCTIONS
+				2.1.1.1. 	CLICK ON IMAGES
+				2.1.1.2. 	ATTRIBUTE CLASS FOR NUMBER OF COLUMNS
+				2.1.1.3.    INITIATE ON LOAD
+				2.1.1.4. 	TMP – ROUND IMAGES
+			2.1.2. BACKGROUND IMAGE CHANGE
+
+				2.1.1. 	PREPARE HTML FOR IMAGES
+				2.1.4. 	SHUFFLE FUNCTION
+				2.1.5. 	INJECT IMAGES
+				2.1.6. 	ANIMATE IMAGES
+				2.1.7. 	FADE IN IMAGES
+				2.1.8. 	MANAGE FOUR COLUMNS
+				2.1.10. WRAPPER SHIFT
+				2.1.12. ARTIST IMAGES LOAD
+			
 		2.2. RECEIPT
 			2.2.1. 	REMOVE HASH
 			2.2.2. 	URL DETECT
@@ -28,463 +32,419 @@
 			2.2.11. SCROLLER
 			2.2.12. SHOW IMAGES
 			2.2.13. SHOW TOGGLE
+			2.2.14. AGENDA CHECK
 
 *****************************************************************************/
 
 // 2.1. BACKGROUND
 
-	// 2.1.1. PREPARE HTML FOR IMAGES
+	// 2.1.1. VARIOUS BACKGROUND FUNCTIONS
 
-	function imagesHtmlPrep( moment ) { // moment = post id
-		console.log("imagesHtmlPrep");
-		// CREATE COLUMNS
-		var direction;
-		var ulHTML = "";
-		var j;
-		for ( i=0; i<4; i++ ) {
-			if ( i % 2 === 0 ) {
-				direction = "slide_up";
-			} else {
-				direction = "slide_down";
-			}
-			j = i + 1;	
-			ulHTML += "<div class='movable_wrapper " + direction + " col_" + j +"'>";
-			ulHTML += "<ul class='img_loop'></ul><ul class='img_loop'></ul>";
-			ulHTML += "</div>";
-		}	
-		// destination wrapper
-		if ( moment === "init" ) {
-			$("#init_container").prepend( ulHTML ).attr("data-cols", "4" );	
-		} else {
-			// create new wrapper
-			var newWrapper = $("<div></div>");
-			// add load_wrapper for subsequent containers
-			ulHTML += "<ul class='load_wrapper column_view hide'></ul>";
-			newWrapper.attr( "id", "wrapper-" + moment ).attr("data-cols", "4" ).html( ulHTML );
-			// add classes depending on no. of cols
-			newWrapper.addClass("container container_4");
-			// append to wrapper
-			newWrapper.appendTo( $(".toLoad") );
-		}
-	}
+		// 2.1.1.1. CLICK ON IMAGES
 
-	// 2.1.2. NUMBER CHECKER	
-	
-	function isNumber( input ) {
-	    return !isNaN( input );
-	}
+		function infoReset () {
+			console.log("infoReset");
+			$(".img_loop").removeClass("paused");
 
-	// 2.1.3. ATTRIBUTE CLASS FOR NUMBER OF COLUMNS
-	
-	function noCols ( number, where ) {
-		console.log("noCols");
-		var target;
-		if ( where === "current" ) {
-			target = $(".current");
-		} else {
-			target = $(".toLoad");
-		}
-		
-		var mQuery = parseInt( number );
-		var maxCols = parseInt( target.find(".container").attr("data-cols") );
-		
-		var noCols;
-		if ( isNumber(mQuery) ) {
-			noCols = Math.min(maxCols, mQuery);	
-		} else {
-			noCols = maxCols;
-		}
-		
-		if ( noCols === 1 ) {
-			target.find(".container").addClass("container_1").removeClass("container_2 container_4");
-		} else if ( noCols === 2 ) {
-	       	target.find(".container").addClass("container_2").removeClass("container_1 container_4");
-		} else {
-			target.find(".container").addClass("container_4").removeClass("container_1 container_2");
-		}
-		
-	}
-
-	// 2.1.4. SHUFFLE FUNCTION
-
-	$.fn.randomize=function(a){(a?this.find(a):this).parent().each(function(){$(this).children(a).sort(function(){return Math.random()-0.5}).detach().appendTo(this)});return this};
-
-	// 2.1.5. INJECT IMAGES
-
-	function imagesInject ( where ) {
-		console.log("imagesInject");
-		var target, 
-			source;
-
-		if ( where != "toLoad" ) {
-
-			// IMAGES INJECTED INTO CURRENT WRAPPER
-			target = $(".current");
-			source = target.find(".container .load_wrapper");
-
-		} else {
-
-			// IMAGES INJECTED INTO OTHER WRAPPER
-			target = $(".toLoad");
-			source = target.find(".container .load_wrapper");
-
-		}
-	
-		// if 4 column view
-		if ( source.find(".column_view").length ) {
-
-			// loop through 4 existing columns
-			source.find(".column_view").each( function(i){
-
-				$(this).find("li.img").each( function(){
-					$(this).clone().appendTo( target.find(".movable_wrapper").eq(i).find(".img_loop") ); 	
-				});
-
-			});
-
-			// copy imgs depending on how many images there are
-			for ( var j = 0; j < 2; j++ ) {
-				
-				$(".movable_wrapper li.img").each( function(){
-					var thisParent = $(this).parents(".img_loop");
-					$(this).clone().appendTo( thisParent  ).addClass("duplicate");
-				});
-
-			}
-
-		// default image injection
-		} else {
-
-			var noImages = target.find(".load_wrapper .img_loop li.img").length;
-
-
-			var noCols = parseInt ( target.find(".container").attr("data-cols") );
-			nocols = 4;
-			
-			// IMAGES INJECTED INTO ALL AVAILABLE ULs
-			source.find("li.img").each( function(){
-				$(this).clone().appendTo( target.find(".img_loop") ); 	
-			});
-
-			// copy imgs depending on how many images there are
-			for ( var j = 0; j < 2; j++ ) {
-				
-				$(".movable_wrapper li.img").each( function(){
-					var thisParent = $(this).parents(".img_loop");
-					$(this).clone().appendTo( thisParent ).addClass("duplicate");
-				});
-
-			}
-
-			// IF MULTIPLE ULs, COLs 2-4 ARE SHUFFLED
-			
-			if ( noCols > 1 ) {
-				
-				for ( i=1; i < noCols; i++ ) {
-					var parent = $(".movable_wrapper").eq( i ).find(".img_loop");
-				    parent.find("li.img").randomize();
-				}
-			} 
-			
-
-		} // end of 4 column check
-
-		// IF 4 COLUMN VIEW
-		if ( target.find(".container").hasClass("container_2") || target.find(".container").hasClass("container_1") ) {
-
-			manageCols();
-						
-		} 
-
-		// TMP ADD NUMBERS TO EACH LI
-
-		// $(".current .img_loop").each( function(i){
-		// 	$(this).find("li.img").each( function(j){
-		// 		$(this).append("<p>" + i + "/" + j + "</p>");
-		// 	});
-		// });
-
-	}
-
-	// 2.1.6. ANIMATE IMAGES
-
- 	function imagesAnim ( where, when ) {
-		console.log("imagesAnim");
-
-		if ( when ) {
-			first = false;
-			console.log("imagesAnim break");
-		} else {
-
-	 		var target;
-			if ( where === "current" ) {
-				target = $(".current");
-			} else {
-				target = $(".toLoad");
-				
-			}
-			/* TMP TEST */
-			target = $(".current");
-
-
-	 		// GET UL + WIN HEIGHT
-	 		var ulH = target.find(".img_loop").height();
-			var winH = $(window).height();
-			var dest = ulH - ( winH * 2 );
-			var time = dest / 18.6;
-			// TMP
-			// time = dest / 99;
-			// target.find(".img_loop").each( function(){
-			// 	console.log( 236, $(this).height() );				
-			// });
-
-			//	time = distance / speed
-
-			// DEFINE ANIMATIONS		
-			$.keyframe.define({
-			    name: 'up',
-			    from: {
-			    	'transform': 'translateY(' + 0 + 'px)'  
-			    },
-			    to: {
-			        'transform': 'translateY(-' + ( ulH - ( winH * 2 ) ) + 'px)'  
-			    }
-			});
-
-			$.keyframe.define({
-			    name: 'down',
-			    from: {
-			    	'transform': 'translateY(-' + ( ulH - ( winH * 2 ) ) + 'px)'   
-			    },
-			    to: {
-			        'transform': 'translateY(0px)' 
-			    }
-			});
-
-			// ASSIGN ANIMATIONS
-
-			target.find(".img_loop").resetKeyframe();
-
-			// $.keyframe.debug = true;
-
-			// SAFARI TEST
-			var isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
-						   navigator.userAgent && !navigator.userAgent.match('CriOS');
-
-			var count = 1;
-			if ( isSafari ) {
-				count = "infinite";
-			} 
-
-			target.find(".movable_wrapper:nth-child(odd) .img_loop").playKeyframe({
-			    name: 'up', 
-			    duration: time + 's', 
-			    timingFunction: "ease-out",
-			    direction: 'alternate',
-			    iterationCount: count, 
-			  	complete: function () {
-			  		if ( !isSafari ) {
-			  			console.log("secondary loop fired");
-						target.find(".movable_wrapper:nth-child(odd) .img_loop").playKeyframe({
-						    name: 'up', 
-						    duration: time + 's', 
-						    timingFunction: 'ease-in-out',
-						    direction: 'alternate',
-						    iterationCount: 'infinite'
-						});	
-			  		}
-   			  	}
-			});
-
-			target.find(".movable_wrapper:nth-child(even) .img_loop").playKeyframe({
-			    name: 'down', 
-			    duration: time + 's',  
-			    timingFunction: "ease-out",
-			    direction: 'alternate', 
-			    iterationCount: count,
-			    complete: function(){
-			    	if ( !isSafari ) {
-						console.log("secondary loop fired");
-				    	target.find(".movable_wrapper:nth-child(even) .img_loop").playKeyframe({
-						    name: 'down', 
-						    duration: time + 's', 
-						    timingFunction: 'ease-in-out',
-						    direction: 'alternate', 
-						    iterationCount: 'infinite'
-						});	
-					}
-			    }
-			});	
-
-		} // END OF FIRST TIME CHECK
-
-	}
-
-	// 2.1.7. FADE IN IMAGES
-
-	function imagesFadeIn ( postId ) {
-		console.log("imagesFadeIn");
-		$(".current").animate({
-			"opacity": "1"
-		}, 2000);	
-	}
-
-	// 2.1.8. MANAGE FOUR COLUMNS
-
-	function manageCols ( cols ) {
-		console.log("manageCols");
-
-		if ( cols === 4 ) {
-
-			$(".appended").remove();
-			$(".duplicate").show();
-		} else {
-
-			// check if four column view is activated
-			if ( $(".load_wrapper ul").hasClass("column_view") ) {
-
-				// IF 2 OR 1 COLUMNS ALL COLUMNS ARE THE SAME
-				// HIDE DUPLICATES
-				$(".duplicate").hide();
-
-				// COPY ULs FROM 2, 3, 4 TO 1
-
-				var target_1 = $(".current .col_1 .img_loop");
-				var target_2 = $(".current .col_2 .img_loop");				
-				$(".current .movable_wrapper").each( function(i){
-					
-					if ( i > 0 ) {
-						// JUST FROM 1st UL IN COLUMN
-						
-						var targetImgs = $(this).find(".img_loop:first-child .img");
-						var noImages = targetImgs.length;
-						var appendHtml = [];
-						var appendImg,
-							clonedImg;
-						for ( var i = 0; i < noImages; i++ ) {
-							appendImg = targetImgs.eq(i);
-							clonedImg = appendImg.clone().addClass("appended");
-							appendHtml.push( clonedImg );
-						}
-						target_1.append(appendHtml);
-						target_2.append(appendHtml);
-
-					}
-				});
-				
-			}
-		}
-
-	}
-
-	// 2.1.9. CLICK ON IMAGES
-
-	function infoReset () {
-		console.log("infoReset");
-		$(".img_loop").removeClass("paused");
-
-		// HIDE INFO
-		$(".img_info").css("opacity","0");
-		$("#img_info_fixed").empty().removeClass("active");		
-	}
-
-	function imagesClick ( thisLi ) {
-		console.log("imagesClick");
-		if ( !$(".img_loop").hasClass("paused") ) {
-			$(".img_loop").addClass("paused");
-
-			// SHOW INFO			
+			// HIDE INFO
 			$(".img_info").css("opacity","0");
-			thisLi.find(".img_info").css("opacity","1").clone().appendTo("#img_info_fixed");
-			$("#img_info_fixed").addClass("active");
-		} else {
-			infoReset();
-		}
-	}
-
-	// 2.1.10. WRAPPER SHIFT
-
-	function wrapperShift ( artistId ) {
-		console.log("wrapperShift");
-		var wr_1 = $("#wrapper_1"),
-			wr_2 = $("#wrapper_2");
-		// CHECK WHERE WRAPPER_1 IS
-		if ( parseInt ( wr_1.css("left") ) === 0 ) {
-			// MOVE WRAPPERS
-			wr_1.css("left", "-100%");
-			setTimeout( function(){
-				wr_1.css("opacity", "0");	
-			}, 1500 );
-			wr_2.css("left", "0%");
-			// Declare which wrapper can be loaded in
-			$(".toLoad").removeClass("toLoad").addClass("current");
-			wr_1.addClass("toLoad").removeClass("current");
-		} else {
-			// MOVE WRAPPERS
-			wr_2.css("left", "100%");
-			setTimeout( function(){
-				wr_2.css("opacity", "0");	
-			}, 1500 );
-			wr_1.css("left", "0%");
-			// Declare which wrapper can be loaded in
-			$(".toLoad").removeClass("toLoad").addClass("current");
-			wr_2.addClass("toLoad").removeClass("current");							
+			$("#img_info_fixed").empty().removeClass("active");		
 		}
 
-		// imagesFadeIn();	
+		function imagesClick ( thisLi ) {
+			console.log("imagesClick");
+			if ( !$(".img_loop").hasClass("paused") ) {
+				$(".img_loop").addClass("paused");
 
-		// CALL ARTISTIMAGES
-		artistImages( artistId );
-	}
+				// SHOW INFO			
+				$(".img_info").css("opacity","0");
+				thisLi.find(".img_info").css("opacity","1").clone().appendTo("#img_info_fixed");
+				$("#img_info_fixed").addClass("active");
+			} else {
+				infoReset();
+			}
+		}
 
-	// 2.1.11. INITIATE ON LOAD
+		// 2.1.1.2. ATTRIBUTE CLASS FOR NUMBER OF COLUMNS
 
-	function imagesInit () {
-		console.log("imagesInit");
-		imagesHtmlPrep( "init" ); // no. of columns // initial load
-		imagesInject( ); // no. of imgs/col
-		imagesAnim( "current" );
-		// Check if images have loaded
-		$("#load_wrapper").imagesLoaded().done( function(){
-		    imagesFadeIn();
+		function isNumber( input ) {
+		    return !isNaN( input );
+		}
+		
+		function noCols ( number, where ) {
+			console.log("noCols");
+			// var target;
+			// if ( where === "current" ) {
+			// 	target = $(".current");
+			// } else {
+			// 	target = $(".toLoad");
+			// }		
+			// var mQuery = parseInt( number );
+			// var maxCols = parseInt( target.find(".container").attr("data-cols") );		
+			// var noCols;
+			// if ( isNumber(mQuery) ) {
+			// 	noCols = Math.min(maxCols, mQuery);	
+			// } else {
+			// 	noCols = maxCols;
+			// }
+			// if ( noCols === 1 ) {
+			// 	target.find(".container").addClass("container_1").removeClass("container_2 container_4");
+			// } else if ( noCols === 2 ) {
+		 //       	target.find(".container").addClass("container_2").removeClass("container_1 container_4");
+			// } else {
+			// 	target.find(".container").addClass("container_4").removeClass("container_1 container_2");
+			// }	
+		}
 
-		    // Receipt slide up
-			$("#receipt_wrapper").css("top","0px");
-  		});	
+		// 2.1.1.3.	MANAGE FOUR COLUMNS
 
-	}
+		function manageCols ( cols ) {
+			console.log("manageCols");
 
-	// 2.1.12. ARTIST IMAGES LOAD
+			// if ( cols === 4 ) {
 
-	function artistImages ( thisArtist ) {
-		console.log("artistImages");
-		// GET ID OF POST TO LOAD
-		var postId = thisArtist.split("-")[1];
+			// 	$(".appended").remove();
+			// 	$(".duplicate").show();
+			// } else {
 
-		// GET NUMBER OF COLUMNS
-		var cols = $("#" + postId).attr("data-cols");
+			// 	// check if four column view is activated
+			// 	if ( $(".load_wrapper ul").hasClass("column_view") ) {
 
-		// CHECK IF NOT LOADED ALREADY
-		if ( $("body").find("#wrapper-" + postId).length === 0 ) {
+			// 		// IF 2 OR 1 COLUMNS ALL COLUMNS ARE THE SAME
+			// 		// HIDE DUPLICATES
+			// 		$(".duplicate").hide();
 
-			// PREPARE HTML WITH ID OF WRAPPER_POSTID
-			imagesHtmlPrep( postId ); 
+			// 		// COPY ULs FROM 2, 3, 4 TO 1
 
-			// ajax call
-			$( "#wrapper-" + postId ).find(".load_wrapper").load("?p=" + postId, function () {
-			// 	console.log("loaded");
-				noCols ( cols, "toLoad" );	
-				imagesInject( "toLoad" );	
-				$(".toLoad").find(".duplicate").show();			
-				// wrapperShift();
-				imagesAnim( ); /* NEEDS FIXING */
+			// 		var target_1 = $(".current .col_1 .img_loop");
+			// 		var target_2 = $(".current .col_2 .img_loop");				
+			// 		$(".current .movable_wrapper").each( function(i){
+						
+			// 			if ( i > 0 ) {
+			// 				// JUST FROM 1st UL IN COLUMN
+							
+			// 				var targetImgs = $(this).find(".img_loop:first-child .img");
+			// 				var noImages = targetImgs.length;
+			// 				var appendHtml = [];
+			// 				var appendImg,
+			// 					clonedImg;
+			// 				for ( var i = 0; i < noImages; i++ ) {
+			// 					appendImg = targetImgs.eq(i);
+			// 					clonedImg = appendImg.clone().addClass("appended");
+			// 					appendHtml.push( clonedImg );
+			// 				}
+			// 				target_1.append(appendHtml);
+			// 				target_2.append(appendHtml);
+
+			// 			}
+			// 		});
+					
+			// 	}
+			// }
+		}
+
+		// 2.1.11. INITIATE ON LOAD
+
+		function imagesInit () {
+			console.log("imagesInit");
+			// MAIN IMAGE PREP FUNCTION		
+			imageManager( "init" );
+			// CHECK IF IMAGES HAVE LOADED
+			$("#load_wrapper").imagesLoaded().done( function(){
+			    imagesFadeIn();
+			    // RECEIPT SLIDE UP
+				$("#receipt_wrapper").css("top","0px");
+	  		});	
+
+			// TMP
+			// roundImages();
+		}
+
+		// 2.1.1.2. TMP – ROUND IMAGES
+
+		function roundImages () {
+			console.log("roundImages");
+			// CREATE A PROXY DIV WITH IMG AS BG
+			$(".bg_image").each( function(i) {
+				var imgSrc = $(this).attr("src");
+				var imgW = $(this).width();
+				console.log(imgSrc);
+				$(this).hide();
+				$( "<div id='proxy_" + i + "' class='bg_proxy bg_image'></div>" ).insertAfter( $(this) );
+				$( "#proxy_" + i ).css({
+					// "border" : "1px solid purple",
+					"width" : imgW,
+					"height" : imgW,
+					"background-image" : "url(" + imgSrc + ")",
+					"background-position" : "center",
+					"background-size" : "cover",
+					"border-radius" : "50%",
+					"box-shadow" : "18px 18px 23px 0px rgba(0,0,0,0.35)"
+				});
 			});
-			
-		} else {
-			console.log("Artist already loaded.");
 		}
 
-	}
+	// 2.1.2. BACKGROUND IMAGE CHANGE
+
+		// 2.1.2.X. PREPARE HTML FOR IMAGES
+		// REDUNDANT????
+
+		// function imagesHtmlPrep ( post ) {
+		// 	console.log("imagesHtmlPrep");
+		// 	// POST === ID OR "INIT"
+		// 	// COLUMNS ALREADY CREATED IN PHP
+		// 	// DESTINATION WRAPPER
+		// 	if ( post === "init" ) {
+		// 		$("#init_container").prepend( ulHTML ).attr("data-cols", "4" );	
+		// 	// } else {
+		// 	// 	// create new wrapper
+		// 	// 	var newWrapper = $("<div></div>");
+		// 	// 	// add load_wrapper for subsequent containers
+		// 	// 	ulHTML += "<ul class='load_wrapper column_view hide'></ul>";
+		// 	// 	newWrapper.attr( "id", "wrapper-" + moment ).attr("data-cols", "4" ).html( ulHTML );
+		// 	// 	// add classes depending on no. of cols
+		// 	// 	newWrapper.addClass("container container_4 wrapper_visible");
+		// 	// 	// APPEND TO CURRENT WRAPPER
+		// 	// 	// AS IT HAPPENS AFTER WRAPPERSHIFT FUNCTION
+		// 	// 	newWrapper.appendTo( $(".current") );
+		// 	}
+		// }
+
+		// 2.1.2.X. AJAX LOAD IMAGES
+
+		function imagesLoad ( post ) {
+			console.log("imagesLoad");
+			// POST === POST ID
+			// TARGET === .CURRENT
+			// CHECK IF NOT LOADED ALREADY
+			if ( !$("body").find("#wrapper-" + postId).length ) {
+				// ADD LI TO LOAD WRAPPER
+				$("#load_wrapper").append("<li id='wrapper-" + postId + "'></li>");
+
+				// AJAX CALL
+				$( "#wrapper-" + postId ).find(".load_wrapper").load("?p=" + postId, function () {
+					console.log("Ajax loaded");
+					// NEW WRAPPER ALREADY RENAMED CURRENT
+					// noCols ( cols, "current" );	
+					// imagesInject( "current" );	
+					// $(".current").find(".duplicate").show();			
+					// imagesAnim( ); 
+					// imagesFadeIn();
+				});			
+			} else {
+				console.log("Already loaded.");
+			}	
+
+		}
+
+		// 2.1.2.X. INJECT IMAGES
+
+			// SHUFFLE FUNCTION
+		$.fn.randomize=function(a){(a?this.find(a):this).parent().each(function(){$(this).children(a).sort(function(){return Math.random()-0.5}).detach().appendTo(this)});return this};
+
+		function imagesInject ( post ) {
+			console.log("imagesInject");
+			// POST === POST ID
+			var target = $(".current"),
+				source;
+			if ( post === "init" ) {
+				source = $("#init_container");
+			} else {
+				source = $("#wrapper_" + post);
+			}
+
+			// IF 4 COLUMN VIEW
+			if ( source.find(".column_view").length ) {
+				// LOOP THROUGH 4 EXISTING COLUMNS
+				source.find(".column_view").each( function(i){
+					$(this).find("li.img").each( function(){
+						$(this).clone().appendTo( target.find(".movable_wrapper").eq(i).find(".img_loop") ); 	
+					});
+				});
+				// COPY IMGS DEPENDING ON HOW MANY IMAGES THERE ARE
+				for ( var j = 0; j < 2; j++ ) {				
+					$(".movable_wrapper li.img").each( function(){
+						var thisParent = $(this).parents(".img_loop");
+						$(this).clone().appendTo( thisParent  ).addClass("duplicate");
+					});
+				}
+			// DEFAULT IMAGE INJECTION
+			} else {
+				var noImages = target.find("li.img").length;
+				var noCols = parseInt ( target.attr("data-cols") );
+				// nocols = 4; ????
+				// IMAGES INJECTED INTO ALL AVAILABLE ULs
+				source.find("li.img").each( function(){
+					$(this).clone().appendTo( target.find(".img_loop") ); 	
+				});
+				// COPY IMGS DEPENDING ON HOW MANY IMAGES THERE ARE
+				for ( var j = 0; j < 2; j++ ) {		
+					$(".movable_wrapper li.img").each( function(){
+						var thisParent = $(this).parents(".img_loop");
+						$(this).clone().appendTo( thisParent ).addClass("duplicate");
+					});
+				}
+				// IF MULTIPLE ULs, COLs 2-4 ARE SHUFFLED	
+				if ( noCols > 1 ) {
+					for ( i=1; i < noCols; i++ ) {
+						var parent = $(".movable_wrapper").eq( i ).find(".img_loop");
+					    parent.find("li.img").randomize();
+					}
+				} 
+			} // END OF 4 COLUMN CHECK
+
+			// IF 4 COLUMN VIEW
+			if ( target.find(".container").hasClass("container_2") || target.find(".container").hasClass("container_1") ) {
+				// TMP REMOVED FOR DEBUGGING
+				// manageCols();						
+			} 
+
+		}
+
+		// 2.1.2.X. ANIMATE IMAGES 
+		// 			CALLED ON MEDIA CHANGE
+
+		function imagesAnim ( first ) {
+			console.log("imagesAnim");
+
+			if ( first ) { // FIRST === TRUE
+				first = false;
+				console.log("imagesAnim break");
+			} else {
+
+		 		var target = $(".current");
+				
+		 		// GET UL + WIN HEIGHT
+		 		var ulH = target.find(".img_loop").height();
+				var winH = $(window).height();
+				var dest = ulH - ( winH * 2 );
+				var time = dest / 18.6;
+
+				// TIME = DISTANCE / SPEED
+
+				// DEFINE ANIMATIONS		
+				$.keyframe.define({
+				    name: 'up',
+				    from: {
+				    	'transform': 'translateY(' + 0 + 'px)'  
+				    },
+				    to: {
+				        'transform': 'translateY(-' + ( ulH - ( winH * 2 ) ) + 'px)'  
+				    }
+				});
+
+				$.keyframe.define({
+				    name: 'down',
+				    from: {
+				    	'transform': 'translateY(-' + ( ulH - ( winH * 2 ) ) + 'px)'   
+				    },
+				    to: {
+				        'transform': 'translateY(0px)' 
+				    }
+				});
+
+				// ASSIGN ANIMATIONS
+
+				target.find(".img_loop").resetKeyframe();
+
+				// $.keyframe.debug = true;
+
+				// SAFARI TEST
+				var isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+							   navigator.userAgent && !navigator.userAgent.match('CriOS');
+
+				var count = 1;
+				if ( isSafari ) {
+					count = "infinite";
+				} 
+
+				target.find(".movable_wrapper:nth-child(odd) .img_loop").playKeyframe({
+				    name: 'up', 
+				    duration: time + 's', 
+				    timingFunction: "ease-out",
+				    direction: 'alternate',
+				    iterationCount: count, 
+				  	complete: function () {
+				  		if ( !isSafari ) {
+				  			console.log("secondary loop fired");
+							target.find(".movable_wrapper:nth-child(odd) .img_loop").playKeyframe({
+							    name: 'up', 
+							    duration: time + 's', 
+							    timingFunction: 'ease-in-out',
+							    direction: 'alternate',
+							    iterationCount: 'infinite'
+							});	
+				  		}
+	   			  	}
+				});
+
+				target.find(".movable_wrapper:nth-child(even) .img_loop").playKeyframe({
+				    name: 'down', 
+				    duration: time + 's',  
+				    timingFunction: "ease-out",
+				    direction: 'alternate', 
+				    iterationCount: count,
+				    complete: function(){
+				    	if ( !isSafari ) {
+							console.log("secondary loop fired");
+					    	target.find(".movable_wrapper:nth-child(even) .img_loop").playKeyframe({
+							    name: 'down', 
+							    duration: time + 's', 
+							    timingFunction: 'ease-in-out',
+							    direction: 'alternate', 
+							    iterationCount: 'infinite'
+							});	
+						}
+				    }
+				});	
+
+			} // END OF FIRST TIME CHECK
+
+		}
+
+		// 2.1.2.X. FADE IN IMAGES
+
+		function imagesFadeIn () {
+			console.log("imagesFadeIn");
+			$(".current").animate({
+				"opacity": "1"
+			}, 2000, function() {
+				console.log(412);
+				$(".current").siblings(".wrapper").css({
+					"opacity": "0"
+				});
+			});
+		}
+
+		// 2.1.2.X. IMAGE MANAGER
+
+		function imageManager ( post ) {
+			console.log("imageManager");
+			// CENTRALISES THESE FUNCTIONS
+				// imagesHtmlPrep( post ); – REDUNDANT???
+			if ( post !== "init" ) {
+				imagesLoad( post );
+			}
+			imagesInject( post );
+			imagesAnim();
+			imagesFadeIn();
+		}
+
+		// 2.1.2.X. WRAPPER SHIFT
+
+		function wrapperShift ( post ) {
+			console.log("wrapperShift");
+		}
+
+		// 2.1.2.X. MAIN FUNCTION
+
+		function bgImages( post ) {
+			console.log("bgImages");
+			// WRAPPER SHIFT
+			wrapperShift(post);
+			// ONCE ANIMATION DONE LOAD NEW IMAGES
+			imageManager(post);
+		}
 
 // 2.2. RECEIPT
 
@@ -501,10 +461,28 @@
 		var hash = window.location.hash;
 		// IF HASH EXISTS
 		if ( hash.length ) {
-			console.log( 753, hash );
-			// See More function
-			seeMore( hash.substring(1) );
+			console.log( "urlDetect", hash.substring(1) );
+			
+			// GET SLUG
+			var slug = hash.substring(1);
 
+			// IF IN AGENDA
+			if ( $( "[data-slug=" + hash.substring(1) + "]" ).parents("") ) {
+
+			}
+				// OPEN UP POST
+
+			// IF INDEX
+				// SEEMORE
+
+			// IF ENTRY DOESN'T HAVE CLASS INDEX_DISABLED
+			console.log( $( "[data-slug=" + hash.substring(1) + "]" ).find("a").attr("class") );
+			if ( !$( "[data-slug=" + hash.substring(1) + "]" ).find("a").hasClass("index_disabled") ) {
+				// SEE MORE FUNCTION	
+				seeMore( hash.substring(1) );				
+			} else {
+				console.log("deactived");	
+			}
 		} else {
 			// PAGE RESET ??
 			// CLOSE ALL / SCROLL TO TOP
@@ -1030,10 +1008,11 @@
 	}
 
 	// 2.2.11. SCROLLER
+	// ONLY USED IN AGENDA ????
 
 	function scroller ( thisClick ) {
 		console.log("scroller");
-		var target = thisClick.parents("section").find(".scroll_target");
+		var target = thisClick.parents(".show_wrapper").find(".scroll_target");
 		$("html,body").animate({
 			scrollTop: target.offset().top - 80
 		}, 500);
@@ -1090,12 +1069,23 @@
 		console.log("showToggleOpen");	
 		var target = click.parents(".show_wrapper").find(".show_content");
 		var contentsH = 0;
+		// MODIFY HEIGHT
 		target.children().each( function(){
 			contentsH += $(this).outerHeight(true);
-		}).height();
+		});
 		target.css( "height", contentsH ).addClass("clicked");
+		// SCROLL TO TARGET
 		scroller( click );
-		$(".show_toggle_text").css( "opacity", "0" );		
+		// HIDE READ MORE BUTTON IN CLICKED SHOW
+		click.parents(".show_wrapper").find(".show_toggle_text").css( "opacity", "0" );		
+		// CHECK IF POST INCLUDES IMAGES
+		var imgCount = click.parents(".show_wrapper").attr("data-count");
+		if ( imgCount > 0 ) {
+			// GET ID
+			var showId = click.parents(".show_wrapper").attr("id");
+			console.log( 1139, showId );
+			wrapperShift( showId );
+		}		
 	}
 
 	function showToggleClose ( click ) {
@@ -1103,8 +1093,25 @@
 		var target = click.parents(".show_wrapper").find(".show_content");
 		target.css( "height", 0 ).removeClass("clicked");
 		setTimeout( function(){
-			$(".show_toggle_text").css( "opacity", "1" );
-		}, 1000 );			
+			// RESET READ MORE BUTTON + IMAGE LINK
+			click.parents(".show_wrapper").find(".show_toggle_text").css( "opacity", "" );		
+		}, 1000 );
+		// SCROLL BACK TO TOP
+		scroller( click );			
+	}
+
+	// 2.2.14
+
+	function agendaCheck () {
+		console.log("agendaCheck");
+		$("#agenda .section_content").each( function(){
+			// CHECK IF SHOW WRAPPERS
+			var wrappers = $(this).find(".show_wrapper").length;
+			// IF NO SHOWS HIDE HEADER
+			if ( wrappers === 0 ) {
+				$(this).prevAll().hide();
+			}
+		});
 	}
 
 	

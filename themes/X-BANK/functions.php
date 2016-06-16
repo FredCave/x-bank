@@ -3,9 +3,9 @@
 // ENQUEUE CUSTOM SCRIPTS
 function enqueue_cpr_scripts() {
   
-    // wp_deregister_script( 'jquery' );
-    // wp_register_script( 'jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js');
-    // wp_enqueue_script( 'jquery' );  
+    wp_deregister_script( 'jquery' );
+    wp_register_script( 'jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js');
+    wp_enqueue_script( 'jquery' );  
     
     wp_enqueue_script('all-scripts', get_template_directory_uri() . '/js/scripts.min.js', array('jquery'), true);
 
@@ -63,8 +63,11 @@ function add_my_var($public_query_vars) {
 // INCLUDE BREAKS
 
 function addBreak() {
-    //echo '<p class="break"><span class="break_inner">*********************************************</span></p>';
     echo '<p class="break"><span class="break_inner">–––––––––––––––––––––––––––––––––––––––––––––</span></p>';
+}
+
+function addInnerBreak() {
+    echo '<p class="inner_break"><span class="break_inner">–––––––––––––––––––––––––––––––––––––––––––––</span></p>';
 }
 
 // IMAGE OBJECT

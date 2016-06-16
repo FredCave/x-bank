@@ -163,29 +163,15 @@ $( document ).ready(function() {
 
 	$(".index").on("click", ".artist_vitrine_toggle", function(e){
 		e.preventDefault();
-		wrapperShift( $(this).attr("data-id") );
+		
+		bgImages();
+
+		// wrapperShift( $(this).attr("data-id") );
 
 		// VITRINE OPEN / CLOSE FUNCTION
 		// vitrineToggle( $(this).attr("data-id") );
-		
-		// CHECK WHETHER ARTIST IS SELECTED, IN INDEX_BIS?? 
-		
+ 		
 	});
-
-	// 3.2.9. SEARCH TOGGLE
-
-		// SHOW
-	// $("#index_search a").on("click", function(){
-	// 	$(this).hide().next().show();
-	// });
-	// 	// HIDE
-	// $(document).click(function(e) { 
-	//     if ( !$(e.target).closest("#index_search").length ) {
-	//         $("#index_search input").hide().prev().show();
-	//         // REMOVE UNDERLINE
-	//         $(".index_menu a").css("border-bottom","");
-	//     }        
-	// });
 
 	// 3.2.10. SEARCH KEYUP
 
@@ -265,13 +251,16 @@ $( document ).ready(function() {
 	// 3.3.1. WINDOW LOAD 
 
 	$(window).on("load", function(){
-		removeHash();
+		// removeHash();
+		urlDetect();
 		imagesInit();
 		justify();
 		// RUN FILTER WITH FASHION AS DEFAULT
 		filterInit();
 		// SHOW IMAGES INIT
 		showImgsInit();	
+		// AGENDA CHECK
+		agendaCheck();
 	});
 
 	// 3.3.2. WINDOW SCROLL THROTTLED
@@ -303,12 +292,12 @@ $( document ).ready(function() {
 	        // Less than 600px wide     
 	        noCols(1, "current");
 	        manageCols();
-	        imagesAnim("current", first);
+	        imagesAnim(first);
 	    } else if ( mql.m.matches ) {
 	        // More than 600px wide
 			noCols(2, "current");
 			manageCols();
-			imagesAnim("current", first);
+			imagesAnim(first);
 			// reset any image infos
 			infoReset();		
 	    } else {
@@ -316,7 +305,7 @@ $( document ).ready(function() {
 			noCols(4, "current");
 			justify();
 			manageCols( 4 );
-			imagesAnim("current", first); // need to check if first time
+			imagesAnim(first); // need to check if first time
 			// reset any image infos
 			infoReset();
 	    }

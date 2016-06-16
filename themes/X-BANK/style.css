@@ -271,6 +271,7 @@ br.star_break {
 /* END OF COLUMNS */
 
 .wrapper .img {
+/*    border: 1px solid red;*/
     position: relative;
     text-align: center;
     margin-bottom: 48px;
@@ -342,6 +343,11 @@ br.star_break {
 .img_info_bottom {
     margin-bottom: 12px;
     bottom: 25%;
+}
+
+.img_info_blank {
+    border: 1px solid transparent;
+    height: 36px;
 }
 
 .img_info_bottom li {
@@ -482,6 +488,17 @@ p.break {
     white-space: nowrap;
 }
 
+p.inner_break {
+    font-size: 0.95em;
+    letter-spacing: 0.5em;
+    width: 100%;
+/*    margin: 0 auto 32px auto;*/
+    margin: 0 auto 10px auto;
+    text-align: center;
+    overflow: hidden; 
+    white-space: nowrap;
+}
+
 span.break_inner {
     width: 105%;
 }
@@ -576,22 +593,10 @@ section {
 }
 
 #r_menu  {
-/*    border: 1px solid red;*/
-/*    padding-bottom: 8px;*/
-/*    margin: 12px auto 46px auto;*/
-    margin: 12px auto 0px auto;
+/*    margin: 12px auto 0px auto;*/
+    margin: 12px auto 12px auto;
     width: 110%;
     margin-left: -5%;
-}
-
-#r_menu span {
-/*    border: 1px solid green;*/
-/*    display: block;
-    margin-bottom: 8px;*/
-}
-
-#r_menu span:last-child {
-/*    margin-bottom: 0px;*/
 }
 
 #r_menu li {
@@ -622,8 +627,6 @@ section {
 #r_menu li:hover a {
     border-bottom: 1px solid black;
 }
-
-
 
 #r_vitrine, #r_vitrine_bis {
     padding: 2px 0px;
@@ -686,23 +689,41 @@ section {
     position: relative;
 }
 
-#agenda .section_content {
+#agenda .show_wrapper {
+/*    border: 1px solid purple;*/
     position: relative;
+    padding-bottom: 24px;
 }
 
-#r_current_text {
+#agenda .inner_break:last-child {
+    display: none;
+}
+
+.show_title {
+/*    border: 1px solid red;*/
+    text-align: left;
+    display: inline-block;
+    vertical-align: top;
+    width: 67%;
+}
+
+.show_dates {
+/*    border: 1px solid red;*/
     position: absolute;
     top: 0;
-    left: 0;
+    right: 0;
+    display: inline-block;
+    vertical-align: top;
     text-align: left;
+    width: auto;
 }
 
-#r_current_image {
+.show_main_image {
     padding-bottom: 16px;
     margin-top: 40px;
 }
 
-#r_current_image img {
+.show_main_image img {
     width: 100%;
     height: auto;
 }
@@ -712,8 +733,14 @@ section {
     display: block;
 }
 
+#upcoming_content .show_toggle {
+    text-align: left;
+    min-height: 48px;
+}
+
 .show_toggle_text {
     transition: opacity 0.5s;
+    padding-bottom: 24px;
 }
 
 .show_toggle_text span {
@@ -789,18 +816,16 @@ section {
 }
 
 .show_content {
+/*    border: 1px solid red;*/
     height: 0px;
     -webkit-transition: height 0.5s ease-in-out;
             transition: height 0.5s ease-in-out;
     overflow: hidden;
+    padding-top: 12px;
 }
 
-#r_current_content div {
+.agenda_content div {
     margin-bottom: 36px;
-}
-
-#r_upcoming_list .show_content p {
-    margin: 24px auto 48px auto;
 }
 
 #index .section_content {
@@ -1088,6 +1113,10 @@ input.disabled {
     height: auto;  
     -webkit-transition: margin-top 0.5s;
             transition: margin-top 0.5s;
+}
+
+.index_collection {
+    margin-bottom: 16px;
 }
 
 .index_artist_bio {
