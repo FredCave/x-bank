@@ -49,13 +49,13 @@ $( document ).ready(function() {
 	// SEE MORE
 
 	$(".wrapper").on("click", ".see_more", function(e){
-		seeMore( $(this).attr("data-artist") );
+		seeMoreIndex( $(this).attr("data-artist") );
 	});	
 
 		// IMG_INFO_FIXED HERE
 
 	$("#img_info_fixed").on("click", ".see_more", function(){
-		seeMore( $(this).attr("data-artist") );
+		seeMoreIndex( $(this).attr("data-artist") );
 	});
 
 
@@ -93,19 +93,22 @@ $( document ).ready(function() {
 	$(".show_toggle").on( "click", function(e){
 		e.preventDefault();
 		var following = $(this).next(".show_content");
+		var thisId = $(this).parents(".show_wrapper").attr("id");
+		console.log(97, thisId);
 		if ( following.hasClass("clicked") ) {
 			// CLOSE
-			showToggleClose( $(this) );
+			showToggleClose( thisId );
 		} else {
 			// OPEN
-			showToggleOpen( $(this) );	
+			showToggleOpen( thisId );	
 		}
 	});
 
 		// READ LESS
 
 	$(".show_toggle_text_close").on( "click", function(){
-		showToggleClose( $(this) );
+		var thisId = $(this).parents(".show_wrapper").attr("id");
+		showToggleClose( thisId );
 	});
 
 	// 3.2.5. MENU CATEGORY CLICK
@@ -114,7 +117,7 @@ $( document ).ready(function() {
 		e.preventDefault();
 		var thisSlug = $(this).data("artist");
 		// console.log( 105, thisSlug );
-		seeMore( thisSlug );
+		seeMoreIndex( thisSlug );
 	});
 
 	// 3.2.6. INDEX CLICK ON LETTER / CATEGORY
@@ -163,10 +166,9 @@ $( document ).ready(function() {
 
 	$(".index").on("click", ".artist_vitrine_toggle", function(e){
 		e.preventDefault();
-		
-		bgImages();
-
-		// wrapperShift( $(this).attr("data-id") );
+		var postId = $(this).attr("data-id").split("-")[1];
+		console.log( 167, postId );
+		bgImages( postId );
 
 		// VITRINE OPEN / CLOSE FUNCTION
 		// vitrineToggle( $(this).attr("data-id") );
@@ -266,7 +268,7 @@ $( document ).ready(function() {
 	// 3.3.2. WINDOW SCROLL THROTTLED
 
 	$(window).on('scroll', _.throttle(function() {
-		vitrineManageScroll( $(window).scrollTop() );
+		// vitrineManageScroll( $(window).scrollTop() );
 	}, 500 ));
 
 		// STOP SCROLL ANIMATIONS ON MANUAL SCROLL
@@ -290,19 +292,19 @@ $( document ).ready(function() {
 	    // Gives number of columns for image injection
 	    if ( mql.s.matches ) {
 	        // Less than 600px wide     
-	        noCols(1, "current");
+	        noCols();
 	        manageCols();
 	        imagesAnim(first);
 	    } else if ( mql.m.matches ) {
 	        // More than 600px wide
-			noCols(2, "current");
+			noCols();
 			manageCols();
 			imagesAnim(first);
 			// reset any image infos
 			infoReset();		
 	    } else {
 	    	// More than 900px wide
-			noCols(4, "current");
+			noCols();
 			justify();
 			manageCols( 4 );
 			imagesAnim(first); // need to check if first time

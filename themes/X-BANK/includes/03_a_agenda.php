@@ -9,7 +9,8 @@ function showPost ( $type ) {
 		$count = count( $images['value'] );
 	endif; ?>
 
-	<div class="show_wrapper" id="show-<?php the_ID(); ?>" data-count="<?php echo $count; ?>">
+	<?php global $post; ?>
+	<div class="show_wrapper" id="show-<?php the_ID(); ?>" data-count="<?php echo $count; ?>" data-slug="<?php echo $post->post_name; ?>">
 
 		<?php if ( $type === "upcoming" ) : 
 			// UPCOMING
@@ -75,6 +76,18 @@ function showPost ( $type ) {
 				<?php the_field( "show_text" ); ?>
 			</div>
 
+			<!-- MAIN IMAGE -->
+			<?php if ( get_field("show_main_image") ) : ?>
+				<div class="show_sec_image">
+					<?php $image = get_field("show_main_image");
+					if( !empty( $image ) ) {
+						x_image_object( $image );	
+					}
+					?>
+				</div>
+			<?php endif; ?>
+
+
 			<!-- ARTISTS EXHIBITED -->
 			<?php if ( have_rows( "show_artists" ) ) : ?>
 				<ul class="show_artists">
@@ -84,9 +97,6 @@ function showPost ( $type ) {
 					$artists = get_field("show_artists");
 
 					// PUT IN ALPHABETICAL ORDER
-					function custom_sort( $a, $b ) {
-						return strtolower ( $a->post_title ) > strtolower ( $b->post_title );
-					}
 					usort( $artists, "custom_sort" );
 
 					// NEED SLUG FOR SEE MORE FUNCTION
@@ -121,7 +131,11 @@ function showPost ( $type ) {
 			<?php endif; ?>
 
 			<!-- SHOW IMAGES -->
-			<?php if ( get_field( "show_images" ) ) : ?>
+			<?php /*
+			
+			// HIDDEN – LOADED SEPARATELY IN BG
+
+			if ( get_field( "show_images" ) ) : ?>
 				<ul class="show_images">
 					<?php while ( have_rows( "show_images" ) ) : the_row(); ?>
 						<li>
@@ -138,17 +152,40 @@ function showPost ( $type ) {
 					<a href="" class="show_images_nav_left">&lt;</a> 
 					<a href="" class="show_images_nav_right">&gt;</a> 
 				</div>
-			<?php endif; ?>
+			<?php endif; */ ?>
 
 			<div class="show_toggle_text_close">
 				Read less
 			</div>
+
+			<!-- SHARE BUTTONS -->
+
+			<ul class="show_share">
+				<!-- FACEBOOK -->
+				<?php $title = get_the_title(); ?>
+				<li>
+					<a target="_blank" href="<?php echo createFBUrl ( $image, $title ); ?>">
+						<img src="<?php bloginfo('template_url'); ?>/img/icon_facebook.png" alt="Facebook icon" />
+					</a>
+				</li>
+				<!-- TWITTER -->
+				<li>
+					<a class="twitter-share-button" 
+						target="_blank" 
+						data-url="<?php echo createTwitterUrl ( $image, $title )[1]; ?>" 
+						href="<?php echo createTwitterUrl ( $image, $title )[2]; ?>">
+						<img src="<?php bloginfo('template_url'); ?>/img/icon_twitter.png" alt="Twitter icon" />
+					</a>
+				</li>
+			</ul>
 
 		</div><!-- END OF .SHOW_CONTENT -->
 
 	</div><!-- END OF .SHOW_WRAPPER -->	
 
 <?php
+	// RESET GLOBAL POST
+	wp_reset_postdata();
 }
 
 ?>

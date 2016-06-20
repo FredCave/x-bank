@@ -72,7 +72,7 @@ function addInnerBreak() {
 
 // IMAGE OBJECT
 
-function x_image_object( $image ) {
+function x_image_object( $image, $bg = null ) {
     $width = $image['sizes'][ 'thumbnail-width' ];
     $height = $image['sizes'][ 'thumbnail-height' ];
     $thumb = $image['sizes'][ "thumbnail" ];
@@ -88,8 +88,12 @@ function x_image_object( $image ) {
         $medium = $image['sizes'][ "large" ];
         $large = $image['url'];
     } 
+    // IF BG IMAGE
+    if ( $bg ) {
+        $class = $class . " bg_image";
+    }
 
-    echo "<img class='bg_image lazyload " . $class . "' 
+    echo "<img class='lazyload " . $class . "' 
     alt='X Bank'  
     data-src='" . $thumb . "' 
     width='" . $width . "' 
@@ -117,6 +121,12 @@ function starFiller ( $noChars, $firstString, $secondString ) {
     }   
     echo "</span>" . $secondString;
 
+}
+
+// CUSTOM SORT
+
+function custom_sort( $a, $b ) {
+    return strtolower ( $a->post_title ) > strtolower ( $b->post_title );
 }
 
 // DATE CHECKERS

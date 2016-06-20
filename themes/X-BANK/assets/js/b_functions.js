@@ -66,34 +66,39 @@
 		}
 
 		// 2.1.1.2. ATTRIBUTE CLASS FOR NUMBER OF COLUMNS
+		// 			BASED ON SIZE OF SCREEN AND MAX NUMBER OF COLUMNS DECIDED BY POST
 
 		function isNumber( input ) {
 		    return !isNaN( input );
 		}
 		
-		function noCols ( number, where ) {
+		function noCols () {
 			console.log("noCols");
-			// var target;
-			// if ( where === "current" ) {
-			// 	target = $(".current");
-			// } else {
-			// 	target = $(".toLoad");
-			// }		
-			// var mQuery = parseInt( number );
-			// var maxCols = parseInt( target.find(".container").attr("data-cols") );		
-			// var noCols;
-			// if ( isNumber(mQuery) ) {
-			// 	noCols = Math.min(maxCols, mQuery);	
-			// } else {
-			// 	noCols = maxCols;
-			// }
-			// if ( noCols === 1 ) {
-			// 	target.find(".container").addClass("container_1").removeClass("container_2 container_4");
-			// } else if ( noCols === 2 ) {
-		 //       	target.find(".container").addClass("container_2").removeClass("container_1 container_4");
-			// } else {
-			// 	target.find(".container").addClass("container_4").removeClass("container_1 container_2");
-			// }	
+			var target = $(".current"),
+				winW = $(window).width(), 
+				mQuery,
+				noCols;
+			// POST COLS TAKEN FROM DATA-COLS OF CURRENT
+			var postCols = parseInt( $(".current").attr( "data-cols" ) );
+			// MEASURE MAX COLS DEPENDING ON SCREEN SIZE
+			if ( winW < 600 ) {
+				mQuery = 1;
+			} else if ( winW >= 600 && winW < 900 ) {
+				mQuery = 2;
+			} else {
+				mQuery = 4;
+			}
+
+			noCols = Math.min( postCols, mQuery );	
+			console.log( 86, noCols );
+	
+			if ( noCols === 1 ) {
+				target.addClass("container_1").removeClass("container_2 container_4");
+			} else if ( noCols === 2 ) {
+		       	target.addClass("container_2").removeClass("container_1 container_4");
+			} else {
+				target.addClass("container_4").removeClass("container_1 container_2");
+			}	
 		}
 
 		// 2.1.1.3.	MANAGE FOUR COLUMNS
@@ -168,7 +173,6 @@
 			$(".bg_image").each( function(i) {
 				var imgSrc = $(this).attr("src");
 				var imgW = $(this).width();
-				console.log(imgSrc);
 				$(this).hide();
 				$( "<div id='proxy_" + i + "' class='bg_proxy bg_image'></div>" ).insertAfter( $(this) );
 				$( "#proxy_" + i ).css({
@@ -213,23 +217,26 @@
 		// 2.1.2.X. AJAX LOAD IMAGES
 
 		function imagesLoad ( post ) {
-			console.log("imagesLoad");
 			// POST === POST ID
-			// TARGET === .CURRENT
+			console.log("imagesLoad");
 			// CHECK IF NOT LOADED ALREADY
-			if ( !$("body").find("#wrapper-" + postId).length ) {
+			if ( !$("body").find("#wrapper_" + post).length ) {
 				// ADD LI TO LOAD WRAPPER
-				$("#load_wrapper").append("<li id='wrapper-" + postId + "'></li>");
+				$("#load_wrapper").append("<li id='wrapper_" + post + "'></li>");
 
 				// AJAX CALL
-				$( "#wrapper-" + postId ).find(".load_wrapper").load("?p=" + postId, function () {
+				$( "#wrapper_" + post ).load("?p=" + post, function () {
 					console.log("Ajax loaded");
-					// NEW WRAPPER ALREADY RENAMED CURRENT
+					// IMAGESINJECT
+					imagesInject( post );	
+					// IMAGESANIM
+					// imagesAnim(); 
+					// IMAGESFADEIN
+					imagesFadeIn();
+
+					// ???
 					// noCols ( cols, "current" );	
-					// imagesInject( "current" );	
-					// $(".current").find(".duplicate").show();			
-					// imagesAnim( ); 
-					// imagesFadeIn();
+					// $(".current").find(".duplicate").show();	//		
 				});			
 			} else {
 				console.log("Already loaded.");
@@ -270,8 +277,9 @@
 				}
 			// DEFAULT IMAGE INJECTION
 			} else {
-				var noImages = target.find("li.img").length;
+				var noImages = source.find("li.img").length;
 				var noCols = parseInt ( target.attr("data-cols") );
+				// console.log( source, noImages, noCols );
 				// nocols = 4; ????
 				// IMAGES INJECTED INTO ALL AVAILABLE ULs
 				source.find("li.img").each( function(){
@@ -298,6 +306,11 @@
 				// TMP REMOVED FOR DEBUGGING
 				// manageCols();						
 			} 
+
+			// EMPTY SIBLING MOVABLE WRAPPERS
+			console.log("Empty non-visible wrappers.");
+			target.siblings(".wrapper").find(".movable_wrapper .img_loop").empty();
+
 
 		}
 
@@ -409,7 +422,6 @@
 			$(".current").animate({
 				"opacity": "1"
 			}, 2000, function() {
-				console.log(412);
 				$(".current").siblings(".wrapper").css({
 					"opacity": "0"
 				});
@@ -419,21 +431,71 @@
 		// 2.1.2.X. IMAGE MANAGER
 
 		function imageManager ( post ) {
-			console.log("imageManager");
-			// CENTRALISES THESE FUNCTIONS
-				// imagesHtmlPrep( post ); – REDUNDANT???
-			if ( post !== "init" ) {
-				imagesLoad( post );
+			console.log("imageManager", post);
+			// // CHECK IF NOT LOADED ALREADY
+			if ( !$("body").find("#wrapper_" + post).length && post !== "init" ) {
+				console.log( 432, " Post not yet loaded.");	
+				// GET NUMBER FROM ID
+				if ( !isNumber( post ) ) {
+					post = post.split("-")[1];
+					console.log(436, post);
+				}
+				// SET NUMBER OF COLUMNS
+				// var cols = parseInt( $("#" + post).attr("data-cols") );
+				// console.log( 433, cols );
+				// if ( !cols ) { // IF COLS UNDEFINED
+				// 	cols = 4;		
+				// }
+				// $(".current").attr( "data-cols", cols );
+				// 	// ONCE AJAX DONE, IMAGESLOAD CALLS:
+				// 		// IMAGESINJECT
+				// 		// IMAGESANIM
+				// 		// IMAGESFADEIN
+				// 	noCols();
+				imagesLoad( post );	
+			} else {
+				console.log( 425, " Post already loaded or Init.");
+				imagesInject( post );
+				// 	//imagesAnim();
+				imagesFadeIn();
 			}
-			imagesInject( post );
-			imagesAnim();
-			imagesFadeIn();
+
+			
+			
+
 		}
 
 		// 2.1.2.X. WRAPPER SHIFT
 
 		function wrapperShift ( post ) {
 			console.log("wrapperShift");
+			var wr_1 = $("#wrapper_1"),
+				wr_2 = $("#wrapper_2");		
+			// CHECK ID OF CURRENT VIS WRAPPER 
+			var currentId = $(".current").attr("data-current");
+
+			if ( post !== currentId ) {
+				// MODIFY DATA-CURRENT
+				$(".toLoad").attr( "data-current", post );
+				// CHECK WHERE WRAPPER_1 IS
+				if ( parseInt ( wr_1.css("left") ) === 0 ) {
+					// MOVE WRAPPERS
+					wr_1.css("left", "-100%");
+					wr_2.css("left", "0%");
+					// Declare which wrapper can be loaded in
+					$(".toLoad").removeClass("toLoad").addClass("current");
+					wr_1.addClass("toLoad").removeClass("current");
+				} else {
+					// MOVE WRAPPERS
+					wr_2.css("left", "100%");
+					wr_1.css("left", "0%");
+					// Declare which wrapper can be loaded in
+					$(".toLoad").removeClass("toLoad").addClass("current");
+					wr_2.addClass("toLoad").removeClass("current");							
+				}
+			} else {
+				console.log( 453, "Already loaded and visible." );
+			}
 		}
 
 		// 2.1.2.X. MAIN FUNCTION
@@ -442,8 +504,22 @@
 			console.log("bgImages");
 			// WRAPPER SHIFT
 			wrapperShift(post);
-			// ONCE ANIMATION DONE LOAD NEW IMAGES
-			imageManager(post);
+			// ONCE ANIMATION DONE LOAD IMAGES
+			setTimeout( function(){
+				imageManager(post);			
+			}, 2000);
+			
+		}
+
+		// 2.1.2.X. BG RESET
+
+		function bgReset () {
+			console.log("bgReset");
+			wrapperShift("init");
+			// ONCE ANIMATION DONE LOAD IMAGES
+			setTimeout( function(){
+				imageManager("init");			
+			}, 2000);		
 		}
 
 // 2.2. RECEIPT
@@ -462,27 +538,25 @@
 		// IF HASH EXISTS
 		if ( hash.length ) {
 			console.log( "urlDetect", hash.substring(1) );
-			
 			// GET SLUG
 			var slug = hash.substring(1);
-
 			// IF IN AGENDA
-			if ( $( "[data-slug=" + hash.substring(1) + "]" ).parents("") ) {
-
-			}
+			if ( $( "[data-slug=" + hash.substring(1) + "]" ).parents("#agenda").length ) {
+				console.log("Hash in agenda.");
 				// OPEN UP POST
-
+				seeMoreAgenda( hash.substring(1) );
+			} else if ( $( "[data-slug=" + hash.substring(1) + "]" ).parents("#index").length ) {
 			// IF INDEX
-				// SEEMORE
-
-			// IF ENTRY DOESN'T HAVE CLASS INDEX_DISABLED
-			console.log( $( "[data-slug=" + hash.substring(1) + "]" ).find("a").attr("class") );
-			if ( !$( "[data-slug=" + hash.substring(1) + "]" ).find("a").hasClass("index_disabled") ) {
-				// SEE MORE FUNCTION	
-				seeMore( hash.substring(1) );				
-			} else {
-				console.log("deactived");	
+				console.log("Hash in index.");
+				// IF ENTRY DOESN'T HAVE CLASS INDEX_DISABLED
+				if ( !$( "[data-slug=" + hash.substring(1) + "]" ).find("a").hasClass("index_disabled") ) {
+					// SEE MORE FUNCTION	
+					seeMoreIndex( hash.substring(1), true );				
+				} else {
+					console.log("deactived");	
+				}
 			}
+						
 		} else {
 			// PAGE RESET ??
 			// CLOSE ALL / SCROLL TO TOP
@@ -496,7 +570,7 @@
 
 	var firstTime = true;
 	function vitrineManageScroll ( scroll ) {	
-		// console.log("vitrineManageScroll");	
+		console.log("vitrineManageScroll");	
 
 		// ON FIRST SCROLL OPEN MAIN VITRINE
 		if ( firstTime ) {
@@ -560,19 +634,16 @@
 			currentBlock = parseInt( $("#index .index_results").attr( "data-block" ) ),
 			maxBlock = parseInt( $("#index .index_results").attr( "data-max" ) ),
 			stemNo;
-		console.log( 547, stem );
 		if ( stem === "left" ) {
 			// LEFT
 			stemNo = currentBlock - 1;
 			if ( stemNo !== 0 ) {
-				console.log(580);
 				showBlock( stemNo );	
 			}
 		} else if ( stem === "right" ) {
 			// RIGHT
 			stemNo = currentBlock + 1;
 			if ( stemNo <= maxBlock ) {
-				console.log(587);
 				showBlock( stemNo );	
 			}
 		} else {
@@ -592,16 +663,11 @@
 		var maxResults = 30,
 			block = 25,
 			results = $("#index .index_results li").length;
-		console.log( 549, results );
 		if ( results > maxResults ) {
-			console.log(552);
-
 			// COUNT HOW MANY BLOCKS ARE NEEDED
 			var blocks = Math.ceil(results / block);
 				// REGISTER THIS NUMBER
 			$("#index .index_results").attr("data-max", blocks);
-			console.log( 563, blocks );
-
 			var navHtml = "<a id='index_nav_left' class='index_nav' href=''><</a>";
 			// FOR EACH BLOCK ADD A NUMBER LINK
 			for ( var i = 1; i <= blocks; i++ ) {
@@ -617,12 +683,10 @@
 
 		} else {
 			// NO FILTER – ALL RESULTS APPENDED TO FINAL AREA
-			console.log(554);
 			$("#index .index_results li").each( function(){
 				// ADD RESULT CLASS TO MAKE VISIBLE
 				$(this).addClass("result");
 			});
-
 			// HIDE NAV
 			$("#index_nav").hide();
 		}
@@ -677,14 +741,12 @@
 			if ( subCatH < $("#fashion_sub_cat").height() ) {
 				subCatH = $("#fashion_sub_cat").height();
 			}
-			console.log( 547, subCatH );
 			$("#sub_cat_wrapper").css( "height", subCatH + 12 );
 		} else if ( thisCat === "design" ) {
 			$(".sub_cat").hide();
 			$("#design_sub_cat").show();
 			// MEASURE SUB_CAT
 			var subCatH = $("#design_sub_cat").height();
-			console.log( 554, subCatH );
 			$("#sub_cat_wrapper").css( "height", subCatH + 12 );
 		} else if ( thisCat === "art" ) {
 			// HIDE SUB-CATS
@@ -706,7 +768,6 @@
 		var childrenH = 0;
 
 		if ( !target.hasClass("clicked") ) {
-			console.log(580);
 			// CLOSE EXISTING POSTS 
 			$(".index_artist_content").removeClass("clicked").css("height","0");
 			
@@ -714,7 +775,6 @@
 			target.children().each( function(){
 				childrenH += $(this).outerHeight(true);
 			});
-			console.log(587, childrenH);
 			// if info already open — setTimeout to wait until content has closed before re-opening
 			if ( resultWrapper.hasClass("open") ) {
 				setTimeout( function(){
@@ -734,25 +794,25 @@
 			var name = target.parents("li").attr("data-slug");
 			window.location.hash = name;
 		
-		} else {
-			console.log(606);			
+		} else {			
 			target.removeClass("clicked").css(
 				"height", "0px"
 			);	
 			resultWrapper.removeClass("open");	
 
-			// clear url
+			// CLEAR URL
 			removeHash();
+
+			// RESET BG
+			bgReset();	
 		
 		}
 		// ANIMATE WRAPPER HEIGHT
 		// CALCULATE HEIGHT BASED ON LI'S HEIGHT + HEIGHT OF CHILD
 		var calcH = childrenH;
-		console.log(623, calcH);
 		$(".index_artist_title").each( function(){
 			calcH += $(this).height();
 		});		
-		console.log(627, calcH);
 		$(".sub_index").css("height", calcH );
 		
 		// SCROLL TO TOP OF POST	
@@ -907,37 +967,57 @@
 
 	// 2.2.9. SEE MORE
 
-	function seeMore ( slug ) {
-		console.log( "seeMore", slug );
-		// SCROLL DOWN TO INDEX ANCHOR
-		var indexOffset = $("#index").offset().top;
-		// need to account for closing vitrine
-		var vitrineH = $(".r_hole").height();
+	function seeMoreAgenda ( slug ) {
+		console.log( "seeMoreAgenda", slug );
+		// WAIT UNTIL RECEIPT ANIMATION IS DONE
+		setTimeout( function(){
+			// TRIGGER CLICK – SHOW TOGGLE
+			$( "[data-slug=" + slug + "]" ).find(".show_toggle").trigger("click");
+		}, 2000 );
+	}
 
-		$("html,body").animate({
-			scrollTop: indexOffset + vitrineH
-		}, 1000);	
+	function seeMoreIndex ( slug, load ) {
+		// LOAD === TRUE IF CALLED BY URLDETECT ON PAGE LOAD
+		console.log( "seeMoreIndex", slug );
+		
+		var delay = 0;
+		if ( load ) {
+			delay = 2000;
+		}
 
-		// SHOW IN INDEX_RESULTS
-			// EMPTY RESULTS WRAPPER
-		var resultWrapper = $("#index .index_results");
-		resultWrapper.empty();
+		setTimeout( function(){
 
-			// LOOP THROUGH INDEX
-		var newId;
-		$(".sub_index li").each( function(){
-			if ( $(this).attr("data-slug") === slug ) {
-				newId = "result-" + $(this).attr("id");
-				$(this).clone().attr("id", newId).addClass("result").appendTo(resultWrapper);
-			}
-		});
+			// SCROLL DOWN TO INDEX ANCHOR
+			var indexOffset = $("#index").offset().top;
+			// need to account for closing vitrine
+			var vitrineH = $(".r_hole").height();
 
-			// TOGGLE INFO CONTAINER
-		var target = $("#" + newId).find(".index_artist_content");
-		artistInfoToggle( target );
+			$("html,body").animate({
+				scrollTop: indexOffset + vitrineH
+			}, 1000);	
 
-		// UNPAUSE ANIMATION
-		infoReset();
+			// SHOW IN INDEX_RESULTS
+				// EMPTY RESULTS WRAPPER
+			var resultWrapper = $("#index .index_results");
+			resultWrapper.empty();
+
+				// LOOP THROUGH INDEX
+			var newId;
+			$(".sub_index li").each( function(){
+				if ( $(this).attr("data-slug") === slug ) {
+					newId = "result-" + $(this).attr("id");
+					$(this).clone().attr("id", newId).addClass("result").appendTo(resultWrapper);
+				}
+			});
+
+				// TOGGLE INFO CONTAINER
+			var target = $("#" + newId).find(".index_artist_content");
+			artistInfoToggle( target );
+
+			// UNPAUSE ANIMATION
+			infoReset();
+
+		}, delay );
 
 	}
 
@@ -964,7 +1044,6 @@
 
 		// CHANGE INDEX TITLE – REMOVED
 		catName = thisId.split("_");
-		console.log( 975, catName[1] );
 		// $("#index .section_head h1").text( catName[1] + " Index" );
 		
 		// ADD ATTRIBUTE TO INDEX
@@ -973,7 +1052,6 @@
 		// IF PARENT CAT DE-UNDERLINE SUB-CATS
 		$("#index_categories li").each( function(){
 			if ( catName[1] === $(this).find("a").text().toLowerCase() ) {
-				console.log(998);
 				$(".sub_cat li").css(
 					"border-bottom", "1px solid transparent"
 				);
@@ -1010,11 +1088,11 @@
 	// 2.2.11. SCROLLER
 	// ONLY USED IN AGENDA ????
 
-	function scroller ( thisClick ) {
+	function scroller ( showId ) {
 		console.log("scroller");
-		var target = thisClick.parents(".show_wrapper").find(".scroll_target");
+		var target = $("#" + showId).find(".scroll_target");
 		$("html,body").animate({
-			scrollTop: target.offset().top - 80
+			scrollTop: target.offset().top - 120
 		}, 500);
 	}
 
@@ -1065,9 +1143,20 @@
 
 	// 2.2.13. SHOW TOGGLE
 
-	function showToggleOpen ( click ) {
-		console.log("showToggleOpen");	
-		var target = click.parents(".show_wrapper").find(".show_content");
+	function showToggleOpen ( showId ) {
+		console.log("showToggleOpen");
+		// CLOSE OTHER SHOWS
+		// $(".show_wrapper").each( function(){
+		// 	// CHECK IF OTHER POST & IF OPEN
+		// 	// && $(this).find(".show_content").hasClass("clicked")
+		// 	if ( $(this).attr("id") !== showId ) {
+		// 		if ( $(this).find(".show_content").hasClass("clicked") ) {
+		// 			console.log( "CLOSE" );
+		// 		}
+		// 		showToggleClose( $(this).attr("id") );
+		// 	}
+		// });
+		var target = $("#" + showId).find(".show_content");
 		var contentsH = 0;
 		// MODIFY HEIGHT
 		target.children().each( function(){
@@ -1075,29 +1164,29 @@
 		});
 		target.css( "height", contentsH ).addClass("clicked");
 		// SCROLL TO TARGET
-		scroller( click );
+		scroller( showId );
 		// HIDE READ MORE BUTTON IN CLICKED SHOW
-		click.parents(".show_wrapper").find(".show_toggle_text").css( "opacity", "0" );		
+		$("#" + showId).find(".show_toggle_text").css( "opacity", "0" );		
 		// CHECK IF POST INCLUDES IMAGES
-		var imgCount = click.parents(".show_wrapper").attr("data-count");
+		var imgCount = $("#" + showId).attr("data-count");
 		if ( imgCount > 0 ) {
 			// GET ID
-			var showId = click.parents(".show_wrapper").attr("id");
-			console.log( 1139, showId );
-			wrapperShift( showId );
+			bgImages( showId );
 		}		
 	}
 
-	function showToggleClose ( click ) {
-		console.log("showToggleClose");
-		var target = click.parents(".show_wrapper").find(".show_content");
+	function showToggleClose ( showId ) {
+		console.log("showToggleClose", showId);
+		var target = $("#" + showId).find(".show_content");
 		target.css( "height", 0 ).removeClass("clicked");
 		setTimeout( function(){
 			// RESET READ MORE BUTTON + IMAGE LINK
-			click.parents(".show_wrapper").find(".show_toggle_text").css( "opacity", "" );		
+			$("#" + showId).find(".show_toggle_text").css( "opacity", "" );		
 		}, 1000 );
 		// SCROLL BACK TO TOP
-		scroller( click );			
+		scroller( showId );	
+		// RESET BG
+		bgReset();		
 	}
 
 	// 2.2.14

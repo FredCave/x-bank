@@ -1,7 +1,6 @@
 <!-- AJAX LOADED CONTENT / JUST IMAGES (+ OPTIONS MENU ) -->
 <ul class="img_loop">
 	<?php 
-
 	if( have_rows('index_images') ):
 	    while ( have_rows('index_images') ) : the_row(); ?>
 			<!-- FUNCTION EXPORTS JUST IMG TAGS -->
@@ -10,14 +9,13 @@
 					See more / Buy it
 				</span>
 
-				<!-- image object function in functions.php -->
-				<?php $image = get_sub_field('index_image'); 
-				
+				<!-- IMAGE OBJECT FUNCTION IN FUNCTIONS.PHP -->
+				<?php 
+				$image = get_sub_field('index_image'); 
                 if( !empty($image) ): 
 					x_image_object( $image );
                 endif; ?>
-				<!-- image info/links -->
-				
+				<!-- IMAGE INFO/LINKS -->			
 				<span class="img_info_bottom img_info">
 					<ul class="img_info_icons">
 						<li><img src="<?php bloginfo('template_url'); ?>/img/icon_facebook.svg" /></li>

@@ -27,7 +27,7 @@ function bg_wrapper ( $img, $a_obj ) {
 		<span class="img_info_blank"></span>
 	<?php endif; ?>
 
-	<?php x_image_object( $img ); ?>
+	<?php x_image_object( $img, True ); ?>
 
 	<!-- IF NAME DECLARED -->
 	<?php if ( $a_declared ) : ?>
@@ -119,7 +119,7 @@ function encodeURIComponent( $str ) {
 
 function createFBUrl ( $_image, $_name ) {
 	if ( $_name !== "" ) {
-		$_text = encodeURIComponent( $_name . " available at xbank.amsterdam" );
+		$_text = encodeURIComponent( $_name . " at xbank.amsterdam" );
 	} else {
 		$_text = "xbank.amsterdam";
 	}	
@@ -136,7 +136,7 @@ function createFBUrl ( $_image, $_name ) {
 function createTwitterUrl ( $_image, $_name ) {
 	$twitter_url = [];
 	if ( $_name !== "" ) {
-		$_text = $_name . " available at xbank.amsterdam";
+		$_text = $_name . " at xbank.amsterdam";
 	} else {
 		$_text = "xbank.amsterdam";
 	}	
@@ -237,7 +237,7 @@ function createTwitterUrl ( $_image, $_name ) {
 </div>
 
 <!-- COLUMN 2 -->
-<div id="wrapper_2" class="wrapper" data-current="">
+<div id="wrapper_2" class="wrapper toLoad" data-current="">
 	<div class="movable_wrapper up col_1">
 		<ul class='img_loop'></ul><ul class='img_loop'></ul>
 	</div>

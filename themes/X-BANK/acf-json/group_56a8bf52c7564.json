@@ -79,6 +79,30 @@
             "media_upload": 1
         },
         {
+            "key": "field_5767c79c9ea3a",
+            "label": "Main Image",
+            "name": "show_main_image",
+            "type": "image",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array",
+            "preview_size": "thumbnail",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": ""
+        },
+        {
             "key": "field_56a8bfb9b33e9",
             "label": "Artists Involved",
             "name": "show_artists",
@@ -244,5 +268,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1466094787
+    "modified": 1466419116
 }
