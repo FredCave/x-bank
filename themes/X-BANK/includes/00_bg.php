@@ -5,12 +5,16 @@
 function bg_wrapper ( $img, $a_obj ) { 
 	// $A_OBJ = RELATIONSHIP POST ID
 	$a_declared = false;
+	$a_active = false;
 	if ( $a_obj ) {
 		$a_declared = true; 
 		$a_name = get_the_title( $a_obj[0] );
 		// OVERRIDE $POST
 		global $post;
 		$post = get_post( $a_obj[0] );
+		if ( get_field("index_activate") ) {
+			$a_active = true;
+		}
 		$a_slug = $post->post_name;
 		// RESET $POST
 		wp_reset_postdata();
@@ -19,10 +23,12 @@ function bg_wrapper ( $img, $a_obj ) {
 	?>
 
 	<?php if ( $a_declared ) : ?>
-		<span class="img_info_top img_info">
-			<!-- LINK TO INDEX SECTION / LINK TO WEBSHOP -->	
-			<a class="see_more" href="#index" data-artist="<?php echo $a_slug; ?>">See More</a> <!--/ <a href="">Buy it</a>-->
-		</span>
+		<?php if ( $a_active ) : ?>
+			<span class="img_info_top img_info">
+				<!-- LINK TO INDEX SECTION / LINK TO WEBSHOP -->	
+				<a class="see_more" href="#index" data-artist="<?php echo $a_slug; ?>">See More</a> <!--/ <a href="">Buy it</a>-->
+			</span>
+		<?php endif; ?>
 	<?php else: ?>
 		<span class="img_info_blank"></span>
 	<?php endif; ?>
@@ -221,7 +227,7 @@ function createTwitterUrl ( $_image, $_name ) {
 </ul>
 
 <!-- COLUMN 1 -->
-<div id="wrapper_1" class="wrapper current" data-current="init">
+<div id="wrapper_1" class="wrapper current" data-current="init" data-cols="4">
 	<div class="movable_wrapper up col_1">
 		<ul class='img_loop'></ul><ul class='img_loop'></ul>
 	</div>

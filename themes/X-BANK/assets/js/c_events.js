@@ -152,6 +152,31 @@ $( document ).ready(function() {
 		paginationNav( $(this) );
 	});
 
+		// APPENDED NAV
+
+	$("#index_bis").on("click", ".index_nav", function (e) {
+		e.preventDefault();	
+		console.log( 159, "Appended nav click." );
+		// CLOSE VITRINE
+			// GET OPEN ARTIST
+		$("#index .index_results .result").each( function(){
+			if ( $(this).find(".index_artist_content").hasClass("clicked") ) {
+				var current = $(this);
+				var artistId = current.find(".artist_vitrine_toggle").attr("data-id");
+				artistVitrineClose ( artistId );
+				// WAIT UNTIL VITRINE ANIMATION IS DONE
+				setTimeout( function(){
+					// CLOSE INFO
+					console.log( 169, "Close info.", current );
+					current.find(".index_artist_title a").trigger("click");					
+				}, 500 );
+			}
+		});
+
+		// PAGINATION CLICK
+
+	});	
+
 	// 3.2.7. ARTIST INFO TOGGLE
 
 	$(".index_results").on("click", ".index_artist_title a", function(e){
@@ -166,13 +191,12 @@ $( document ).ready(function() {
 
 	$(".index").on("click", ".artist_vitrine_toggle", function(e){
 		e.preventDefault();
-		var postId = $(this).attr("data-id").split("-")[1];
-		console.log( 167, postId );
-		bgImages( postId );
+		// var postId = $(this).attr("data-id").split("-")[1];
+		// bgImages( postId );
 
 		// VITRINE OPEN / CLOSE FUNCTION
-		// vitrineToggle( $(this).attr("data-id") );
- 		
+		artistVitrineToggle( $(this).attr("data-id") );
+ 		// THIS CALLS BGIMAGES (ONLY ON OPEN)
 	});
 
 	// 3.2.10. SEARCH KEYUP

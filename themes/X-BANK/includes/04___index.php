@@ -47,21 +47,6 @@
 			</ul>
 		</div>	
 
-		<!-- LETTERS -->
-
-		<!--
-  		<ul id="index_letters" class="index_menu">
-  			<?php
-  			// Create a range of letters
- 			$letters = range('A', 'Z');
- 			// Loop through letters
- 			foreach ( $letters as $letter ) {			
- 				// Create individual LIs
-  				echo "<li class='index_letter'><a class='disabled' href=''>" . $letter . "</a></li>";
-  			} ?>
-  		</ul>
-  		-->
-
 		<!-- SEARCH -->
 		<p id="index_search" class="index_menu">
 			<!-- SEARCH TOGGLE BUTTON -->
@@ -74,6 +59,11 @@
 		
 		<?php include("04_a_index.php"); ?>
 				
+		
+
+
+		<!-- INDEX NAVIGATION -->
+		<div id="index_nav"></div>
 
 	</div>
 
@@ -90,14 +80,11 @@
 <section id="index_bis" class="index">
 
 	<div class="section_content">
-
 		<!-- APPENDED GOES HERE -->
-
-		<ul class="index_results"></ul>
-
-		<!-- INDEX NAVIGATION -->
-		<div id="index_nav"></div>
-
 	</div>
+
+	<ul class="index_results" data-block="">
+		<!-- APPENDED RESULTS GO HERE -->
+	</ul>
 
 </section>

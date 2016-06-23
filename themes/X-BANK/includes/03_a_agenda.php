@@ -103,9 +103,13 @@ function showPost ( $type ) {
 					foreach ( $artists as $artist ) {
 						$artist_slug = $artist->post_name; ?>	
 						<li>
-							<!--<a href="" data-artist="<?php echo $artist_slug; ?>" class="show_artist_link">-->
+							<?php if ( get_field( "index_activate", $artist->ID ) ) : ?>
+							<a href="" data-artist="<?php echo $artist_slug; ?>" class="show_artist_link">
 								<?php echo $artist->post_title; ?>
-							<!--</a>-->
+							</a>
+							<?php else : 
+								echo $artist->post_title; 
+							endif; ?>
 						</li>
 					<?php
 					} 
@@ -130,35 +134,18 @@ function showPost ( $type ) {
 				</ul>
 			<?php endif; ?>
 
-			<!-- SHOW IMAGES -->
-			<?php /*
-			
-			// HIDDEN – LOADED SEPARATELY IN BG
-
-			if ( get_field( "show_images" ) ) : ?>
-				<ul class="show_images">
-					<?php while ( have_rows( "show_images" ) ) : the_row(); ?>
-						<li>
-							<?php 
-							$image = get_sub_field( "show_image" );
-							if( !empty( $image ) ) {
-								x_image_object( $image );	
-							}
-							?> 
-						</li>
-					<?php endwhile; ?>
-				</ul>
-				<div class="show_images_nav">
-					<a href="" class="show_images_nav_left">&lt;</a> 
-					<a href="" class="show_images_nav_right">&gt;</a> 
-				</div>
-			<?php endif; */ ?>
-
 			<div class="show_toggle_text_close">
 				Read less
 			</div>
 
 			<!-- SHARE BUTTONS -->
+
+			<?php 
+			$image = get_field("show_main_image")["url"];
+			if( empty( $image ) ) {
+				$image = "http://xbank.amsterdam/wp-content/uploads/2016/01/x_bank.jpg";	
+			}
+			?>
 
 			<ul class="show_share">
 				<!-- FACEBOOK -->

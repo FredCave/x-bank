@@ -86,7 +86,7 @@
                             ],
                             "elements": "",
                             "min": "",
-                            "max": "",
+                            "max": 1,
                             "return_format": "id"
                         }
                     ]
@@ -127,5 +127,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1465666277
+    "modified": 1466613310
 }

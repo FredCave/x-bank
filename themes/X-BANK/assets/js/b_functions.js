@@ -90,7 +90,7 @@
 			}
 
 			noCols = Math.min( postCols, mQuery );	
-			console.log( 86, noCols );
+			console.log( 86, noCols, postCols, mQuery );
 	
 			if ( noCols === 1 ) {
 				target.addClass("container_1").removeClass("container_2 container_4");
@@ -105,47 +105,37 @@
 
 		function manageCols ( cols ) {
 			console.log("manageCols");
-
-			// if ( cols === 4 ) {
-
-			// 	$(".appended").remove();
-			// 	$(".duplicate").show();
-			// } else {
-
-			// 	// check if four column view is activated
-			// 	if ( $(".load_wrapper ul").hasClass("column_view") ) {
-
-			// 		// IF 2 OR 1 COLUMNS ALL COLUMNS ARE THE SAME
-			// 		// HIDE DUPLICATES
-			// 		$(".duplicate").hide();
-
-			// 		// COPY ULs FROM 2, 3, 4 TO 1
-
-			// 		var target_1 = $(".current .col_1 .img_loop");
-			// 		var target_2 = $(".current .col_2 .img_loop");				
-			// 		$(".current .movable_wrapper").each( function(i){
-						
-			// 			if ( i > 0 ) {
-			// 				// JUST FROM 1st UL IN COLUMN
-							
-			// 				var targetImgs = $(this).find(".img_loop:first-child .img");
-			// 				var noImages = targetImgs.length;
-			// 				var appendHtml = [];
-			// 				var appendImg,
-			// 					clonedImg;
-			// 				for ( var i = 0; i < noImages; i++ ) {
-			// 					appendImg = targetImgs.eq(i);
-			// 					clonedImg = appendImg.clone().addClass("appended");
-			// 					appendHtml.push( clonedImg );
-			// 				}
-			// 				target_1.append(appendHtml);
-			// 				target_2.append(appendHtml);
-
-			// 			}
-			// 		});
-					
-			// 	}
-			// }
+			if ( cols === 4 ) {
+				$(".appended").remove();
+				$(".duplicate").show();
+			} else {
+				// CHECK IF FOUR COLUMN VIEW IS ACTIVATED
+				if ( $(".load_wrapper ul").hasClass("column_view") ) {
+					// IF 2 OR 1 COLUMNS ALL COLUMNS ARE THE SAME
+					// HIDE DUPLICATES
+					$(".duplicate").hide();
+					// COPY ULs FROM 2, 3, 4 TO 1
+					var target_1 = $(".current .col_1 .img_loop");
+					var target_2 = $(".current .col_2 .img_loop");				
+					$(".current .movable_wrapper").each( function(i){					
+						if ( i > 0 ) {
+							// JUST FROM 1st UL IN COLUMN				
+							var targetImgs = $(this).find(".img_loop:first-child .img");
+							var noImages = targetImgs.length;
+							var appendHtml = [];
+							var appendImg,
+								clonedImg;
+							for ( var i = 0; i < noImages; i++ ) {
+								appendImg = targetImgs.eq(i);
+								clonedImg = appendImg.clone().addClass("appended");
+								appendHtml.push( clonedImg );
+							}
+							target_1.append(appendHtml);
+							target_2.append(appendHtml);
+						}
+					});				
+				}
+			}
 		}
 
 		// 2.1.11. INITIATE ON LOAD
@@ -190,30 +180,6 @@
 
 	// 2.1.2. BACKGROUND IMAGE CHANGE
 
-		// 2.1.2.X. PREPARE HTML FOR IMAGES
-		// REDUNDANT????
-
-		// function imagesHtmlPrep ( post ) {
-		// 	console.log("imagesHtmlPrep");
-		// 	// POST === ID OR "INIT"
-		// 	// COLUMNS ALREADY CREATED IN PHP
-		// 	// DESTINATION WRAPPER
-		// 	if ( post === "init" ) {
-		// 		$("#init_container").prepend( ulHTML ).attr("data-cols", "4" );	
-		// 	// } else {
-		// 	// 	// create new wrapper
-		// 	// 	var newWrapper = $("<div></div>");
-		// 	// 	// add load_wrapper for subsequent containers
-		// 	// 	ulHTML += "<ul class='load_wrapper column_view hide'></ul>";
-		// 	// 	newWrapper.attr( "id", "wrapper-" + moment ).attr("data-cols", "4" ).html( ulHTML );
-		// 	// 	// add classes depending on no. of cols
-		// 	// 	newWrapper.addClass("container container_4 wrapper_visible");
-		// 	// 	// APPEND TO CURRENT WRAPPER
-		// 	// 	// AS IT HAPPENS AFTER WRAPPERSHIFT FUNCTION
-		// 	// 	newWrapper.appendTo( $(".current") );
-		// 	}
-		// }
-
 		// 2.1.2.X. AJAX LOAD IMAGES
 
 		function imagesLoad ( post ) {
@@ -229,13 +195,11 @@
 					console.log("Ajax loaded");
 					// IMAGESINJECT
 					imagesInject( post );	
-					// IMAGESANIM
-					// imagesAnim(); 
-					// IMAGESFADEIN
-					imagesFadeIn();
-
+					imagesAnim(); 
+					setTimeout( function(){
+						imagesFadeIn();						
+					}, 500 );
 					// ???
-					// noCols ( cols, "current" );	
 					// $(".current").find(".duplicate").show();	//		
 				});			
 			} else {
@@ -250,7 +214,7 @@
 		$.fn.randomize=function(a){(a?this.find(a):this).parent().each(function(){$(this).children(a).sort(function(){return Math.random()-0.5}).detach().appendTo(this)});return this};
 
 		function imagesInject ( post ) {
-			console.log("imagesInject");
+			console.log("imagesInject", post);
 			// POST === POST ID
 			var target = $(".current"),
 				source;
@@ -258,6 +222,14 @@
 				source = $("#init_container");
 			} else {
 				source = $("#wrapper_" + post);
+			}
+
+			var noImages = source.find("li.img").length;
+			// AIMING FOR 10 PER UL
+			var loops = Math.ceil( 16 / noImages );
+			// MIN 2 LOOPS
+			if ( loops < 2 ) {
+				loops = 2;
 			}
 
 			// IF 4 COLUMN VIEW
@@ -269,27 +241,26 @@
 					});
 				});
 				// COPY IMGS DEPENDING ON HOW MANY IMAGES THERE ARE
-				for ( var j = 0; j < 2; j++ ) {				
+				for ( var j = 0; j < loops; j++ ) {				
 					$(".movable_wrapper li.img").each( function(){
 						var thisParent = $(this).parents(".img_loop");
 						$(this).clone().appendTo( thisParent  ).addClass("duplicate");
 					});
 				}
 			// DEFAULT IMAGE INJECTION
-			} else {
-				var noImages = source.find("li.img").length;
+			} else {	
 				var noCols = parseInt ( target.attr("data-cols") );
-				// console.log( source, noImages, noCols );
-				// nocols = 4; ????
-				// IMAGES INJECTED INTO ALL AVAILABLE ULs
+				// IMAGES INJECTED INTO ALL AVAILABLE ULs – ONE PER UL
 				source.find("li.img").each( function(){
 					$(this).clone().appendTo( target.find(".img_loop") ); 	
 				});
 				// COPY IMGS DEPENDING ON HOW MANY IMAGES THERE ARE
-				for ( var j = 0; j < 2; j++ ) {		
-					$(".movable_wrapper li.img").each( function(){
-						var thisParent = $(this).parents(".img_loop");
-						$(this).clone().appendTo( thisParent ).addClass("duplicate");
+				for ( var j = 0; j < loops; j++ ) {			
+					target.find(".movable_wrapper li.img").each( function(){			
+						// CHECK IF NOT DUPLICATING A DUPLICATE
+						if ( !$(this).hasClass("duplicate") ) {
+							$(this).clone().appendTo( $(this).parents(".img_loop") ).addClass("duplicate");
+						}
 					});
 				}
 				// IF MULTIPLE ULs, COLs 2-4 ARE SHUFFLED	
@@ -299,6 +270,11 @@
 					    parent.find("li.img").randomize();
 					}
 				} 
+
+				// ASSIGN DATA-COLS TO CURRENT
+				console.log( 274, noCols );
+				$(".current").attr( "data-cols", noCols );
+
 			} // END OF 4 COLUMN CHECK
 
 			// IF 4 COLUMN VIEW
@@ -332,7 +308,11 @@
 				var winH = $(window).height();
 				var dest = ulH - ( winH * 2 );
 				var time = dest / 18.6;
-
+				// IF TIME NEGATIVE
+				if ( time < 0 ) {
+					time = 0 - time;
+				}
+				console.log( 343, ulH, dest, time );
 				// TIME = DISTANCE / SPEED
 
 				// DEFINE ANIMATIONS		
@@ -435,34 +415,29 @@
 			// // CHECK IF NOT LOADED ALREADY
 			if ( !$("body").find("#wrapper_" + post).length && post !== "init" ) {
 				console.log( 432, " Post not yet loaded.");	
-				// GET NUMBER FROM ID
-				if ( !isNumber( post ) ) {
-					post = post.split("-")[1];
-					console.log(436, post);
-				}
+
 				// SET NUMBER OF COLUMNS
-				// var cols = parseInt( $("#" + post).attr("data-cols") );
-				// console.log( 433, cols );
-				// if ( !cols ) { // IF COLS UNDEFINED
-				// 	cols = 4;		
-				// }
-				// $(".current").attr( "data-cols", cols );
-				// 	// ONCE AJAX DONE, IMAGESLOAD CALLS:
-				// 		// IMAGESINJECT
-				// 		// IMAGESANIM
-				// 		// IMAGESFADEIN
-				// 	noCols();
+				var cols = parseInt( $("#" + post).attr("data-cols") );
+				if ( $( "#show-" + post ).length ) { // IF SHOW
+					console.log("Show cols.");
+					cols = 2;
+				} else if ( !cols ) { // IF COLS UNDEFINED
+					console.log("Cols undefined.");
+					cols = 4;		
+				}
+				$(".current").attr( "data-cols", cols );
+				// ONCE AJAX DONE, IMAGESLOAD CALLS:
+					// IMAGESINJECT
+					// IMAGESANIM
+					// IMAGESFADEIN
+				noCols();
 				imagesLoad( post );	
 			} else {
 				console.log( 425, " Post already loaded or Init.");
 				imagesInject( post );
-				// 	//imagesAnim();
+				imagesAnim();
 				imagesFadeIn();
 			}
-
-			
-			
-
 		}
 
 		// 2.1.2.X. WRAPPER SHIFT
@@ -501,7 +476,11 @@
 		// 2.1.2.X. MAIN FUNCTION
 
 		function bgImages( post ) {
-			console.log("bgImages");
+			console.log("bgImages", post);
+			// GET NUMBER FROM ID
+			if ( !isNumber( post ) ) {
+				post = post.split("-")[1];
+			}
 			// WRAPPER SHIFT
 			wrapperShift(post);
 			// ONCE ANIMATION DONE LOAD IMAGES
@@ -515,11 +494,18 @@
 
 		function bgReset () {
 			console.log("bgReset");
-			wrapperShift("init");
-			// ONCE ANIMATION DONE LOAD IMAGES
-			setTimeout( function(){
-				imageManager("init");			
-			}, 2000);		
+			// CHECK IF NOT ALREADY INIT
+			if ( $(".current").attr("data-current") !== "init" ) {
+				wrapperShift("init");
+				// ONCE ANIMATION DONE LOAD IMAGES
+				setTimeout( function(){
+					imageManager("init");			
+				}, 2000);					
+			} else {
+				console.log("Init already visible.");
+			}
+			// UPDATE URL
+			window.location.hash = "";
 		}
 
 // 2.2. RECEIPT
@@ -622,7 +608,12 @@
 			if ( i >= ( ( blockNo - 1 ) * 25 ) && i < ( blockNo * 25 ) ) {
 				$(this).addClass("result");					
 			} else {
-				$(this).removeClass("result");		
+				$(this).removeClass("result").css("display","");	
+				// CLOSE ANY OPEN ARTIST INFOS	
+				if ( $(this).find(".clicked").length ) {
+					// TRIGGER CLICK
+					$(this).find(".index_artist_title a").trigger("click");
+				}
 			}
 		});
 	}
@@ -763,65 +754,101 @@
 	function artistInfoToggle ( target ) {
 		console.log("artistInfoToggle");	 
 		// TARGET = .INDEX_ARTIST_CONTENT
+		var resultWrapper = $("#index .index_results"),
+			childrenH = 0,
+			delay = 0;
 
-		var resultWrapper = $("#index .index_results");
-		var childrenH = 0;
+		// CHECK IF VITRINE OPEN
+		if ( $("#artist_vitrine").hasClass("open") ) {
+			console.log( 785, "Vitrine open." );
+			// GET ID
+			var postId = $("#artist_vitrine").attr("data-current");
+			// CLOSE VITRINE
+			artistVitrineClose( postId );
+			// ADD DELAY TO ALLOW TIME FOR VITRINE TO CLOSE
+			delay = 1000;				
+		}
 
 		if ( !target.hasClass("clicked") ) {
+
+			// MODIFY TEXT
+			var text = target.prev(".index_artist_title").find("p").html();
+			text = text.replace('More', 'Less');
+			target.prev(".index_artist_title").find("p").html(text);
+
 			// CLOSE EXISTING POSTS 
 			$(".index_artist_content").removeClass("clicked").css("height","0");
-			
+
 			// GET HEIGHT OF CONTENT AND DECLARE CSS TO GET ANIMATION
 			target.children().each( function(){
 				childrenH += $(this).outerHeight(true);
-			});
-			// if info already open — setTimeout to wait until content has closed before re-opening
-			if ( resultWrapper.hasClass("open") ) {
+			});				
+
+			// IF INFO ALREADY OPEN — SETTIMEOUT TO WAIT UNTIL CONTENT HAS CLOSED BEFORE RE-OPENING
+			if ( resultWrapper.hasClass("open") ) {	
+				console.log( 813, "Info already open." );		
+				delay = 500;
 				setTimeout( function(){
+					console.log( 807, childrenH, target.parents("li").attr("id") );
 					target.addClass("clicked").css(
 						"height", childrenH
 					);
 					resultWrapper.addClass("open");				
 				}, 500);
 			} else {
+				console.log( 823, "Info closed." );
 				target.addClass("clicked").css(
 					"height", childrenH
 				);
 				resultWrapper.addClass("open");							
 			}
 			
-			// update url
+			// UPDATE URL
 			var name = target.parents("li").attr("data-slug");
 			window.location.hash = name;
 		
-		} else {			
-			target.removeClass("clicked").css(
-				"height", "0px"
-			);	
-			resultWrapper.removeClass("open");	
+		} else {	
 
-			// CLEAR URL
-			removeHash();
+			setTimeout( function(){
+				console.log( 797, "Delayed." );
 
-			// RESET BG
-			bgReset();	
+				// RESET TEXT
+				var text = target.prev(".index_artist_title").find("p").html();
+				text = text.replace('Less', 'More');
+				target.prev(".index_artist_title").find("p").html(text);
 		
+				target.removeClass("clicked").css(
+					"height", "0px"
+				);	
+				resultWrapper.removeClass("open");	
+
+				// CLEAR URL
+				removeHash();
+
+				// RESET BG
+				bgReset();	
+
+			}, delay );
+
 		}
-		// ANIMATE WRAPPER HEIGHT
-		// CALCULATE HEIGHT BASED ON LI'S HEIGHT + HEIGHT OF CHILD
-		var calcH = childrenH;
-		$(".index_artist_title").each( function(){
-			calcH += $(this).height();
-		});		
-		$(".sub_index").css("height", calcH );
-		
-		// SCROLL TO TOP OF POST	
+
 		setTimeout( function(){
-			var targetOffset = target.offset().top - 60;
-			$("html,body").animate({
-				scrollTop: targetOffset
-			}, 1000);			
-		}, 500 );
+			// ANIMATE WRAPPER HEIGHT
+			// CALCULATE HEIGHT BASED ON LI'S HEIGHT + HEIGHT OF CHILD
+			var calcH = childrenH;
+			$(".index_artist_title").each( function(){
+				calcH += $(this).height();
+			});		
+			$(".sub_index").css("height", calcH );
+			
+			// SCROLL TO TOP OF POST	
+			setTimeout( function(){
+				var targetOffset = target.offset().top - 60;
+				$("html,body").animate({
+					scrollTop: targetOffset
+				}, 1000);			
+			}, 500 );
+		}, delay );
 
 	}
 
@@ -858,7 +885,9 @@
 				var artist = $( "#result-" + thisA );
 				var scrollTarget = $( "#result-" + thisA ).offset().top;
 				// scrollTarget = artist.offset().top;				
-				artistVitrineOpen( artist );				
+				
+				// CALLED SEPARATELY
+				// artistVitrineOpen( artist );				
 			} else {
 				scrollTarget = $( "#toggle-main" ).offset().top;
 			}
@@ -888,65 +917,120 @@
 		}	
 	}
 
-	// 2.2.7. ARTIST VITRINE OPEN
+	// 2.2.7. ARTIST VITRINE TOGGLE
+
+	function artistVitrineToggle ( thisArtist ) {
+		console.log( "artistVitrineToggle", thisArtist );
+		// CHECK IF VITRINE IS OPEN
+		if ( !$("#artist_vitrine").hasClass("open") ) {
+			// THIS FUNCTION CALLS BGIMAGES AFTER VITRINE ANIMATION
+			artistVitrineOpen( thisArtist );			
+		} else {
+			artistVitrineClose( thisArtist );		
+		}
+	}
+
 
 	function artistVitrineOpen ( thisArtist ) {
-		console.log("artistVitrineOpen");
-		// thisArtist returns results LI
+		console.log( "artistVitrineOpen", thisArtist );
 
-		// BACKGROUND FUNCTION — BG SECTION 2.2
-		artistImages( thisArtist ); 
+		// GET PARENT LI 
+		// MUST HAVE RESULT CLASS TO AVOID CONFUSION WITH SOURCE LI
+		var thisId = thisArtist.split("-")[1];
+		var parent = $( "#result-" + thisId );
 
-		// get, clone, hide and prepend followinginner and followingouter
-		var followingInner = thisArtist.find(".index_artist_content").children();
-		var followingOuter = thisArtist.nextAll();
+		// REGISTER CURRENT ID AND ADD OPEN CLASS
+		$("#artist_vitrine").addClass("open").attr( "data-current", thisArtist );
+
+		// MODIFY TEXT
+		parent.find(".artist_vitrine_toggle").text("Hide Images");
+
+		// GET, CLONE, HIDE AND PREPEND FOLLOWINGINNER AND FOLLOWINGOUTER
+		var followingInner = parent.find(".index_artist_content");
+		var followingOuter = parent.nextAll(".result");
+		var followingNav = $("#index_nav"); 
 	
-		// hide original elements
-		followingInner.add(followingOuter).hide().addClass("hidden");
+		// HIDE ORIGINAL ELEMENTS
+		followingInner.add(followingOuter).add(followingNav).hide().addClass("hidden");
 
-		// clone elements
+		// MAKE SURE TARGET AREA IS EMPTY
+		$("#index_bis .section_content").empty();
+		$("#index_bis .index_results").empty();
+
+		// CLONE ELEMENTS
 		followingInner.clone().prependTo( $("#index_bis .section_content") ).show();
+		followingNav.clone().attr("id","index_nav_bis").prependTo( $("#index_bis .index_results") ).show();	
 		followingOuter.clone().prependTo( $("#index_bis .index_results") ).show();	
-		
-		// collapse sub_index
-			// pause transition
 
-		var prevElements = thisArtist.prevAll().length + 1;
-		var resultsH = prevElements * thisArtist.find(".index_artist_title").height();
+		// MODIFY APPENDED NAV
+		$("#index_nav_bis a").each( function(){
+			var prevId = $(this).attr("id");
+			$(this).attr({
+				id: prevId + "_bis",
+				"data-id": prevId
+			});
+		});
+
+		// COLLAPSE SUB_INDEX
+			// PAUSE TRANSITION
+		var resultsH = $("#index .index_results").height();
+		console.log( 937, resultsH );
 		$(".sub_index").css({
 			"height": resultsH,
 			"-webkit-transition": "height 0s",
             "transition": "height 0s" 
 		});
-		// animate vitrine is done by vitrineToggle function
+
+		// ANIMATE VITRINE IS DONE BY VITRINETOGGLE FUNCTION
 		
-		// reset transition ????
+		// RESET TRANSITION
 		setTimeout( function(){
 			$(".sub_index").css({
 				"-webkit-transition": "",
 				"transition": "" 
 			});	
+			var postId = thisArtist.split("-")[1];
+			console.log( 968, postId );
+			bgImages( postId );
+
 		}, 500);
+
+		// VITRINE TOGGLED CALLED HERE
+		vitrineToggle ( thisArtist );
 
 	}
 
 	// 2.2.8. ARTIST VITRINE CLOSE
 
-	function artistVitrineClose () {
+	function artistVitrineClose ( thisArtist ) {
 		console.log("artistVitrineClose");
-		$("#artist_vitrine").css("height", "0px").removeClass("clicked");
+
+		// REMOVE CURRENT ID AND OPEN CLASS
+		$("#artist_vitrine").removeClass("open").attr( "data-current", "" );
+
+		// GET PARENT LI 
+		var thisId = thisArtist.split("-")[1];
+		var parent = $( "#result-" + thisId );
 		
-		// stop image jump
+		// CLOSE VITRINE MANUALLY
+		$("#artist_vitrine").css("height", "0px").removeClass("clicked");
+
+		// RESET TEXT
+		parent.find(".artist_vitrine_toggle").text("See Images");
+	
+		// STOP IMAGE JUMP
 		$("#index_bis .index_artist_image img").css("margin-top", "0px");
 		//$("#index_bis").css("padding-top", "0px");
 		$("#index").css("padding-bottom", "24px");
 
+		// AFTER VITRINE CLOSE ANIMATION
 		setTimeout( function(){
-			// reset html elements from index_bis
-			$(".hidden").show().removeClass("hidden");
-			// empty #index_bis	
-			$("#index_bis .index_results").empty().siblings().remove();
-			// animate wrapper height
+			// RESET HTML ELEMENTS FROM INDEX_BIS
+			$(".hidden").css("display","").show().removeClass("hidden");
+			// EMPTY #INDEX_BIS	
+			$("#index_bis .section_content").empty();
+			$("#index_bis .index_results").empty();
+			// ANIMATE WRAPPER HEIGHT
 			$(".sub_index").css({
 				"-webkit-transition": "height 0s",
 				"transition": "height 0s", 
@@ -957,9 +1041,13 @@
 					"-webkit-transition": "",
 					"transition": "" 
 				});
+
+				// CALL BGRESET HERE
+				bgReset();
+
 			}, 1000);
 
-			$("#index").css("padding-bottom", "");
+		// 	$("#index").css("padding-bottom", "");
 
 		}, 1000);
 
@@ -1146,36 +1234,44 @@
 	function showToggleOpen ( showId ) {
 		console.log("showToggleOpen");
 		// CLOSE OTHER SHOWS
-		// $(".show_wrapper").each( function(){
-		// 	// CHECK IF OTHER POST & IF OPEN
-		// 	// && $(this).find(".show_content").hasClass("clicked")
-		// 	if ( $(this).attr("id") !== showId ) {
-		// 		if ( $(this).find(".show_content").hasClass("clicked") ) {
-		// 			console.log( "CLOSE" );
-		// 		}
-		// 		showToggleClose( $(this).attr("id") );
-		// 	}
-		// });
-		var target = $("#" + showId).find(".show_content");
-		var contentsH = 0;
-		// MODIFY HEIGHT
-		target.children().each( function(){
-			contentsH += $(this).outerHeight(true);
+		var delay = 0;
+		$(".show_wrapper").each( function(){
+			// CHECK IF OTHER POST & IF OPEN
+			// && $(this).find(".show_content").hasClass("clicked")
+			if ( $(this).attr("id") !== showId ) {
+				if ( $(this).find(".show_content").hasClass("clicked") ) {
+					// IF CLOSE FUNCTION EVERYTHING ELSE IS DELAYED
+					delay = 1000;
+					console.log("Close delayed.");
+					showToggleClose( $(this).attr("id"), true );
+				}
+			}
 		});
-		target.css( "height", contentsH ).addClass("clicked");
-		// SCROLL TO TARGET
-		scroller( showId );
-		// HIDE READ MORE BUTTON IN CLICKED SHOW
-		$("#" + showId).find(".show_toggle_text").css( "opacity", "0" );		
-		// CHECK IF POST INCLUDES IMAGES
-		var imgCount = $("#" + showId).attr("data-count");
-		if ( imgCount > 0 ) {
-			// GET ID
-			bgImages( showId );
-		}		
+		setTimeout( function(){
+			var target = $("#" + showId).find(".show_content");
+			var contentsH = 0;
+			// MODIFY HEIGHT
+			target.children().each( function(){
+				contentsH += $(this).outerHeight(true);
+			});
+			target.css( "height", contentsH ).addClass("clicked");
+			// SCROLL TO TARGET
+			scroller( showId );
+			// HIDE READ MORE BUTTON IN CLICKED SHOW
+			$("#" + showId).find(".show_toggle_text").css( "opacity", "0" );		
+			// CHECK IF POST INCLUDES IMAGES
+			var imgCount = $("#" + showId).attr("data-count");
+			if ( imgCount > 0 ) {
+				// GET ID
+				bgImages( showId );
+			}	
+			// UPDATE URL
+			var showSlug = $("#"+showId).attr("data-slug");
+			window.location.hash = showSlug;		
+		}, delay );
 	}
 
-	function showToggleClose ( showId ) {
+	function showToggleClose ( showId, blockReset ) {
 		console.log("showToggleClose", showId);
 		var target = $("#" + showId).find(".show_content");
 		target.css( "height", 0 ).removeClass("clicked");
@@ -1186,7 +1282,12 @@
 		// SCROLL BACK TO TOP
 		scroller( showId );	
 		// RESET BG
-		bgReset();		
+		if ( !blockReset ) {
+			console.log( 1198, blockReset );
+			bgReset();
+		} else {
+			console.log( 1201, "Reset blocked." );
+		}	
 	}
 
 	// 2.2.14
