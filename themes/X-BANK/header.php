@@ -3,7 +3,7 @@
 
 <head>
 	<title>X BANK</title>
-    <meta name="description" content="">
+    <meta name="description" content="X Bank">
 	<meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta property="og:url" content="<?php bloginfo('url'); ?>" />
@@ -81,3 +81,9 @@
 			fjs.parentNode.insertBefore(js, fjs);
 		}(document, 'script', 'facebook-jssdk'));
 	</script>
+	<!-- PINTEREST -->
+	<script
+    	type="text/javascript"
+    	async defer
+    	src="http://assets.pinterest.com/js/pinit.js">
+    </script>

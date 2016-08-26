@@ -21,23 +21,11 @@
 						<?php
 						global $post;
     					$post_slug = $post->post_name;
-    					$a_name = $post_slug;
-    					?>
-						<!-- FACEBOOK -->
-						<li>
-							<a target="_blank" href="<?php echo createFBUrl ( $image, $a_name ); ?>">
-								<img src="<?php bloginfo('template_url'); ?>/img/icon_facebook.png" alt="Facebook icon" />
-							</a>
-						</li>
-						<!-- TWITTER -->
-						<li>
-							<a class="twitter-share-button" 
-								target="_blank" 
-								data-url="<?php echo createTwitterUrl ( $image, $a_name )[1]; ?>" 
-								href="<?php echo createTwitterUrl ( $image, $a_name )[2]; ?>">
-								<img src="<?php bloginfo('template_url'); ?>/img/icon_twitter.png" alt="Twitter icon" />
-							</a>
-						</li>
+    					$post_title = $post->post_title;
+    					$image_url = $image["url"];
+						echo soc_med_links( $post_slug, $post_title, $image_url ); 
+						wp_reset_postdata();
+						?>
 					</ul>
 				</span>
 		    </li>

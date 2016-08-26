@@ -20,7 +20,8 @@
 				$height = $image['height'];
 				?>
 
-				<img class="lazyload"
+				<img class="lazyload" 
+					id="main_logo" 
 					alt="X Bank logo" 
 					data-src="<?php echo $thumb; ?>" 
 					src="<?php echo $thumb; ?>" 

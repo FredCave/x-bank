@@ -6,10 +6,9 @@
 				2.1.1.1. 	CLICK ON IMAGES
 				2.1.1.2. 	ATTRIBUTE CLASS FOR NUMBER OF COLUMNS
 				2.1.1.3.    INITIATE ON LOAD
-				2.1.1.4. 	TMP – ROUND IMAGES
+				2.1.1.4. 	ROUND IMAGES
 				2.1.1.5. 	CLEAR HASH
 			2.1.2. BACKGROUND IMAGE CHANGE
-
 				2.1.1. 	PREPARE HTML FOR IMAGES
 				2.1.4. 	SHUFFLE FUNCTION
 				2.1.5. 	INJECT IMAGES
@@ -66,6 +65,30 @@
 			}
 		}
 
+		// 2.1.1.X. SOCIAL MEDIA LINKS
+
+		function fbShare ( click ) {
+			console.log("fbShare");
+			// GET INFO
+			var post_name = click.data("text"),
+				post_link = click.data("link"),
+				img_url = click.data("img");
+			FB.init({ 
+				appId: 1196911897000591, 
+				status: true, 
+				cookie: true, 
+				version : 'v2.5' 
+			});
+	        FB.ui({
+	            method: 'feed',
+	            name: post_name,
+	            // href: $(location).attr('href'),
+	            link: post_link,
+	            picture: img_url,
+	            caption: 'xbank.amsterdam'
+	        });			
+		}
+
 		// 2.1.1.2. ATTRIBUTE CLASS FOR NUMBER OF COLUMNS
 		// 			BASED ON SIZE OF SCREEN AND MAX NUMBER OF COLUMNS DECIDED BY POST
 
@@ -91,7 +114,7 @@
 			}
 
 			noCols = Math.min( postCols, mQuery );	
-			console.log( 86, noCols, postCols, mQuery );
+			// console.log( 117, noCols, postCols, mQuery );
 	
 			if ( noCols === 1 ) {
 				target.addClass("container_1").removeClass("container_2 container_4");
@@ -139,14 +162,47 @@
 			}
 		}
 
+		// 2.1.x.x. CALCULATE IMAGE SIZES
+
+		function calcImgSizes() {
+			console.log("calcImgSizes");
+			// CALCULATE BASED ON SCREEN SIZE
+			var winW = $(window).width(),
+				currentCols = parseInt( $(".current").attr("data-cols") ),
+				perc;
+			if ( winW < 660 ) {
+				perc = 0.9;
+			} else if ( winW < 900 ) {
+				perc = 0.8;
+			} else {
+				perc = 0.6;
+			}
+			var imgW = winW / currentCols * perc * 0.9;
+			// console.log( 181, winW, currentCols, perc, imgW );
+
+			$(".lazyload").each( function(){
+				// SET DATA-SIZE
+				$(this).attr( "data-sizes", imgW );
+			});
+
+		}
+
 		// 2.1.11. INITIATE ON LOAD
 
 		function imagesInit () {
 			console.log("imagesInit");
+			
+			// CALCULATE IMAGE SIZES
+			calcImgSizes();
+			
+			// INITIATE LAZYSIZES HERE
+			lazySizes.init();
+
 			// MAIN IMAGE PREP FUNCTION		
 			imageManager( "init" );
 			// CHECK IF IMAGES HAVE LOADED
 			$("#load_wrapper").imagesLoaded().done( function(){
+			    // console.log( 205, "Images loaded.");
 			    imagesFadeIn();
 			    // RECEIPT SLIDE UP
 				$("#receipt_wrapper").css("top","0px");
@@ -168,7 +224,7 @@
 					$(".bg_image").each( function(i) {									
 						var imgSrc = $(this).attr("src");
 						var imgW = $(this).width();
-						console.log( 170, $(this).width());
+						// console.log( 170, $(this).width());
 						$(this).hide();
 						$( "<div id='proxy_" + i + "' class='bg_proxy bg_image'></div>" ).insertAfter( $(this) );
 						$( "#proxy_" + i ).css({
@@ -212,17 +268,21 @@
 
 		// 2.1.2.X. AJAX LOAD IMAGES
 
-		function imagesLoad ( post ) {
+		function imagesLoad ( post, type ) {
 			// POST === POST ID
-			console.log("imagesLoad");
+			console.log( "imagesLoad", post, type );
 			// CHECK IF NOT LOADED ALREADY
 			if ( !$("body").find("#wrapper_" + post).length ) {
+				// GET NAME
+				var postName = $("#result-" + post).attr("data-slug");
 				// ADD LI TO LOAD WRAPPER
-				$("#load_wrapper").append("<li id='wrapper_" + post + "'></li>");
-
+				$("#load_wrapper").append("<li id='wrapper_" + post + "' data-name='" + postName + "'></li>");
 				// AJAX CALL
 				$( "#wrapper_" + post ).load("?p=" + post, function () {
 					console.log("Ajax loaded");
+					// FOLLOWING HAPPENS ONLY IF SHOW 
+					// FOR INDEX IT IS DELAYED
+					if ( type === "show" ) {
 					// IMAGESINJECT
 					imagesInject( post );	
 					imagesAnim(); 
@@ -230,7 +290,9 @@
 						imagesFadeIn();						
 					}, 500 );
 					// ???
-					// $(".current").find(".duplicate").show();	//		
+					// $(".current").find(".duplicate").show();	//
+					}
+							
 				});			
 			} else {
 				console.log("Already loaded.");
@@ -255,11 +317,16 @@
 				source = $("#wrapper_" + post);
 			}
 
-
 			var noImages = source.find("li.img").length;
-			console.log( 245, "no. of images:", noImages );
+			// IF NO IMAGES FOUND
+			if ( noImages === 0 ) {
+				console.log( 321, "Error: No Images found." );
+				return false;
+			}
+			// console.log( 323, source, "no. of images: ", noImages );
 			// AIMING FOR 10 PER UL
 			var loops = Math.ceil( 16 / noImages );
+
 			// MIN 2 LOOPS
 			if ( loops < 2 ) {
 				loops = 2;
@@ -283,20 +350,25 @@
 				}
 			// DEFAULT IMAGE INJECTION
 			} else {	
-				noCols = parseInt ( target.attr("data-cols") );
+				// GET NO COLS FROM POST
+				var result = $("#result-" + post);
+				noCols = parseInt ( result.attr("data-cols") );
+				// console.log( 346, noCols );
 				// IMAGES INJECTED INTO ALL AVAILABLE ULs – ONE PER UL
 				source.find("li.img").each( function(){
 					$(this).clone().appendTo( target.find(".img_loop") ); 	
 				});
 				// COPY IMGS DEPENDING ON HOW MANY IMAGES THERE ARE
-				for ( var j = 0; j < loops; j++ ) {			
-					target.find(".movable_wrapper li.img").each( function(){			
-						// CHECK IF NOT DUPLICATING A DUPLICATE
-						if ( !$(this).hasClass("duplicate") ) {
-							$(this).clone().appendTo( $(this).parents(".img_loop") ).addClass("duplicate");
-						}
-					});
-				}
+				// console.log( 354, loops );
+				// for ( var j = 0; j < loops; j++ ) {			
+				// 	console.log( 255, "Inject loop.");
+				// 	// target.find(".movable_wrapper li.img").each( function(){			
+				// 	// 	// CHECK IF NOT DUPLICATING A DUPLICATE
+				// 	// 	if ( !$(this).hasClass("duplicate") ) {
+				// 	// 		$(this).clone().appendTo( $(this).parents(".img_loop") ).addClass("duplicate");
+				// 	// 	}
+				// 	// });
+				// }
 				// IF MULTIPLE ULs, COLs 2-4 ARE SHUFFLED	
 				if ( noCols > 1 ) {
 					for ( i=1; i < noCols; i++ ) {
@@ -316,13 +388,15 @@
 			} 
 			
 			// ASSIGN DATA-COLS TO CURRENT
-			console.log( 319, noCols );
+			// console.log( 319, noCols );
 			$(".current").attr( "data-cols", noCols );
 
 			// EMPTY SIBLING MOVABLE WRAPPERS
 			console.log("Empty non-visible wrappers.");
 			target.siblings(".wrapper").find(".movable_wrapper .img_loop").empty();
 
+			// CALCULATE IMAGE SIZES
+			// calcImgSizes();
 
 		}
 
@@ -350,7 +424,7 @@
 					if ( time < 0 ) {
 						time = 0 - time;
 					}
-					console.log( 343, "UL height:", ulH, "target:", dest, "duration:", time );
+					// console.log( 343, "UL height:", ulH, "target:", dest, "duration:", time );
 					// TIME = DISTANCE / SPEED
 
 					// DEFINE ANIMATIONS		
@@ -451,11 +525,11 @@
 
 		// 2.1.2.X. IMAGE MANAGER
 
-		function imageManager ( post ) {
-			console.log("imageManager", post);
+		function imageManager ( post, type ) {
+			console.log("imageManager", post, type);
 			// // CHECK IF NOT LOADED ALREADY
 			if ( !$("body").find("#wrapper_" + post).length && post !== "init" ) {
-				console.log( 432, " Post not yet loaded.");	
+				// console.log( 432, " Post not yet loaded.");	
 
 				// SET NUMBER OF COLUMNS
 				var cols = parseInt( $("#" + post).attr("data-cols") );
@@ -472,7 +546,20 @@
 					// IMAGESANIM
 					// IMAGESFADEIN
 				noCols();
-				imagesLoad( post );	
+				// REMOVED FOR IMAGES TO BE PRELOADED
+				// imagesLoad( post );	
+				// FOLLOWING FUNCTIONS ADDED FROM IMAGESLOAD
+				if ( type === "index" ) {
+					imagesInject( post );	
+					imagesAnim(); 
+					setTimeout( function(){
+						imagesFadeIn();						
+					}, 500 );
+				} else {
+					// IF SHOWS
+					imagesLoad( post, type );	
+				}
+
 			} else {
 				console.log( 425, " Post already loaded or Init.");
 				// WHY THIS HERE??
@@ -519,8 +606,8 @@
 
 		// 2.1.2.X. MAIN FUNCTION
 
-		function bgImages( post ) {
-			console.log("bgImages", post);
+		function bgImages( post, type ) {
+			console.log("bgImages", post, type);
 			// GET NUMBER FROM ID
 			if ( !isNumber( post ) ) {
 				post = post.split("-")[1];
@@ -529,7 +616,7 @@
 			wrapperShift(post);
 			// ONCE ANIMATION DONE LOAD IMAGES
 			setTimeout( function(){
-				imageManager(post);			
+				imageManager( post, type );			
 			}, 2000);
 			
 		}
@@ -795,92 +882,40 @@
 
 	// 2.2.5. ARTIST INFO TOGGLE
 
-	function artistInfoToggle ( target ) {
-		console.log( "artistInfoToggle", target.parents("li").attr("id") );	 
-		// TARGET = .INDEX_ARTIST_CONTENT
-		var resultWrapper = $("#index .index_results"),
-			childrenH = 0,
-			delay = 0;
+	function artistInfoOpen ( target ) {
+		console.log( "artistInfoOpen", target );
 
-		// CHECK IF VITRINE OPEN
-		if ( $("#artist_vitrine").hasClass("open") ) {
-			console.log( 785, "Vitrine open." );
-			// GET ID
-			var postId = $("#artist_vitrine").attr("data-current");
-			// CLOSE VITRINE
-			artistVitrineClose( postId );
-			// ADD DELAY TO ALLOW TIME FOR VITRINE TO CLOSE
-			delay = 1000;				
-		}
+		var childrenH = 0,
+			resultWrapper = $("#index .index_results"),
+			delay = 0,
+			targetId = target.parents("li").attr("id").split("-")[1];
 
-		if ( !target.hasClass("clicked") ) {
+		// CLOSE EXISTING POSTS 
+		$(".index_artist_content").removeClass("clicked").css("height","0");
+		$("#index .index_results").removeClass("open");
 
-			console.log( 792, "Target is not clicked." );
+		// MODIFY TEXT: "VIEW LESS"
+		var text = target.prev(".index_artist_title").find("p").html();
+		text = text.replace('More', 'Less');
+		target.prev(".index_artist_title").find("p").html(text);
 
-			// MODIFY TEXT
-			var text = target.prev(".index_artist_title").find("p").html();
-			text = text.replace('More', 'Less');
-			target.prev(".index_artist_title").find("p").html(text);
+		// UPDATE URL
+		var name = target.parents("li").attr("data-slug");
+		window.location.hash = name;
 
-			// CLOSE EXISTING POSTS 
-			$(".index_artist_content").removeClass("clicked").css("height","0");
-
-			// GET HEIGHT OF CONTENT AND DECLARE CSS TO GET ANIMATION
+		setTimeout( function() {
+			// GET HEIGHT OF CONTENT 
 			target.children().each( function(){
 				childrenH += $(this).outerHeight(true);
-			});				
+			});	
+			console.log( 1038, childrenH, target, target.parents("li").attr("id") );
 
-			// IF INFO ALREADY OPEN — SETTIMEOUT TO WAIT UNTIL CONTENT HAS CLOSED BEFORE RE-OPENING
-			if ( resultWrapper.hasClass("open") ) {	
-				console.log( 813, "Info already open." );		
-				delay = 500;
-				setTimeout( function(){
-					console.log( 807, childrenH, target.parents("li").attr("id") );
-					target.addClass("clicked").css(
-						"height", childrenH
-					);
-					resultWrapper.addClass("open");				
-				}, 500);
-			} else {
-				console.log( 823, "Info closed." );
-				target.addClass("clicked").css(
-					"height", childrenH
-				);
-				resultWrapper.addClass("open");							
-			}
-			
-			// UPDATE URL
-			var name = target.parents("li").attr("data-slug");
-			window.location.hash = name;
-		
-		} else {	
+			// TMP
+			target.addClass("clicked").css(
+				"height", childrenH
+			);
+			resultWrapper.addClass("open");	
 
-			console.log( 831, "Target is clicked." );
-
-			setTimeout( function(){
-				console.log( 797, "Delayed." );
-
-				// RESET TEXT
-				var text = target.prev(".index_artist_title").find("p").html();
-				text = text.replace('Less', 'More');
-				target.prev(".index_artist_title").find("p").html(text);
-		
-				target.removeClass("clicked").css(
-					"height", "0px"
-				);	
-				resultWrapper.removeClass("open");	
-
-				// // CLEAR URL
-				// clearHash();
-
-				// RESET BG
-				bgReset();	
-
-			}, delay );
-
-		}
-
-		setTimeout( function(){
 			// ANIMATE WRAPPER HEIGHT
 			// CALCULATE HEIGHT BASED ON LI'S HEIGHT + HEIGHT OF CHILD
 			var calcH = childrenH;
@@ -888,18 +923,110 @@
 				calcH += $(this).height();
 			});		
 			$(".sub_index").css("height", calcH );
-			
+
 			// SCROLL TO TOP OF POST	
 			setTimeout( function(){
 				var targetOffset = target.offset().top - 60;
-				console.log( 868, targetOffset );
-				$("html,body").animate({
-					scrollTop: targetOffset
-				}, 1000);			
+				console.log( 1054, target, targetOffset );			
+				if ( targetOffset > 0 ) {
+					$("html,body").animate({
+						scrollTop: targetOffset
+					}, 1000);
+				}
+							
 			}, 500 );
+
+			// AFTER EVERYTHING ELSE: LOAD IMAGES READY FOR ANIMATION
+			console.log( 1067, target );	
+			imagesLoad ( targetId, "index" );
 		}, delay );
+	}
+
+	function artistInfoClose ( ) {
+		console.log("artistInfoClose");
+
+		// CLOSE ANY OPEN INFOS
+		var target = $(".index_results").find(".clicked");
+		target.removeClass("clicked").css(
+					"height", "0px"
+				);	
+		$(".index_results").removeClass("open");
+
+		// CLEAR URL
+		clearHash();
+
+		// ANIMATE WRAPPER HEIGHT
+		var calcH = 0;
+		$(".result").each( function(){
+			calcH += $(this).find(".index_artist_title").height();
+		});		
+		$(".sub_index").css("height", calcH );
 
 	}
+
+	function artistInfoToggle ( target, bis ) {
+		console.log( "artistInfoToggle", target );	 
+		// TARGET = .INDEX_ARTIST_CONTENT
+
+		// RESET ALL TEXTS
+		$("#index .index_results li").each( function(){
+			// IF NOT DISABLED
+			if ( !$(this).find(".index_disabled").length ) {
+				var siblText = $(this).find(".index_artist_title p").html();
+				// IF IT CONTAINS "LESS"
+				if ( siblText.indexOf("Less") >= 0 ) {
+					siblText = siblText.replace('Less', 'More');
+					$(this).find(".index_artist_title p").html( siblText );
+				}					
+			}
+		});
+
+		// CLOSE VITRINE
+		var delay = 0;
+		if ( $("#artist_vitrine").hasClass("open") ) {
+			console.log( 785, "Vitrine open." );
+			// GET ID
+			var postId = $("#artist_vitrine").attr("data-current");
+			// CLOSE VITRINE
+			artistVitrineClose( postId );
+			// ADD DELAY TO ALLOW TIME FOR VITRINE TO CLOSE
+			delay = 1000;		
+		}
+
+		if ( bis !== true ) {
+			setTimeout( function(){		
+				console.log( 1123, bis );
+				if ( !target.hasClass("clicked") ) {
+					// OPEN INFO
+					artistInfoOpen( target );
+
+				} else {	
+					// CLOSE INFO
+					artistInfoClose();				
+				}
+			}, delay );
+		} else {
+			// IF IN BIS
+			console.log( 1010, target );
+			// CLOSE OTHER INFO
+			artistInfoClose();
+			// SCROLL TO TARGET
+
+			// FIND TARGET 
+			var initTarget = target.parents("li").attr("id");
+			console.log( 1015, initTarget );
+			$( "#" + initTarget ).find(".index_artist_title a").css({
+				"border": "1px solid red"
+			});
+		}
+
+
+	}
+
+	// function artistInfoToggleBis ( target ) {
+	// 	console.log("artistInfoToggleBis");
+
+	// }
 
 	// 2.2.6. VITRINE TOGGLE
 
@@ -1023,7 +1150,7 @@
 		// COLLAPSE SUB_INDEX
 			// PAUSE TRANSITION
 		var resultsH = $("#index .index_results").height();
-		console.log( 937, resultsH );
+		// console.log( 937, resultsH );
 		$(".sub_index").css({
 			"height": resultsH,
 			"-webkit-transition": "height 0s",
@@ -1039,8 +1166,8 @@
 				"transition": "" 
 			});	
 			var postId = thisArtist.split("-")[1];
-			console.log( 968, postId );
-			bgImages( postId );
+			// console.log( 968, postId );
+			bgImages( postId, "index" );
 
 		}, 500);
 
@@ -1074,11 +1201,16 @@
 
 		// AFTER VITRINE CLOSE ANIMATION
 		setTimeout( function(){
+			
 			// RESET HTML ELEMENTS FROM INDEX_BIS
 			$(".hidden").css("display","").show().removeClass("hidden");
+
 			// EMPTY #INDEX_BIS	
 			$("#index_bis .section_content").empty();
 			$("#index_bis .index_results").empty();
+			
+			//alert( 1184 );
+
 			// ANIMATE WRAPPER HEIGHT
 			$(".sub_index").css({
 				"-webkit-transition": "height 0s",
@@ -1316,7 +1448,7 @@
 			if ( imgCount > 0 ) {
 				// GET ID
 				setTimeout( function(){
-					bgImages( showId );					
+					bgImages( showId, "show" );					
 				}, 500 );
 			}	
 			// UPDATE URL
@@ -1339,7 +1471,7 @@
 			// scroller( showId );			
 			// RESET BG
 			if ( !blockReset ) {
-				console.log( 1198, blockReset );
+				// console.log( 1198, blockReset );
 				bgReset();
 			} else {
 				console.log( 1201, "Reset blocked." );

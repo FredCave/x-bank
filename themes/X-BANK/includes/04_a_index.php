@@ -32,7 +32,7 @@
 						<?php 
 						$a = get_the_title();
 						if ( get_field("index_activate") ) {
-							$b = "See More";
+							$b = "View More";
 						} else {
 							$b = "";							
 						}
@@ -64,10 +64,15 @@
 						<p class="index_collection"><?php the_field("index_collection_name"); ?> available from <?php the_field("index_collection_from"); ?></p>
 					<?php endif; ?>
 
-					<!-- SEE IMAGES LINK -->
-					<a data-id="toggle-<?php the_ID(); ?>" class="artist_vitrine_toggle">
-						See Images
-					</a>
+					<!-- SEE IMAGES LINK – ONLY IF POST HAS BG IMAGES -->
+					<?php  
+					if ( get_field( "index_images" ) ) { ?>
+	
+						<a data-id="toggle-<?php the_ID(); ?>" class="artist_vitrine_toggle">
+							See Images
+						</a>
+
+					<?php } ?>
 
 					<div class="index_artist_bio">
 						<?php 

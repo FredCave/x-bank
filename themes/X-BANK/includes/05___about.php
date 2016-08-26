@@ -50,6 +50,12 @@
 				<!-- X BANK -->
 				<?php if ( get_field("info_about") ) { ?>
 					<h1>X Bank</h1>
+					<div class="about_image">
+						<?php 
+						$img = get_field("info_about_image"); 
+						x_image_object( $img );
+						?>
+					</div>
 					<div class="about_text">
 						<?php the_field("info_about"); ?>
 					</div>
@@ -86,8 +92,18 @@
 
 				<h1 id="press">
 					<span class="link">
-						<a target="_blank" href="https://www.dropbox.com/sh/c6wsgz7u18juee2/AAAkKxLUgGHAapOjjnDTCsfUa?dl=0
-">Press Area</a>
+						<!--<a target="_blank" href="https://www.dropbox.com/sh/c6wsgz7u18juee2/AAAkKxLUgGHAapOjjnDTCsfUa?dl=0">Press Area</a>-->
+						<?php
+						$career_query = new WP_Query( "name=careers" );
+						// var_dump($career_query );
+						if ( $career_query->have_posts() ) :
+							while ( $career_query->have_posts() ): $career_query->the_post();
+								$link = get_field( "career_link" ); ?>
+									<a target="_blank" href="<?php echo $link['url']; ?>">Careers</a>
+								<?php
+							endwhile;
+						endif;
+						?>
 					</span>
 				</h1>
 

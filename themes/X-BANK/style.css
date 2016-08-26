@@ -1,8 +1,8 @@
 /*
-Theme Name:   	X-BANK 16.06.30.07
+Theme Name:   	X-BANK
 Author:       	Fred Cave
 Author URI:		http://www.fredcave.com
-Version:        16.06.30.07
+Version:        16.07.25.01
 */
 
 #wpadminbar {
@@ -367,6 +367,7 @@ br.star_break {
     width: 32px;
     text-align: center;
     position: relative;
+    cursor: pointer;
 }
 
     @media ( max-width: 660px ) {
@@ -555,6 +556,7 @@ section {
 #r_logo img {
     width: 50%;
     height: auto;
+    cursor: pointer;
 }
 
     @media ( max-width: 660px ) {
@@ -728,7 +730,7 @@ section {
 
 .show_main_image {
     padding-bottom: 16px;
-    margin-top: 40px;
+    margin-top: 12px;
 }
 
 .show_main_image img {
@@ -915,8 +917,7 @@ section {
     position: absolute;
 }
 
-#fashion_sub_cat li:nth-child(1) {
-/*    border: 1px solid blue;*/
+/*#fashion_sub_cat li:nth-child(1) {
     left: 0;
 }
 
@@ -932,9 +933,9 @@ section {
 
 #fashion_sub_cat li:nth-child(4) {
     right: 0;
-}
+}*/
 
-#design_sub_cat span {
+.sub_cat span {
 /*    border: 1px solid blue;*/
     display: block;
     position: relative;
@@ -942,18 +943,18 @@ section {
     margin-bottom: 8px;
 }
 
-#design_sub_cat span li:nth-child(1) {
+.sub_cat span li:nth-child(1) {
 /*    border: 1px solid blue;*/
     left: 0;
 }
 
-#design_sub_cat span  li:nth-child(2) {
-    left: 50%;
-    transform: translateX(-50%);
+.sub_cat span  li:nth-child(2) {
+    right: 0;
 }
 
-#design_sub_cat span  li:nth-child(3) {
-    right: 0;
+.sub_cat span  li:nth-child(3) {
+    left: 50%;
+    transform: translateX(-50%);
 }
 
     @media ( max-width: 600px ) {
@@ -1179,6 +1180,16 @@ input.disabled {
 
 #about .back_to_top a {
     border-bottom: 0px;
+}
+
+.about_image {
+/*    border: 1px solid red;*/
+    margin-bottom: 24px;
+}
+
+.about_image img {
+    width: 80%;
+    height: auto;
 }
 
 .about_text {

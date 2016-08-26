@@ -30,10 +30,14 @@ $( document ).ready(function() {
 	var text;
 	$("h1").each( function(){
 		if ( $(this).find("a").length ) {
+			// REPLACE SPACES BY STARS
 			text = $(this).find("a").text().replace(/\s/g, "*");
 			$(this).find("a").text(text);
 		} else {
+			// REPLACE SPACES BY STARS
 			text = $(this).text().replace(/\s/g, "*");
+			// REINSERT SPACES AFTER COLONS
+			text = text.replace(":*", ": ");
 			$(this).text(text);
 		}		
 	});

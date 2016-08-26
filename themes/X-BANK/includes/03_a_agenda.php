@@ -33,6 +33,28 @@ function showPost ( $type ) {
 
 			<div class="show_content">
 
+				<div class="show_main_image">
+					<?php $image = get_field( "show_title" ); 
+					if ( !empty($image) ) {
+						$width = $image['sizes'][ 'thumbnail-width' ];
+					    $height = $image['sizes'][ 'thumbnail-height' ];
+					    $thumb = $image['sizes'][ "thumbnail" ];
+					    $medium = $image['sizes'][ "medium" ];
+					    $large = $image['sizes'][ "large" ];
+						echo "<img class='lazyload' 
+						alt='" . get_the_title() . "' 
+					    data-src='" . $thumb . "' 
+					    width='" . $width . "' 
+					    height='" . $height . "' 
+					    data-sizes='auto' 
+					    data-srcset='" . $large . " 1280w, 
+					        " . $medium . " 800w, 
+					        " . $thumb . " 300w' 
+					    src=' " . $thumb . "' />";
+					}
+					?>
+				</div>
+
 			<?php else: 
 				// CURRENT
 				?>
@@ -137,37 +159,32 @@ function showPost ( $type ) {
 				</ul>
 			<?php endif; ?>
 
-			<div class="show_toggle_text_close">
-				Read less
-			</div>
-
 			<!-- SHARE BUTTONS -->
-
 			<?php 
-			$image = get_field("show_main_image")["url"];
-			if( empty( $image ) ) {
-				$image = "http://xbank.amsterdam/wp-content/uploads/2016/01/x_bank.jpg";	
+			// MAIN IMAGE
+			$image_url = get_field("show_main_image")["url"];
+			if( empty( $image_url ) ) {
+				// FALLBACK: HANDWRITTEN TITLE
+				$image_url = get_field("show_title")["url"];	
+			}
+			if( empty( $image_url ) ) {
+				$image_url = "http://xbank.amsterdam/wp-content/uploads/2016/01/x_bank.jpg";	
 			}
 			?>
 
 			<ul class="show_share">
-				<!-- FACEBOOK -->
-				<?php $title = get_the_title(); ?>
-				<li>
-					<a target="_blank" href="<?php echo createFBUrl ( $image, $title ); ?>">
-						<img src="<?php bloginfo('template_url'); ?>/img/icon_facebook.png" alt="Facebook icon" />
-					</a>
-				</li>
-				<!-- TWITTER -->
-				<li>
-					<a class="twitter-share-button" 
-						target="_blank" 
-						data-url="<?php echo createTwitterUrl ( $image, $title )[1]; ?>" 
-						href="<?php echo createTwitterUrl ( $image, $title )[2]; ?>">
-						<img src="<?php bloginfo('template_url'); ?>/img/icon_twitter.png" alt="Twitter icon" />
-					</a>
-				</li>
+				<?php
+				global $post;
+				$post_slug = $post->post_name;
+				$post_title = $post->post_title;
+				echo soc_med_links( $post_slug, $post_title, $image_url ); 
+				wp_reset_postdata();
+				?>
 			</ul>
+
+			<div class="show_toggle_text_close">
+				Read less
+			</div>
 
 		</div><!-- END OF .SHOW_CONTENT -->
 

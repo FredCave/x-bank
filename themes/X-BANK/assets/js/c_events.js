@@ -39,13 +39,31 @@ $( document ).ready(function() {
 		imagesClick( $(this).parents("li") );		
 	});
 
-		// ON LINK CLICK
+		// ON FACEBOOK LINK CLICK
 
-	// $(".wrapper").on("click", ".img_info_icons a", function(e){
-	// 	// console.log( 55, e.target );
-	// 	// e.preventDefault();
-	// });		
+	$(".wrapper").on("click", ".img_info_icons a.facebook_share", function(e){
+		e.preventDefault();
+		fbShare( $(this) );
+	});	
+
+		// ON PINTEREST CLICK
+
+	$(".wrapper").on("click", ".img_info_icons a.pinterest", function(e){
+		e.preventDefault();
+		PinUtils.pinOne({
+            media: e.target.getAttribute('data-media'),
+            description: e.target.getAttribute('data-description'),
+            url: e.target.getAttribute('data-url')
+        });
+	});		
+
+		// SHOW POST ON RECEIPT
 	
+	$(".show_share a.facebook_share").on("click", function(e){
+		e.preventDefault();
+		fbShare( $(this) );
+	});	
+
 	// SEE MORE
 
 	$(".wrapper").on("click", ".see_more", function(e){
@@ -180,11 +198,21 @@ $( document ).ready(function() {
 
 	$(".index_results").on("click", ".index_artist_title a", function(e){
 		e.preventDefault();
+		var target = $(this).parents(".index_artist_title").next(".index_artist_content");
+		if ( $(this).parents("#index_bis").length ) {
+			// IF IN INDEX_BIS
+			console.log("Index_bis click.");
+			artistInfoToggle( target, true );
+			return false;
+		}
+		console.log( 190, "CLICK." );
 		if ( !$(this).hasClass("index_disabled") ) {
-			var target = $(this).parents(".index_artist_title").next(".index_artist_content");
 			artistInfoToggle( target );
 		} 	
 	});
+
+		
+
 
 	// 3.2.8. ARTIST VITRINE TOGGLE
 
@@ -275,6 +303,17 @@ $( document ).ready(function() {
 		showImgsForward( $(this) );
 	});	
 
+	// 3.2.14. MAIN LOGO – IMAGE RESET
+
+	$("#main_logo").on( "click", function(){
+		// RESET BG
+		bgReset();
+		// CLOSE MAIN VITRINE
+		$("#r_vitrine").next(".r_hole").css("height", "0px").removeClass("clicked");
+		// CLOSE ARTIST INFO
+		artistInfoClose();
+	});
+
 // 3.3 WINDOW EVENTS
 
 	// 3.3.1. WINDOW LOAD 
@@ -309,6 +348,10 @@ $( document ).ready(function() {
 	// 3.3.3. RESIZE HANDLER
 	
 	$(window).on( "resize", function(){
+		// RECALCULATE IMAGE SIZES
+		calcImgSizes();
+		lazySizes.autoSizer.updateElems;
+
 		// SHOW IMAGES INIT
 		showImgsInit();	
 		// ROUND IMAGES RESIZE
@@ -357,8 +400,15 @@ $( document ).ready(function() {
 	// 3.3.4. ON HASH CHANGE
 
 		// TMP DEACTIVATED – NEED TO PUT BACK
-	$(window).hashchange( function(){
-		// urlDetect();
+	// $(window).hashchange( function(){
+	// 	// urlDetect();
+	// });
+
+	$(document).on('lazybeforesizes', function(e){
+		// FIRED JUST BEFORE SIZES ATTRIBUTE IS SET
+		console.log( "lazybeforesizes" );
+		// CALCULATE IMAGE SIZES
+		calcImgSizes();
 	});
 
 

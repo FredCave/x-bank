@@ -25,13 +25,11 @@ include( "03_a_agenda.php" );
 		if ( $show_query->have_posts() ):
 			while ( $show_query->have_posts() ): $show_query->the_post(); 
 				// IF END DATE NOT PAST
-				if ( !isPast( get_field("show_end") ) ) :
-					// IF START DATE PAST
-					if ( isPast( get_field("show_start") ) ) :				
-						
+				if ( isPast( get_field("show_end") ) !== 0 ) :
+					// IF START DATE PAST OR CURRENT
+					if ( isPast( get_field("show_start") ) !== 2 ) :				
 						showPost("current");
 						addInnerBreak();
-
 					endif;
 				endif; // SHOW END CHECK
 			endwhile;
@@ -57,15 +55,13 @@ include( "03_a_agenda.php" );
 		$show_query = new WP_Query( $args );
 		if ( $show_query->have_posts() ):
 			while ( $show_query->have_posts() ): $show_query->the_post(); 
-				// IF END DATE NOT PAST
-				if ( !isPast( get_field("show_end") ) ) :
-					// IF START DATE NOT PAST
-					if ( !isPast( get_field("show_start") ) ) :			
-						
+				// IF END DATE IN FUTURE
+				if ( isPast( get_field("show_end") ) === 2 ) :
+					// IF START DATE IN FUTURE
+					if ( isPast( get_field("show_start") ) === 2 ) {
 						showPost("upcoming");
-						addInnerBreak();
-
-					endif; 
+						addInnerBreak();						
+					}			
 				endif; // SHOW END CHECK
 			endwhile;
 		endif; ?>

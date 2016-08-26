@@ -1,11 +1,18 @@
 <?php
 
+// FIX UPLOAD BUG
+// add_filter( 'wp_image_editors', 'change_graphic_lib' );
+
+// function change_graphic_lib($array) {
+//     return array( 'WP_Image_Editor_GD', 'WP_Image_Editor_Imagick' );
+// }
+
 // ENQUEUE CUSTOM SCRIPTS
 function enqueue_cpr_scripts() {
   
-    // wp_deregister_script( 'jquery' );
-    // wp_register_script( 'jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js');
-    // wp_enqueue_script( 'jquery' );  
+    wp_deregister_script( 'jquery' );
+    wp_register_script( 'jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js');
+    wp_enqueue_script( 'jquery' );  
     
     wp_enqueue_script('all-scripts', get_template_directory_uri() . '/js/scripts.min.js', array('jquery'), true);
 
@@ -73,36 +80,38 @@ function addInnerBreak() {
 // IMAGE OBJECT
 
 function x_image_object( $image, $bg = null ) {
-    $width = $image['sizes'][ 'thumbnail-width' ];
-    $height = $image['sizes'][ 'thumbnail-height' ];
-    $thumb = $image['sizes'][ "thumbnail" ];
-    $medium = $image['sizes'][ "medium" ];
-    $large = $image['sizes'][ "large" ];
-    $full = $image['url'];
-    $id = $image["id"];
-    
-    $class = "landscape"; 
-    if ( $width < $height ) {
-        $class = "portrait";
-        $thumb = $image['sizes'][ "medium" ];
-        $medium = $image['sizes'][ "large" ];
-        $large = $image['url'];
-    } 
-    // IF BG IMAGE
-    if ( $bg ) {
-        $class = $class . " bg_image";
-    }
+    if( !empty($image) ):                                     
+        $width = $image['sizes'][ 'thumbnail-width' ];
+        $height = $image['sizes'][ 'thumbnail-height' ];
+        $thumb = $image['sizes'][ "thumbnail" ];
+        $medium = $image['sizes'][ "medium" ];
+        $large = $image['sizes'][ "large" ];
+        $full = $image['url'];
+        $id = $image["id"];
+        
+        $class = "landscape"; 
+        if ( $width < $height ) {
+            $class = "portrait";
+            $thumb = $image['sizes'][ "medium" ];
+            $medium = $image['sizes'][ "large" ];
+            $large = $image['url'];
+        } 
+        // IF BG IMAGE
+        if ( $bg ) {
+            $class = $class . " bg_image";
+        }
 
-    echo "<img class='lazyload " . $class . "' 
-    alt='X Bank'  
-    data-src='" . $thumb . "' 
-    width='" . $width . "' 
-    height='" . $height . "' 
-    data-sizes='auto' 
-    data-srcset='" . $large . " 1280w, 
-        " . $medium . " 800w, 
-        " . $thumb . " 300w' 
-    src=' " . $thumb . "' />";
+        echo "<img class='lazyload " . $class . "' 
+        alt='X Bank'  
+        data-src='" . $thumb . "' 
+        width='" . $width . "' 
+        height='" . $height . "' 
+        data-sizes='auto' 
+        data-srcset='" . $large . " 1280w, 
+            " . $medium . " 800w, 
+            " . $thumb . " 300w' 
+        src=' " . $thumb . "' />";
+    endif; 
 }
 
 // STAR FILLER
@@ -125,41 +134,76 @@ function starFiller ( $noChars, $firstString, $secondString ) {
 
 // CREATE SOCIAL MEDIA LINKS
 
+function soc_med_links( $_slug, $_name, $_image ) {
+    // IF POST NAME
+    if ( $_name !== "" ) {
+        $_text = $_name . " at xbank.amsterdam";
+    } else {
+        $_text = "xbank.amsterdam";
+    } 
+    // IF POST SLUG
+    if ( $_slug !== "" ) {
+         $_link = "http://xbank.amsterdam/#" . $_slug; 
+    } else {
+        $_link = "http://xbank.amsterdam";
+    } 
+    ?>
+    <!-- FACEBOOK -->
+    <li>
+        <a target="_blank" 
+            href="" 
+            class="facebook_share" 
+            data-text="<?php echo $_text; ?>" 
+            data-img="<?php echo $_image; ?>" 
+            data-link="<?php echo $_link; ?>">
+            <img src="<?php bloginfo('template_url'); ?>/img/icon_facebook.png" alt="Facebook icon" />
+        </a>
+    </li>
+    <!-- TWITTER -->
+    <li>
+        <a class="twitter-share-button" 
+            target="_blank" 
+            data-url="<?php echo createTwitterUrl ( $_name, $_link )[1]; ?>" 
+            href="<?php echo createTwitterUrl ( $_name, $_link )[2]; ?>">
+            <img src="<?php bloginfo('template_url'); ?>/img/icon_twitter.png" alt="Twitter icon" />
+        </a>
+    </li>
+    <!-- PINTEREST -->
+    <li>
+        <a data-pin-do="buttonPin" 
+        data-pin-description="<?php echo $_text; ?>" 
+        data-pin-url="<?php echo $_link; ?>" 
+        data-pin-media="<?php echo $_image; ?>" 
+        data-pin-custom="true" 
+        class="pinterest" 
+        target="_blank" 
+        href="https://www.pinterest.com/pin/create/button/" >
+            <img src="<?php bloginfo('template_url'); ?>/img/icon_pinterest.png" alt="Pinterest icon" />
+        </a> 
+    </li>
+    <?php 
+}
+
 function encodeURIComponent( $str ) {
     $revert = array('%21'=>'!', '%2A'=>'*', '%27'=>"'", '%28'=>'(', '%29'=>')');
     return strtr(rawurlencode($str), $revert);
 }
 
-function createFBUrl ( $_image, $_name ) {
-    if ( $_name !== "" ) {
-        $_text = encodeURIComponent( $_name . " at xbank.amsterdam" );
-    } else {
-        $_text = "xbank.amsterdam";
-    }   
-    $fb_url = "http://www.facebook.com/dialog/feed?app_id=" . 1196911897000591 .
-        "&link=" . "http://xbank.amsterdam" .
-        "&picture=" . $_image .
-        "&name=" . $_text . 
-        "&caption=xbank.amsterdam" . 
-        "&redirect_uri=" . get_bloginfo( "url" ) . "/popupclose.html" . 
-        "&display=popup"; 
-    return $fb_url; 
-}
-
-function createTwitterUrl ( $_image, $_name ) {
+function createTwitterUrl ( $_name, $_link ) {
+    // $_NAME = POST TITLE
     $twitter_url = [];
     if ( $_name !== "" ) {
         $_text = $_name . " at xbank.amsterdam";
     } else {
         $_text = "xbank.amsterdam";
     }   
-    // $_url = encodeURIComponent ( "http://xbank.amsterdam?artist=" . $_name . "&image=" . $_image["url"] );
-    $_url = encodeURIComponent ( "http://xbank.amsterdam" );
+    $_url = encodeURIComponent ( $_link );
+    $_url = "test.xbank.amsterdam%23potluck";
     $twitter_url[1] = $_url;
     $twitter_url[2] = "https://twitter.com/share" . 
         "?text=" . $_text . 
         "&hashtags=XBank, Amsterdam, " . str_replace( " ", "", $_name );        
-    return $twitter_url;  
+    return $twitter_url; 
 }
 
 // CUSTOM SORT
@@ -183,15 +227,22 @@ function isPast ( $date ) {
     $show_day = $show[0];
     $show_month = $show[1];
     $show_year = $show[2];
-    $past = False;
+    /*  
+        PAST = 0
+        CURRENT = 1
+        FUTURE = 2
+    */
+    $past = 2;
     if ( $show_year < $today_year ) {
-        $past = True;
+        $past = 0;
     } else if (  $show_year === $today_year ) {
         if ( $show_month < $today_month ) {
-            $past = True;
+            $past = 0;
         } else if ( $show_month === $today_month ) {
             if ( $show_day < $today_day ) {
-               $past = True; 
+                $past = 0; 
+            } else if ( $show_day === $today_day ) {
+                $past = 1;
             }
         }
     }
@@ -199,21 +250,6 @@ function isPast ( $date ) {
 }
 
 // SLUG GENERATOR
-/*
-function toAscii($str, $replace=array(), $delimiter='-') {
-    if( !empty($replace) ) {
-        $str = str_replace((array)$replace, ' ', $str);
-    }
-
-    $clean = iconv('UTF-8', 'ASCII//IGNORE', $str);
-    // $clean = preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $clean);
-    $clean = preg_replace("/&038;/", 'and', $clean);
-
-    // $clean = strtolower(trim($clean, '-'));
-    // $clean = preg_replace("/[\/_|+ -]+/", $delimiter, $clean);
-
-    return $clean;
-}*/
 
 function toAscii( $title ) {
     $raw_title = '';

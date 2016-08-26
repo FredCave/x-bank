@@ -8,14 +8,14 @@ function bg_wrapper ( $img, $a_obj ) {
 	$a_active = false;
 	if ( $a_obj ) {
 		$a_declared = true; 
-		$a_name = get_the_title( $a_obj[0] );
+		$post_title = get_the_title( $a_obj[0] );
 		// OVERRIDE $POST
 		global $post;
 		$post = get_post( $a_obj[0] );
 		if ( get_field("index_activate") ) {
 			$a_active = true;
 		}
-		$a_slug = $post->post_name;
+		$post_slug = $post->post_name;
 		// RESET $POST
 		wp_reset_postdata();
 	}
@@ -39,22 +39,10 @@ function bg_wrapper ( $img, $a_obj ) {
 	<?php if ( $a_declared ) : ?>
 		<span class="img_info_bottom img_info">
 			<ul class="img_info_icons">
-
-				<!-- FACEBOOK -->
-				<li>
-					<a target="_blank" href="<?php echo createFBUrl ( $img, $a_name ); ?>">
-						<img src="<?php bloginfo('template_url'); ?>/img/icon_facebook.png" alt="Facebook icon" />
-					</a>
-				</li>
-				<!-- TWITTER -->
-				<li>
-					<a class="twitter-share-button" 
-						target="_blank" 
-						data-url="<?php echo createTwitterUrl ( $img, $a_name )[1]; ?>" 
-						href="<?php echo createTwitterUrl ( $img, $a_name )[2]; ?>">
-						<img src="<?php bloginfo('template_url'); ?>/img/icon_twitter.png" alt="Twitter icon" />
-					</a>
-				</li>
+				<?php 
+				$image_url = $img["url"];
+				echo soc_med_links( $post_slug, $post_title, $image_url ); 
+				?>
 			</ul>
 		</span>
 	<?php else: ?>

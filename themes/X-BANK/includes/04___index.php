@@ -25,14 +25,51 @@
 		<!-- SUB-CATEGORIES -->
 		<div id="sub_cat_wrapper" class="">
 			<ul id="fashion_sub_cat" class="sub_cat">
-				<li><a href="">Women</a></li>
-				<li><a href="">Men</a></li>
-				<li><a href="">Kids</a></li>
-				<li><a href="">Beauty</a></li>
+				<?php 
+				$args = array(
+					'child_of'		=> 4,
+					'order'			=> "DESC",
+					'hide_empty'	=> 1
+				);
+				$categories = get_categories( $args );
+				$len = count( $categories );
+				$loop = 1;
+				echo "<span>";
+				foreach($categories as $category) { 		
+					echo "<li><a href=''>". $category->name ."</a></li>";
+					if ( $loop === 3 ) {
+						echo "</span><span>";
+						$loop = 0;
+					}
+					$loop++;
+				}
+				echo "</span>";
+				?>
 				<div class="clear"></div>
 			</ul>		
 
 			<ul id="design_sub_cat" class="sub_cat">
+				<?php 
+				$args = array(
+					'child_of'		=> 3,
+					'order'			=> "DESC",
+					'hide_empty'	=> 1
+				);
+				$categories = get_categories( $args );
+				$len = count( $categories );
+				$loop = 1;
+				echo "<span>";
+				foreach($categories as $category) { 		
+					echo "<li><a href=''>". $category->name ."</a></li>";
+					if ( $loop === 3 ) {
+						echo "</span><span>";
+						$loop = 0;
+					}
+					$loop++;
+				}
+				echo "</span>";
+				?>
+				<!--
 				<span>
 					<li><a href="">Books</a></li>
 					<li><a href="">Chinaware</a></li>
@@ -43,6 +80,7 @@
 					<li><a href="">Interior</a></li>
 					<li><a href="">Objects</a></li>
 				</span>
+				-->
 				<div class="clear"></div>
 			</ul>
 		</div>	
@@ -59,9 +97,6 @@
 		
 		<?php include("04_a_index.php"); ?>
 				
-		
-
-
 		<!-- INDEX NAVIGATION -->
 		<div id="index_nav"></div>
 
