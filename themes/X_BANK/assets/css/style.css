@@ -1205,6 +1205,14 @@ input.disabled {
 	margin-bottom: 24px;
 }
 
+.about_links p {
+    margin-bottom: 4px;   
+}
+
+.about_links li {
+    margin-bottom: 12px;   
+}
+
 .about_opening {
     margin-bottom: 24px;    
 }

@@ -102,31 +102,59 @@
 				</div>
 				-->
 
-				<h1 id="press">
-					<span class="link">
-						<!--<a target="_blank" href="https://www.dropbox.com/sh/c6wsgz7u18juee2/AAAkKxLUgGHAapOjjnDTCsfUa?dl=0">Press Area</a>-->
-						<?php
-						$career_query = new WP_Query( "name=careers" );
-						// var_dump($career_query );
-						if ( $career_query->have_posts() ) :
-							while ( $career_query->have_posts() ): $career_query->the_post();
-								$link = get_field( "career_link" ); ?>
-									<a target="_blank" href="<?php echo $link['url']; ?>">Careers</a>
+				<?php
+				$career_query = new WP_Query( "name=careers" );
+				if ( $career_query->have_posts() ) :
+					while ( $career_query->have_posts() ): $career_query->the_post(); 
+						// CHECK IF LINKS
+						$links = get_field( "career_links" );
+						if ( $links[0]["career_link"] ) : ?>
+							<h1 id="careers">Careers</h1>
+							<div class="about_image">
+								<?php 
+								$img = get_field("career_image"); 
+								x_image_object( $img );
+								?>
+							</div>
+							<div class="about_text">
+								<?php the_field("career_text"); ?>
+							</div>
+							<ul class="about_links">
 								<?php
-							endwhile;
+								if( have_rows("career_links") ):
+							    	while ( have_rows("career_links") ) : the_row();
+							    		// CHECK IF FILE IS UPLOADED
+							        	$link = get_sub_field( "career_link" ); 
+										if ($link) :
+							        		?>
+											<li>
+												<p>
+													<a target="_blank" href="<?php echo $link['url']; ?>">
+														<?php 
+														$link_title = get_sub_field( "career_link_title" ); 
+														// GET DATE
+														$date = date_create( $link["date"] );
+														if ( $link_title ) {
+															echo $link_title . "<br>";
+														} else {
+															echo "Untitled";
+														}
+														?>
+													</a>
+												</p>
+												<p>Added the <?php echo date_format($date,"d/m/Y"); ?></p>
+											</li>
+										<?php
+										endif;
+							    	endwhile;
+								endif;
+								?>
+							</ul>
+						<?php
 						endif;
-						?>
-					</span>
-				</h1>
-
-				<!--
-				<h1 id="vacancies">
-					<span class="link">
-						<a target="_blank" href="https://www.dropbox.com/sh/mvuxsofbc4la4jz/AAC83Z1zIaWOVEQ-5LrMXJdva?dl=0
-">Vacancies</a>
-					</span>
-				</h1>
-				-->
+					endwhile;
+				endif;
+				?>
 			
 			</div>
 
