@@ -109,8 +109,19 @@
 						// CHECK IF LINKS
 						$links = get_field( "career_links" );
 						if ( $links[0]["career_link"] ) : ?>
-							<h1 id="careers">Careers</h1>
-							<div class="about_image">
+							
+							</div><!-- END OF .SECTION_CONTENT -->
+
+							<?php addBreak(); ?>
+							<div class="section_head">
+								<h1 id="careers">Careers</h1>
+								<div class="back_to_top"><a href=""><img src="<?php bloginfo('template_url'); ?>/img/up_arrow.png" alt="Back to top" /></a></div>
+							</div>
+							<?php addBreak(); ?>
+
+							<div class="section_content">
+
+							<div class="about_image career_image">
 								<?php 
 								$img = get_field("career_image"); 
 								x_image_object( $img );
@@ -142,7 +153,7 @@
 														?>
 													</a>
 												</p>
-												<p>Added the <?php echo date_format($date,"d/m/Y"); ?></p>
+												<p><?php echo date_format($date,"d/m/Y"); ?></p>
 											</li>
 										<?php
 										endif;
@@ -156,7 +167,7 @@
 				endif;
 				?>
 			
-			</div>
+			</div><!-- END OF .SECTION_CONTENT -->
 
 	<?php endwhile;
 	endif;
